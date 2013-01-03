@@ -1,1 +1,0 @@
-../../core/www/cms/index404.php

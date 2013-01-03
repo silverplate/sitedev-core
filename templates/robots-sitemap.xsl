@@ -1,1 +1,0 @@
-../core/templates/robots-sitemap.xsl

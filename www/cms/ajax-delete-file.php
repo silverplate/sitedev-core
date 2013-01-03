@@ -1,1 +1,0 @@
-../../core/www/cms/ajax-delete-file.php
