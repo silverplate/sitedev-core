@@ -229,24 +229,24 @@
 	</xsl:template>
 
 	<xsl:template match="update-status">
-		<div class="form-message">
-			<xsl:choose>
-				<xsl:when test="@type = 'error'">
-					<xsl:attribute name="class">form-message error</xsl:attribute>
+		<xsl:choose>
+			<xsl:when test="@type = 'error'">
+                <div class="form-message-error">
 					<xsl:choose>
 						<xsl:when test="text()"><xsl:value-of select="text()" disable-output-escaping="yes" /></xsl:when>
-						<xsl:otherwise>Информация не&nbsp;сохранена<br /><nobr>из-за допущенных</nobr> ошибок</xsl:otherwise>
+						<xsl:otherwise>Информация не&nbsp;сохранена из-за&nbsp;допущенных ошибок</xsl:otherwise>
 					</xsl:choose>
-				</xsl:when>
-				<xsl:when test="@type = 'success'">
-					<xsl:attribute name="class">form-message success</xsl:attribute>
-					<xsl:choose>
-						<xsl:when test="text()"><xsl:value-of select="text()" disable-output-escaping="yes" /></xsl:when>
-						<xsl:otherwise>Информация сохранена</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-			</xsl:choose>
-		</div>
+                </div>
+			</xsl:when>
+			<xsl:when test="@type = 'success'">
+                <div class="form-message-success">
+    				<xsl:choose>
+    					<xsl:when test="text()"><xsl:value-of select="text()" disable-output-escaping="yes" /></xsl:when>
+    					<xsl:otherwise>Информация сохранена</xsl:otherwise>
+    				</xsl:choose>
+                </div>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="get-page-link">

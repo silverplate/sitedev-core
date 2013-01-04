@@ -7,7 +7,7 @@ extends App_Cms_Front_Document_Controller
     {
         parent::execute();
 
-        $this->setTemplate($this->_document->getTemplate()->getFile()->getPath());
+        $this->setTemplate($this->_document->getTemplate()->getTemplateFile()->getPath());
         $this->_computeNavigationXml();
     }
 

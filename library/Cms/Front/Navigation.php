@@ -104,7 +104,7 @@ abstract class Core_Cms_Front_Navigation extends App_Model
         return $result ? Ext_Xml::node($_name, $result) : false;
     }
 
-    public function getNavigationXmlTree($_parentId = '')
+    public static function getNavigationXmlTree($_parentId = '')
     {
         $xml = '';
 
@@ -137,7 +137,7 @@ abstract class Core_Cms_Front_Navigation extends App_Model
         return $xml;
     }
 
-    public function getNavigationXmlList()
+    public static function getNavigationXmlList()
     {
         $xml = '';
 

@@ -11,7 +11,7 @@ if ($page->IsAuthorized()) {
         $obj = App_Cms_User::Load($_GET['id']);
         if (!$obj) unset($obj);
 
-    } elseif (isset($_GET['NEW'])) {
+    } else if (key_exists('add', $_GET)) {
         $obj = new App_Cms_User();
     }
 
@@ -123,7 +123,7 @@ if ($page->IsAuthorized()) {
 
     } else {
         $about = $g_section->description ? '<p class="first">' . $g_section->description . '</p>' : '';
-        $page->AddContent('<module type="simple" is_able_to_add="true">' . $listXml . '<content><html><![CDATA[' . $about . ']]></html></content></module>');
+        $page->AddContent('<module type="simple" is-able-to-add="true">' . $listXml . '<content><html><![CDATA[' . $about . ']]></html></content></module>');
     }
 }
 

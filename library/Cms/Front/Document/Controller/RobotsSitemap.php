@@ -2,10 +2,10 @@
 
 abstract class Core_Cms_Front_Document_Controller_RobotsSitemap extends App_Cms_Front_Document_Controller_Common
 {
-    public function output()
+    public function output($_createCache = true)
     {
         header('Content-type: text/xml; charset=utf-8');
-        echo $this->getHtml();
+        echo $this->getHtml($_createCache);
     }
 
     public function execute()

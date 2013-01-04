@@ -28,8 +28,8 @@ abstract class Core_Cms_Front_Template extends App_Model
 //             ' SET ' . $this->getPrimaryKeyName() . ' = NULL WHERE ' . $this->getPrimaryKeyWhere()
 //         );
 
-        if ($this->getFile()) {
-            $this->getFile()->delete();
+        if ($this->getTemplateFile()) {
+            $this->getTemplateFile()->delete();
         }
 
         return parent::delete();
@@ -66,7 +66,7 @@ abstract class Core_Cms_Front_Template extends App_Model
         return self::getFolder() . '/' . $this->filename;
     }
 
-    public function getFile()
+    public function getTemplateFile()
     {
         if (!isset($this->_file)) {
             $this->_file = is_file($this->getFilePath())
@@ -79,8 +79,8 @@ abstract class Core_Cms_Front_Template extends App_Model
 
     public function getContent()
     {
-        return $this->getFile()
-             ? file_get_contents($this->getFile()->getPath())
+        return $this->getTemplateFile()
+             ? file_get_contents($this->getTemplateFile()->getPath())
              : false;
     }
 

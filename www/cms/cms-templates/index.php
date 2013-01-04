@@ -12,7 +12,7 @@ if ($page->isAuthorized()) {
             unset($obj);
         }
 
-    } else if (isset($_GET['NEW'])) {
+    } else if (key_exists('add', $_GET)) {
         $obj = new App_Cms_Front_Template();
     }
 

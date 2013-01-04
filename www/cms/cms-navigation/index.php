@@ -10,7 +10,7 @@ if ($page->IsAuthorized()) {
 		$obj = App_Cms_Front_Navigation::Load($_GET['id']);
 		if (!$obj) unset($obj);
 
-	} elseif (isset($_GET['NEW'])) {
+	} else if (key_exists('add', $_GET)) {
 		$obj = new App_Cms_Front_Navigation();
 	}
 

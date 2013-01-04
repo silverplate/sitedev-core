@@ -119,9 +119,12 @@ abstract class Core_Cms_Back_Log extends App_Model
         return $obj;
     }
 
-    public function getBackOfficeXml($_xml = null)
+    public function getBackOfficeXml($_node = null, $_xml = null, $_attrs = null)
     {
-        $attrs = array('date' => $this->creationDate);
+        $node = empty($_node) ? 'item' : $_node;
+
+        $attrs = empty($_attrs) ? array() : $_attrs;
+        $attrs['date'] = $this->creationDate;
 
         foreach (array('entry_id', 'user_ip', 'script_name', 'action_id') as $item) {
             if ($this->$item) {
@@ -129,14 +132,15 @@ abstract class Core_Cms_Back_Log extends App_Model
             }
         }
 
-        $xml = empty($_xml) ? array() : $_xml;
-        if (!is_array($xml)) $xml = array($xml);
+        if (empty($_xml))         $xml = array();
+        else if (is_array($_xml)) $xml = $_xml;
+        else                      $xml = array($_xml);
 
         foreach (array('user_agent', 'description') as $item) {
             Ext_Xml::append($xml, Ext_Xml::notEmptyCdata($item, $this->$item));
         }
 
-        return parent::getXml('item', $xml, $attrs);
+        return parent::getXml($node, $xml, $attrs);
     }
 
     /**

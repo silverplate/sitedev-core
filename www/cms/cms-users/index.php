@@ -10,7 +10,7 @@ if ($page->IsAuthorized()) {
 		$obj = App_Cms_Back_User::Load($_GET['id']);
 		if (!$obj) unset($obj);
 
-	} elseif (isset($_GET['NEW'])) {
+	} else if (key_exists('add', $_GET)) {
 		$obj = new App_Cms_Back_User;
 	}
 

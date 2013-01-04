@@ -13,7 +13,7 @@ abstract class Core_Cms_Back_User_Has_Section extends App_Model
              ->isPrimary(true);
     }
 
-    public static function getList($_where = array())
+    public static function getList($_where = array(), $_params = array())
     {
         $where = $_where;
 
@@ -45,6 +45,6 @@ abstract class Core_Cms_Back_User_Has_Section extends App_Model
             unset($where['is_published']);
         }
 
-        return parent::getList($where);
+        return parent::getList($where, $_params);
     }
 }

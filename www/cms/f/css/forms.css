@@ -85,10 +85,10 @@ div.field-error-message
     font-size: 0.7em;
 }
 
-div.form-message
+div.form-message-error,
+div.form-message-success
 {
     font-size: 0.84em;
-    color: green;
 /*     width: 200px; */
     width: 30%;
     text-align: right;
@@ -97,9 +97,14 @@ div.form-message
     right: 20px;
 }
 
-div.form-error-message
+div.form-message-error
 {
     color: red;
+}
+
+div.form-message-success
+{
+    color: green;
 }
 
 

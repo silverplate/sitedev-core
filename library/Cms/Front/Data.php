@@ -72,12 +72,18 @@ abstract class Core_Cms_Front_Data extends App_Model
         $this->frontDataContentTypeId = $_id;
     }
 
-    public function getXml($_additionalXml = null)
+    public function getXml($_node = null, $_xml = null, array $_attrs = null)
     {
-        $attrs = array(
-            'type-id' => $this->getTypeId(),
-            'tag' => $this->tag
-        );
+        // Name
+
+        $node = $_node ? $_node : 'document-data';
+
+        // @
+
+        $attrs = empty($_attrs) ? array() : $_attrs;
+
+        $attrs['type-id'] = $this->getTypeId();
+        $attrs['tag'] = $this->tag;
 
         if ($this->isPublished) {
             $attrs['is-published'] = 1;
@@ -87,12 +93,18 @@ abstract class Core_Cms_Front_Data extends App_Model
             $attrs['is-mount'] = 1;
         }
 
-        $xml = array();
+        // XML
 
-        Ext_Xml::append(
-            $xml,
-            Ext_Xml::notEmptyNode('additional', $_additionalXml)
-        );
+//         $xml = array();
+
+//         Ext_Xml::append(
+//             $xml,
+//             Ext_Xml::notEmptyNode('additional', $_additionalXml)
+//         );
+
+        if (empty($_xml))         $xml = array();
+        else if (is_array($_xml)) $xml = $_xml;
+        else                      $xml = array($_xml);
 
         if ($this->getController()) {
             Ext_Xml::append(
@@ -118,7 +130,7 @@ abstract class Core_Cms_Front_Data extends App_Model
             ));
         }
 
-        return parent::getXml('document-data', $xml, $attrs);
+        return parent::getXml($node, $xml, $attrs);
     }
 
     public function getController()

@@ -9,9 +9,9 @@ extends App_Cms_Front_Document_Controller_Common
         $this->setRootName('page-not-found');
     }
 
-    public function output()
+    public function output($_createCache = true)
     {
         header('HTTP/1.0 404 Not Found');
-        return parent::output();
+        return parent::output($_createCache);
     }
 }

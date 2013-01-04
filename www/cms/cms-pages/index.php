@@ -10,7 +10,7 @@ if ($page->IsAuthorized()) {
         $obj = App_Cms_Front_Document::Load($_GET['id']);
         if (!$obj) unset($obj);
 
-    } elseif (isset($_GET['NEW'])) {
+    } else if (key_exists('add', $_GET)) {
         $obj = new App_Cms_Front_Document();
     }
 
@@ -189,13 +189,13 @@ if ($page->IsAuthorized()) {
     }
 
     if (isset($obj) && $obj) {
-        $module = '<module type="tree" name="' . $g_section->GetName() . '" is_able_to_add="true"';
+        $module = '<module type="tree" name="' . $g_section->GetName() . '" is-able-to-add="true"';
 
         if ($obj->getId()) {
-            $module .= ' id="' . $obj->getId() . '" file_path="' . $obj->GetFilePath() . '">';
+            $module .= ' id="' . $obj->getId() . '" file-path="' . $obj->GetFilePath() . '">';
             $module .= '<title><![CDATA[<a href="' . $obj->GetUrl() . '?' . ($obj->isPublished ? 'no_cache' : 'key=' . SITE_KEY) . '" target="_blank" title="Посмотреть на сайте">' . $obj->getTitle() . '</a>]]></title>';
         } else {
-            $module .= ' is_new="true">';
+            $module .= ' is-new="true">';
             $module .= '><title><![CDATA[Добавление]]></title>';
         }
 
@@ -206,7 +206,7 @@ if ($page->IsAuthorized()) {
 
     } else {
         $about = $g_section->description ? '<p class="first">' . $g_section->description . '</p>' : '';
-        $page->AddContent('<module type="tree" name="' . $g_section->GetName() . '" is_able_to_add="true"><content><html><![CDATA[' . $about . ']]></html></content></module>');
+        $page->AddContent('<module type="tree" name="' . $g_section->GetName() . '" is-able-to-add="true"><content><html><![CDATA[' . $about . ']]></html></content></module>');
     }
 }
 
