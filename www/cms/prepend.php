@@ -1,7 +1,7 @@
 <?php
 
 require_once realpath(dirname(__FILE__) . '/../../../core/library') . '/libs.php';
-require_once CORE_SETS . 'project.php';
+require_once SETS . 'project.php';
 
 $g_section_start_url = '/cms/';
 
