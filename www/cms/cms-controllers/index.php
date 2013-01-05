@@ -125,38 +125,29 @@ if ($page->isAuthorized()) {
 
     // XML модуля
 
-    if (isset($obj)) {
-        $module = '<module type="simple" is-able-to-add="true"';
+    $xml = $listXml . $formStatusXml;
+    $attrs = array('type' => 'simple', 'is-able-to-add' => 'true');
 
-        if ($obj->getId()) {
-            $module .= ' id="' . $obj->id . '">';
-            $module .= Ext_Xml::cdata('title', $obj->getTitle());
-
-        } else {
-            $module .= ' is-new="true">';
-            $module .= Ext_Xml::cdata('title', 'Добавление');
+    if (empty($obj)) {
+        if ($g_section->description) {
+            $xml .= Ext_Xml::notEmptyNode('content', Ext_Xml::cdata(
+                'html',
+                '<p class="first">' . $g_section->description . '</p>'
+            ));
         }
 
-        $module .= $formStatusXml;
-        $module .= $form->getXml();
-        $module .= $listXml;
-        $module .= '</module>';
-
-        $page->addContent($module);
+    } else if ($obj->getId()) {
+        $attrs['id'] = $obj->id;
+        $xml .= Ext_Xml::cdata('title', $obj->getTitle());
+        $xml .= $form->getXml();
 
     } else {
-        $about = $g_section->description
-               ? '<p class="first">' . $g_section->description . '</p>'
-               : '';
-
-        $page->addContent(Ext_Xml::node(
-            'module',
-            $formStatusXml .
-            $listXml .
-            Ext_Xml::notEmptyNode('content', Ext_Xml::notEmptyCdata('html', $about)),
-            array('type' => 'simple', 'is-able-to-add' => 'true')
-        ));
+        $attrs['is-new'] = 1;
+        $xml .= Ext_Xml::cdata('title', 'Добавление');
+        $xml .= $form->getXml();
     }
+
+    $page->addContent(Ext_Xml::node('module', $xml, $attrs));
 }
 
 $page->output();
