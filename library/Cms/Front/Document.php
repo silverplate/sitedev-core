@@ -71,13 +71,11 @@ abstract class Core_Cms_Front_Document extends App_Model
 
     public function getLang()
     {
-        global $g_langs;
-
         if (is_null($this->_language)) {
             $this->_language = '';
 
-            if (isset($g_langs) && $g_langs) {
-                foreach (array_keys($g_langs) as $i) {
+            if (App_Cms_Front_Office::getLanguages()) {
+                foreach (array_keys(App_Cms_Front_Office::getLanguages()) as $i) {
                     $pos = strpos($this->uri, "/$i/");
 
                     if ($pos !== false && $pos == 0) {
@@ -100,10 +98,10 @@ abstract class Core_Cms_Front_Document extends App_Model
 
     public function getUrl()
     {
-        global $g_langs;
+        $langs = App_Cms_Front_Office::getLanguages();
 
         return $this->getLang()
-             ? 'http://' . $g_langs[$this->getLang()][0] . $this->getUri()
+             ? 'http://' . $langs[$this->getLang()][0] . $this->getUri()
              : $this->getUri();
     }
 

@@ -14,8 +14,9 @@ abstract class Core_Cms_Cache_Project extends Core_Cms_Cache
 		$this->IsAble = IS_CACHE;
 	}
 
-	public function IsAvailable()
+	public function isAvailable()
 	{
-		return parent::IsAvailable() && !get_admin_param('mode');
+		return parent::isAvailable() &&
+		       !App_Cms_Front_Office::getAdminParam('is_admin_mode');
 	}
 }

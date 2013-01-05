@@ -120,9 +120,6 @@ if (!defined('ENV')) {
 
 $gCustomUrls = array();
 
-// $g_langs = array('ru' => array('/', 'Русский'),
-//                  'en' => array('/eng/', 'Английский'));
-
 
 // Почта
 

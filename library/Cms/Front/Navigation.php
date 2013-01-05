@@ -33,8 +33,6 @@ abstract class Core_Cms_Front_Navigation extends App_Model
 
     public static function getRowDocuments($_name)
     {
-        global $g_langs;
-
         $list = App_Db::get()->getList('
             SELECT
                 d.' . App_Cms_Front_Document::getPri() . ' AS id,
@@ -54,9 +52,9 @@ abstract class Core_Cms_Front_Navigation extends App_Model
                 d.sort_order
         ');
 
-        if ($list && !empty($g_langs)) {
+        if ($list && App_Cms_Front_Office::getLanguages()) {
             for ($i = 0; $i < count($list); $i++) {
-                foreach (array_keys($g_langs) as $j) {
+                foreach (array_keys(App_Cms_Front_Office::getLanguages()) as $j) {
                     $pos = strpos($list[$i]['uri'], "/$j/");
 
                     if (0 === $pos) {

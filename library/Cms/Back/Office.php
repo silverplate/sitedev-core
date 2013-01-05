@@ -305,4 +305,9 @@ abstract class Core_Cms_Back_Office
 
         return $result;
     }
+
+    public static function bootstrap()
+    {
+        self::auth();
+    }
 }

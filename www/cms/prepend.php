@@ -3,4 +3,4 @@
 require_once realpath(dirname(__FILE__) . '/../../../core/library') . '/libs.php';
 require_once SETS . 'project.php';
 
-App_Cms_Back_Office::auth();
+App_Cms_Back_Office::bootstrap();
