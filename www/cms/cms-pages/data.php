@@ -44,8 +44,8 @@ if (is_null($document_id) || !App_Cms_Front_Document::Load($document_id)) {
     $controller_row_conditions = array();
     $controller_self_condition = isset($obj) && $obj && $obj->frontControllerId ? ' OR ' . App_Cms_Front_Controller::getPri() . ' = ' . App_Db::escape($obj->frontControllerId) : '';
     $used = App_Db::Get()->GetList('SELECT ' . App_Cms_Front_Controller::GetPri() . ' FROM ' . App_Cms_Front_Data::GetTbl() . ' WHERE ' . App_Cms_Front_Controller::GetPri() . ' != ""' . (isset($obj) ? ' AND ' . App_Cms_Front_Data::GetPri() . ' != ' . App_Db::escape($obj->GetId()) : '') . ' GROUP BY ' . App_Cms_Front_Controller::GetPri());
-    if ($used) array_push($controller_row_conditions, '(is_multiple = 1 OR ' . App_Cms_Front_Controller::GetPri() . ' NOT IN (' . App_Db::escape($used) . ')' . $controller_self_condition . ')');
-    array_push($controller_row_conditions, $controller_self_condition ? '(is_published = 1' . $controller_self_condition . ')' : 'is_published = 1');
+    if ($used) $controller_row_conditions[] = '(is_multiple = 1 OR ' . App_Cms_Front_Controller::GetPri() . ' NOT IN (' . App_Db::escape($used) . ')' . $controller_self_condition . ')';
+    $controller_row_conditions[] = $controller_self_condition ? '(is_published = 1' . $controller_self_condition . ')' : 'is_published = 1';
 
     $form->Elements[App_Cms_Front_Controller::GetPri()]->AddOption('', 'Нет');
     foreach (App_Cms_Front_Controller::GetList(array('type_id' => 2), null, $controller_row_conditions) as $item) {

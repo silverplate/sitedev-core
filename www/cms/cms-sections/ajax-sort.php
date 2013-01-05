@@ -11,7 +11,7 @@ if (isset($_POST['items']) && $_POST['items']) {
     $current_sort_order = array();
     $objects = App_Cms_Back_Section::GetList(array(App_Cms_Back_Section::GetPri() => $_POST['items']));
     foreach ($objects as $item) {
-        array_push($current_sort_order, $item->sortOrder);
+        $current_sort_order[] = $item->sortOrder;
     }
 
     foreach ($objects as $item) {

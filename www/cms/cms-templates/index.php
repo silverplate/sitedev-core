@@ -3,7 +3,6 @@
 require_once '../prepend.php';
 
 $page = new App_Cms_Back_Page();
-$page->setTitle(App_Cms_Back_Section::get()->getTitle());
 
 if ($page->isAuthorized()) {
     if (isset($_GET['id'])) {

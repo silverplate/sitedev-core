@@ -33,7 +33,7 @@ if (!empty($data['branches'])) {
         for ($j = 0; $j < count($data['branch_' . $i]); $j++) {
             $id = $data['branch_' . $i][$j];
             $objects[$id]->sortOrder = $order[$newOrder[$id]];
-            array_push($changed, $id);
+            $changed[] = $id;
         }
     }
 

@@ -6,11 +6,11 @@ function obj_filter($_filter) {
     $parameters = array('count' => $_filter['per_page'], 'offset' => ($page - 1) * $_filter['per_page']);
 
     if ($_filter['name']) {
-        array_push($row_conditions, 'CONCAT(last_name, " ", first_name, " ", patronymic_name) LIKE "%' . $_filter['name'] . '%"');
+        $row_conditions[] = 'CONCAT(last_name, " ", first_name, " ", patronymic_name) LIKE "%' . $_filter['name'] . '%"';
     }
 
     if ($_filter['email']) {
-        array_push($row_conditions, 'email LIKE "%' . $_filter['email'] . '%"');
+        $row_conditions[] = 'email LIKE "%' . $_filter['email'] . '%"';
     }
 
     return array(

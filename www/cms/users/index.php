@@ -4,7 +4,6 @@ require_once '../prepend.php';
 require_once 'filter-lib.php';
 
 $page = new App_Cms_Back_Page();
-$page->SetTitle(App_Cms_Back_Section::get()->GetTitle());
 
 if ($page->IsAuthorized()) {
     if (isset($_GET['id'])) {
