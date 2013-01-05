@@ -4,7 +4,7 @@ require_once '../prepend.php';
 require_once 'filter-lib.php';
 
 $page = new App_Cms_Back_Page();
-$page->SetTitle($g_section->GetTitle());
+$page->SetTitle(App_Cms_Back_Section::get()->GetTitle());
 
 if ($page->IsAuthorized()) {
     $filter = bo_log_get_filter();

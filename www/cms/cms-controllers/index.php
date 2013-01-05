@@ -1,9 +1,9 @@
 <?php
 
-require('../prepend.php');
+require_once '../prepend.php';
 
 $page = new App_Cms_Back_Page();
-$page->setTitle($g_section->getTitle());
+$page->setTitle(App_Cms_Back_Section::get()->getTitle());
 
 if ($page->isAuthorized()) {
 
@@ -129,10 +129,10 @@ if ($page->isAuthorized()) {
     $attrs = array('type' => 'simple', 'is-able-to-add' => 'true');
 
     if (empty($obj)) {
-        if ($g_section->description) {
+        if (App_Cms_Back_Section::get()->description) {
             $xml .= Ext_Xml::notEmptyNode('content', Ext_Xml::cdata(
                 'html',
-                '<p class="first">' . $g_section->description . '</p>'
+                '<p class="first">' . App_Cms_Back_Section::get()->description . '</p>'
             ));
         }
 

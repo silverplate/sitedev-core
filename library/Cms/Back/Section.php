@@ -6,6 +6,11 @@ abstract class Core_Cms_Back_Section extends App_Model
         'users' => 'App_Cms_Back_User_Has_Section'
     );
 
+    /**
+     * @var App_Cms_Back_Section|false
+     */
+    protected static $_current;
+
     public function __construct()
     {
         parent::__construct();
@@ -28,15 +33,23 @@ abstract class Core_Cms_Back_Section extends App_Model
         return parent::isUnique('uri', $_value, $_excludedId);
     }
 
+    public static function get()
+    {
+        if (!isset(self::$_current)) {
+            self::$_current = self::compute();
+        }
+
+        return self::$_current;
+    }
+
     public static function compute()
     {
-        global $g_section_start_url;
-
         $url = parse_url($_SERVER['REQUEST_URI']);
-        $path = explode(
-            '/',
-            trim(str_replace($g_section_start_url, '', $url['path']), '/')
-        );
+        $path = explode( '/', trim(str_replace(
+            App_Cms_Back_Office::$uriStartsWith,
+            '',
+            $url['path']
+        ), '/'));
 
         return self::getBy('uri', $path[0]);
     }

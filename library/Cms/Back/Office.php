@@ -3,6 +3,11 @@
 abstract class Core_Cms_Back_Office
 {
     /**
+     * @var string
+     */
+    public static $uriStartsWith = '/cms/';
+
+    /**
      * Сортировка списка.
      *
      * @param string $_class Название класса объекты, которого нужно сортировать.

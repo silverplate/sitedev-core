@@ -54,8 +54,6 @@ abstract class Core_Cms_Back_Log extends App_Model
 
     public static function log($_actionId, $_params = array())
     {
-        global $g_user, $g_section;
-
         $params = array(
             'user_ip' => $_SERVER['REMOTE_ADDR'],
             'user_agent' => $_SERVER['HTTP_USER_AGENT'],
@@ -76,9 +74,9 @@ abstract class Core_Cms_Back_Log extends App_Model
             $params[$sectionKey] = $_params['section']->getId();
             $params['section_name'] = $_params['section']->getTitle();
 
-        } else if ($g_section) {
-            $params[$sectionKey] = $g_section->getId();
-            $params['section_name'] = $g_section->getTitle();
+        } else if (App_Cms_Back_Section::get()) {
+            $params[$sectionKey] = App_Cms_Back_Section::get()->getId();
+            $params['section_name'] = App_Cms_Back_Section::get()->getTitle();
 
         } else if (
             isset($_params['section_id']) &&
@@ -100,9 +98,9 @@ abstract class Core_Cms_Back_Log extends App_Model
             $params[$userKey] = $_params['user']->getId();
             $params['user_name'] = $_params['user']->getTitle();
 
-        } else if ($g_user) {
-            $params[$userKey] = $g_user->getId();
-            $params['user_name'] = $g_user->getTitle();
+        } else if (App_Cms_Back_User::get()) {
+            $params[$userKey] = App_Cms_Back_User::get()->getId();
+            $params['user_name'] = App_Cms_Back_User::get()->getTitle();
 
         } else if (
             isset($_params['user_id']) &&

@@ -4,7 +4,7 @@ require_once '../prepend.php';
 require_once 'filter-lib.php';
 
 $page = new App_Cms_Back_Page();
-$page->SetTitle($g_section->GetTitle());
+$page->SetTitle(App_Cms_Back_Section::get()->GetTitle());
 
 if ($page->IsAuthorized()) {
     if (isset($_GET['id'])) {
@@ -122,7 +122,7 @@ if ($page->IsAuthorized()) {
         $page->AddContent($module);
 
     } else {
-        $about = $g_section->description ? '<p class="first">' . $g_section->description . '</p>' : '';
+        $about = App_Cms_Back_Section::get()->description ? '<p class="first">' . App_Cms_Back_Section::get()->description . '</p>' : '';
         $page->AddContent('<module type="simple" is-able-to-add="true">' . $listXml . '<content><html><![CDATA[' . $about . ']]></html></content></module>');
     }
 }

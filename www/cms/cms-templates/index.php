@@ -3,7 +3,7 @@
 require_once '../prepend.php';
 
 $page = new App_Cms_Back_Page();
-$page->setTitle($g_section->getTitle());
+$page->setTitle(App_Cms_Back_Section::get()->getTitle());
 
 if ($page->isAuthorized()) {
     if (isset($_GET['id'])) {
@@ -126,7 +126,7 @@ if ($page->isAuthorized()) {
         $page->addContent($module);
 
     } else {
-        $about = $g_section->description ? '<p class="first">' . $g_section->description . '</p>' : '';
+        $about = App_Cms_Back_Section::get()->description ? '<p class="first">' . App_Cms_Back_Section::get()->description . '</p>' : '';
         $page->addContent('<module type="simple" is-able-to-add="true">' . $listXml . '<content><html><![CDATA[' . $about . ']]></html></content></module>');
     }
 }

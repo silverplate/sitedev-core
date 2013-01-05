@@ -6,6 +6,11 @@ abstract class Core_Cms_Back_User extends App_Model
         'sections' => 'App_Cms_Back_User_Has_Section'
     );
 
+    /**
+     * @var App_Cms_Back_User|false
+     */
+    protected static $_current;
+
     public function __construct()
     {
         parent::__construct();
@@ -63,7 +68,7 @@ abstract class Core_Cms_Back_User extends App_Model
 
     public function remindPassword()
     {
-        global $g_section_start_url, $g_bo_mail;
+        global $g_bo_mail;
 
         if ($this->email) {
             $this->reminderKey = App_Db::get()->getUnique(self::getTbl(), 'reminder_key');
@@ -71,8 +76,10 @@ abstract class Core_Cms_Back_User extends App_Model
             $this->update();
 
             $message = 'Для смены пароля к системе управления сайта http://' .
-                       $_SERVER['HTTP_HOST'] . "$g_section_start_url загрузите страницу: http://" .
-                       $_SERVER['HTTP_HOST'] . "$g_section_start_url?r={$this->reminderKey}\r\n\n" .
+                       $_SERVER['HTTP_HOST'] . App_Cms_Back_Office::$uriStartsWith .
+                       ' загрузите страницу: http://' .
+                       $_SERVER['HTTP_HOST'] . App_Cms_Back_Office::$uriStartsWith .
+                       "?r={$this->reminderKey}\r\n\n" .
                        'Если вы не просили поменять пароль, проигнорируйте это сообщение.';
 
             return send_email($g_bo_mail, $this->email, 'Смена пароля', $message, null, false);
@@ -81,7 +88,7 @@ abstract class Core_Cms_Back_User extends App_Model
 
     public function changePassword()
     {
-        global $g_section_start_url, $g_bo_mail;
+        global $g_bo_mail;
 
         if ($this->email) {
             $date = $this->getDate('reminder_date');
@@ -98,8 +105,10 @@ abstract class Core_Cms_Back_User extends App_Model
                 $this->reminderDate = '';
                 $this->update();
 
-                $message = 'Доступ к системе управления сайта http://' . $_SERVER['HTTP_HOST'] .
-                           "$g_section_start_url.\r\n\n" .
+                $message = 'Доступ к системе управления сайта http://' .
+                           $_SERVER['HTTP_HOST'] .
+                           App_Cms_Back_Office::$uriStartsWith .
+                           ".\r\n\n" .
                            'Логин: ' . $this->login .
                            "\r\nПароль: $password";
 
@@ -139,5 +148,16 @@ abstract class Core_Cms_Back_User extends App_Model
     public function updatePassword($_password)
     {
         $this->updateAttr('passwd', md5($_password));
+    }
+
+    public static function get()
+    {
+        if (!isset(self::$_current)) {
+            self::$_current = App_Cms_Session::get()->isLoggedIn()
+                            ? self::auth(App_Cms_Session::get()->getUserId())
+                            : false;
+        }
+
+        return self::$_current;
     }
 }

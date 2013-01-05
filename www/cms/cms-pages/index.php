@@ -3,7 +3,7 @@
 require_once '../prepend.php';
 
 $page = new App_Cms_Back_Page();
-$page->SetTitle($g_section->GetTitle());
+$page->SetTitle(App_Cms_Back_Section::get()->GetTitle());
 
 if ($page->IsAuthorized()) {
     if (isset($_GET['id'])) {
@@ -189,7 +189,7 @@ if ($page->IsAuthorized()) {
     }
 
     if (isset($obj) && $obj) {
-        $module = '<module type="tree" name="' . $g_section->GetName() . '" is-able-to-add="true"';
+        $module = '<module type="tree" name="' . App_Cms_Back_Section::get()->GetName() . '" is-able-to-add="true"';
 
         if ($obj->getId()) {
             $module .= ' id="' . $obj->getId() . '" file-path="' . $obj->GetFilePath() . '">';
@@ -205,8 +205,8 @@ if ($page->IsAuthorized()) {
         $page->AddContent($module);
 
     } else {
-        $about = $g_section->description ? '<p class="first">' . $g_section->description . '</p>' : '';
-        $page->AddContent('<module type="tree" name="' . $g_section->GetName() . '" is-able-to-add="true"><content><html><![CDATA[' . $about . ']]></html></content></module>');
+        $about = App_Cms_Back_Section::get()->description ? '<p class="first">' . App_Cms_Back_Section::get()->description . '</p>' : '';
+        $page->AddContent('<module type="tree" name="' . App_Cms_Back_Section::get()->GetName() . '" is-able-to-add="true"><content><html><![CDATA[' . $about . ']]></html></content></module>');
     }
 }
 

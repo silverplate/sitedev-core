@@ -3,8 +3,6 @@
 require_once realpath(dirname(__FILE__) . '/../../../core/library') . '/libs.php';
 require_once SETS . 'project.php';
 
-$g_section_start_url = '/cms/';
-
 
 /*** Authorization
 *********************************************************/
@@ -70,10 +68,4 @@ if (isset($_POST['auth_submit'])) {
 } else {
 	App_Cms_Session::Get()->SetParam(App_Cms_Session::ACT_PARAM, App_Cms_Session::Get()->GetParam(App_Cms_Session::ACT_PARAM_NEXT) ? App_Cms_Session::Get()->GetParam(App_Cms_Session::ACT_PARAM_NEXT) : App_Cms_Session::ACT_START);
 	App_Cms_Session::Get()->SetParam(App_Cms_Session::ACT_PARAM_NEXT, App_Cms_Session::ACT_CONTINUE);
-
-	/* User */
-	$g_user = App_Cms_Session::Get()->IsLoggedIn() ? App_Cms_Back_User::Auth(App_Cms_Session::Get()->GetUserId()) : false;
-
-	/* Section */
-	$g_section = App_Cms_Back_Section::compute();
 }

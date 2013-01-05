@@ -3,11 +3,8 @@
 require 'prepend.php';
 $result = 0;
 
-global $g_user;
-
-if (!empty($g_user) && isset($_POST['f']) && is_file($_POST['f'])) {
+if (App_Cms_Back_User::get() && !empty($_POST['f']) && is_file($_POST['f'])) {
     Ext_File::deleteFile($_POST['f']);
-
     $dir = dirname($_POST['f']);
 
     if (Ext_File::isDirEmpty($dir)) {

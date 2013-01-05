@@ -21,28 +21,23 @@ abstract class Core_Cms_Back_Page extends App_Cms_Page
 
     public function isAuthorized()
     {
-        global $g_user;
-        return !empty($g_user);
+        return (boolean) App_Cms_Back_User::get();
     }
 
     public function isAllowed()
     {
-        global $g_user, $g_section, $g_section_start_url;
-
         return $this->isAuthorized() && (
-            (!empty($g_section) && $g_user->isSection($g_section->getId())) ||
-            $this->_url['path'] == $g_section_start_url
+            (App_Cms_Back_Section::get() && App_Cms_Back_User::get()->isSection(App_Cms_Back_Section::get()->getId())) ||
+            $this->_url['path'] == App_Cms_Back_Office::$uriStartsWith
         );
     }
 
     protected function _getUserNavigationXml()
     {
-        global $g_user;
-
         $xml = '';
 
-        if (!empty($g_user)) {
-            foreach ($g_user->getSections() as $item) {
+        if (App_Cms_Back_User::get()) {
+            foreach (App_Cms_Back_User::get()->getSections() as $item) {
                 $xml .= $item->getNavigationXml();
             }
 
@@ -59,14 +54,12 @@ abstract class Core_Cms_Back_Page extends App_Cms_Page
 
     public function getXml()
     {
-        global $g_user;
-
         if (defined('SITE_TITLE') && SITE_TITLE) {
             $this->addSystem(Ext_Xml::cdata('title', SITE_TITLE));
         }
 
-        if (!empty($g_user)) {
-            $this->addSystem($g_user->getXml());
+        if (App_Cms_Back_User::get()) {
+            $this->addSystem(App_Cms_Back_User::get()->getXml());
         }
 
         $this->addSystem(App_Cms_Session::get()->getXml(
