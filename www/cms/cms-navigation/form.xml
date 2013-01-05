@@ -3,7 +3,7 @@
 
 <form>
     <element name="title" type="string" is-required="true">
-        <label><![CDATA[Название]]></label>
+        <label>Название</label>
     </element>
 
     <element name="name" type="folder" is-required="true">

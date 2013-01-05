@@ -87,7 +87,7 @@ if ($page->isAuthorized()) {
 
                     App_Cms_Ext_Form::saveCookieStatus();
 
-                    reload('?id=' . $obj->getId());
+                    reload('?id=' . $obj->id);
 
                 } else {
                     $form->setUpdateStatus(App_Cms_Ext_Form::ERROR);
@@ -104,7 +104,7 @@ if ($page->isAuthorized()) {
 
     if (!isset($form) || !$form->isSubmited()) {
         $formStatusXml = App_Cms_Ext_Form::getCookieStatusXml(
-            empty($obj) ? 'Выполнено' : 'Данные контролера сохранены'
+            empty($obj) ? 'Выполнено' : 'Данные сохранены'
         );
 
         App_Cms_Ext_Form::clearCookieStatus();
