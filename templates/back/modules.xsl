@@ -95,9 +95,9 @@
 	</xsl:template>
 
     <xsl:template match="form-status" name="form-status">
-        <div class="form-message">
+        <div class="form-message-success">
             <xsl:if test="@status = 'error'">
-                <xsl:attribute name="class">form-message form-error-message</xsl:attribute>
+                <xsl:attribute name="class">form-message-error</xsl:attribute>
             </xsl:if>
 
             <xsl:choose>
