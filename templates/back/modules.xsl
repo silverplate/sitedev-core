@@ -30,7 +30,7 @@
 
                     <!--
                     @todo Что это?
-                    -->
+
                     <xsl:if test="@is-simple-sort">
                         <xsl:text>&nbsp;&bull; </xsl:text>
                         <xsl:call-template name="module-element-link">
@@ -43,7 +43,7 @@
                                 </xsl:choose>
                             </xsl:with-param>
                         </xsl:call-template>
-                    </xsl:if>
+                    </xsl:if> -->
                 </td>
 
                 <xsl:if test="title">
@@ -74,7 +74,7 @@
                 </td>
 
                 <td class="content">
-                    <xsl:for-each select="local-navigation[@type = 'content_filter']">
+                    <xsl:for-each select="local-navigation[@type = 'content-filter']">
                         <xsl:variable name="is-date"><xsl:choose>
                             <xsl:when test="@is-date">true</xsl:when>
                             <xsl:otherwise>false</xsl:otherwise>

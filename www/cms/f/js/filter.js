@@ -41,10 +41,10 @@ function filterUpdate(_eleName, _isFormSubmit, _isSortable, _isDate)
     var from, till;
 
     if (_isDate) {
-        from = dateFilterGetDate("filter_from");
-        till = dateFilterGetDate("filter_till");
+        from = dateFilterGetDate("filter-from");
+        till = dateFilterGetDate("filter-till");
     }
-
+    
     if (formEle && ele && (!_isDate || (from && till))) {
         showLoadingBar();
 
@@ -61,27 +61,42 @@ function filterUpdate(_eleName, _isFormSubmit, _isSortable, _isDate)
 
         for (var i = 0; i < inputs.length; i++) {
             var input = document.getElementById("filter-" + inputs[i]);
-            setCookie("filter-" + inputs[i], input ? input.value : "");
+
+            if (input) {
+                setCookie("filter-" + inputs[i], input.value);
+            }
         }
 
         var inputs = new Array("users", "sections", "actions", "type", "group");
 
         for (var i = 0; i < inputs.length; i++) {
             var checkEle = document.getElementById("is-filter-" + inputs[i]);
+
             if (checkEle) {
                 var value = "";
+
                 if (checkEle.checked) {
                     var input = formEle.elements["filter_" + inputs[i]];
-                    if (!input) input = formEle.elements["filter_" + inputs[i] + "[]"];
 
-                    if (input && input.length > 0) {
-                        for (var j = 0; j < input.length; j++) {
-                            if (input[j].checked) {
-                                value += (value != "" ? "|" : "") + input[j].value;
+                    if (!input) {
+                        input = formEle.elements["filter_" + inputs[i] + "[]"];
+                    }
+                    
+                    if (input) {
+                        if (input.length) {
+                            for (var j = 0; j < input.length; j++) {
+                                if (input[j].checked) {
+                                    value += (value != "" ? "|" : "") + input[j].value;
+                                }
                             }
+
+                        } else if (input.checked) {
+                            value = input.value;
                         }
                     }
                 }
+               
+                console.log(value);
 
                 setCookie("is-filter-" + inputs[i], checkEle.checked ? 1 : "");
                 setCookie("filter-" + inputs[i], value);

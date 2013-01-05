@@ -4,57 +4,93 @@ require_once '../prepend.php';
 require_once 'filter-lib.php';
 
 $page = new App_Cms_Back_Page();
-$page->SetTitle(App_Cms_Back_Section::get()->GetTitle());
 
-if ($page->IsAuthorized()) {
-    $filter = bo_log_get_filter();
+if ($page->isAuthorized()) {
+    $filter = boLogGetFilter();
 
-    $listXml  = '<local-navigation type="content_filter" is-date="true"';
-    $listXml .= ' today="' . date('Y-m-d') . '" week="' . date('Y-m-d', strtotime('-1 week')) . '" month="' . date('Y-m-d', strtotime('-1 month')) . '" all_from="' . date('Y-m-d', strtotime('-5 years')) . '" all_till="' . date('Y-m-d', strtotime('+5 years')) . '"';
-    $listXml .= ' from="' . date('Y-m-d', $filter['from_date']) . '" till="' . date('Y-m-d', $filter['till_date']) . '"';
-    foreach (array('open') as $item) {
-        if ($filter['is_' . $item]) $listXml .= ' is-' . $item . '="true"';
+    $xml = '';
+    $xmlAttrs = array(
+        'type'     => 'content-filter',
+        'is-date'  => 1,
+        'today'    => date('Y-m-d'),
+        'week'     => date('Y-m-d', time() - 60 * 60 * 24 * 7),
+        'month'    => date('Y-m-d', time() - 60 * 60 * 24 * 31),
+        'all-from' => date('Y-m-d', time() - 60 * 60 * 24 * 365 * 5),
+        'all-till' => date('Y-m-d', time() + 60 * 60 * 24 * 365 * 5),
+        'from'     => date('Y-m-d', $filter['from_date']),
+        'till'     => date('Y-m-d', $filter['till_date'])
+    );
+
+    if (!empty($filter['is_open'])) {
+        $xmlAttrs['is_open'] = 1;
     }
-    $listXml .= '>';
 
-    $listXml .= '<filter-param type="multiple" name="users"';
-    if ($filter['is_users']) $listXml .= ' is-selected="true"';
-    $listXml .= '><title><![CDATA[Пользователь]]></title>';
-    foreach (App_Cms_Back_User::GetList() as $item) {
-        $listXml .= '<item value="' . $item->GetId() . '"';
-        if (is_array($filter['users']) && in_array($item->GetId(), $filter['users'])) {
-            $listXml .= ' is-selected="true"';
+
+    // Пользователи
+
+    $lAttrs = array('type' => 'multiple', 'name' => 'users');
+    if ($filter['is_users']) $lAttrs['is-selected'] = 1;
+
+    $lXml = Ext_Xml::cdata('title', 'Пользователь');
+
+    foreach (App_Cms_Back_User::getList() as $item) {
+        $attrs = array('value' => $item->id);
+
+        if ($filter['users'] && in_array($item->id, $filter['users'])) {
+            $attrs['is-selected'] = 1;
         }
-        $listXml .= '><![CDATA[' . $item->GetTitle() . ']]></item>';
-    }
-    $listXml .= '</filter-param>';
 
-    $listXml .= '<filter-param type="multiple" name="sections"';
-    if ($filter['is_sections']) $listXml .= ' is-selected="true"';
-    $listXml .= '><title><![CDATA[Раздел]]></title>';
-    foreach (App_Cms_Back_Log::GetList() as $item) {
-        $listXml .= '<item value="' . $item->GetId() . '"';
-        if (is_array($filter['sections']) && in_array($item->GetId(), $filter['sections'])) {
-            $listXml .= ' is-selected="true"';
+        $lXml .= Ext_Xml::cdata('item', $item->getTitle(), $attrs);
+    }
+
+    $xml .= Ext_Xml::node('filter-param', $lXml, $lAttrs);
+
+
+    // Разделы
+
+    $lAttrs = array('type' => 'multiple', 'name' => 'sections');
+    if ($filter['is_sections']) $lAttrs['is-selected'] = 1;
+
+    $lXml = Ext_Xml::cdata('title', 'Раздел');
+
+    foreach (App_Cms_Back_Section::getList() as $item) {
+        $attrs = array('value' => $item->id);
+
+        if ($filter['sections'] && in_array($item->id, $filter['sections'])) {
+            $attrs['is-selected'] = 1;
         }
-        $listXml .= '><![CDATA[' . $item->GetTitle() . ']]></item>';
-    }
-    $listXml .= '</filter-param>';
 
-    $listXml .= '<filter-param type="multiple" name="actions"';
-    if ($filter['is_actions']) $listXml .= ' is-selected="true"';
-    $listXml .= '><title><![CDATA[Действие]]></title>';
-    foreach (App_Cms_Back_Log::GetActions() as $id => $title) {
-        $listXml .= '<item value="' . $id . '"';
-        if (is_array($filter['actions']) && in_array($id, $filter['actions'])) {
-            $listXml .= ' is-selected="true"';
+        $lXml .= Ext_Xml::cdata('item', $item->getTitle(), $attrs);
+    }
+
+    $xml .= Ext_Xml::node('filter-param', $lXml, $lAttrs);
+
+
+    // Действия
+
+    $lAttrs = array('type' => 'multiple', 'name' => 'actions');
+    if ($filter['is_actions']) $lAttrs['is-selected'] = 1;
+
+    $lXml = Ext_Xml::cdata('title', 'Действие');
+
+    foreach (App_Cms_Back_Log::getActions() as $id => $title) {
+        $attrs = array('value' => $id);
+
+        if ($filter['actions'] && in_array($id, $filter['actions'])) {
+            $attrs['is-selected'] = 1;
         }
-        $listXml .= '><![CDATA[' . $title . ']]></item>';
-    }
-    $listXml .= '</filter-param>';
-    $listXml .= '</local-navigation>';
 
-    $page->AddContent('<module type="simple">' . $listXml . '</module>');
+        $lXml .= Ext_Xml::cdata('item', $title, $attrs);
+    }
+
+    $xml .= Ext_Xml::node('filter-param', $lXml, $lAttrs);
+
+
+    $page->addContent(Ext_Xml::node(
+        'module',
+        Ext_Xml::node('local-navigation', $xml, $xmlAttrs),
+        array('type' => 'simple')
+    ));
 }
 
-$page->Output();
+$page->output();

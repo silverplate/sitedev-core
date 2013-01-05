@@ -35,8 +35,6 @@
         match="local-navigation[@type = 'filter' or @type = 'content-filter']"
         mode="list"
     >
-        <script type="text/javascript" src="/cms/f/js/filter.js" />
-
         <div id="filter-link">
             <xsl:if test="@is-open"><xsl:attribute name="style">display: none;</xsl:attribute></xsl:if>
             <a onclick="showFilter();">Отфильтровать</a>
@@ -93,7 +91,7 @@
 
         <xsl:if test="@type = 'filter'">
             <ul id="filter-content"><xsl:if test="@is-sortable"><xsl:attribute name="class">sortable</xsl:attribute></xsl:if></ul>
-            <script type="text/javascript" language="JavaScript"><xsl:value-of select="concat('filterUpdate(&quot;filter-content&quot;, false, ', $is-sortable, ', ', $is-date, ');')" /></script>
+            <script type="text/javascript"><xsl:value-of select="concat('filterUpdate(&quot;filter-content&quot;, false, ', $is-sortable, ', ', $is-date, ');')" /></script>
         </xsl:if>
     </xsl:template>
 
@@ -115,7 +113,7 @@
 
                             <xsl:for-each select="item"><tr>
                                 <td><input type="checkbox" name="filter_{parent::node()/@name}[]" id="{generate-id()}" value="{@value}">
-                                    <xsl:if test="(parent::node()/@is-selected and @is-selected) or (parent::node()/@is-selected)">
+                                    <xsl:if test="@is-selected">
                                         <xsl:attribute name="checked">true</xsl:attribute>
                                     </xsl:if>
                                 </input></td>

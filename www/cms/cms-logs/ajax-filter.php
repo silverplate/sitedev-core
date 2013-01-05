@@ -3,12 +3,12 @@
 require_once '../prepend.php';
 require_once 'filter-lib.php';
 
-$filter = bo_log_get_filter(true);
-$resultItems = bo_log_filter($filter);
+$filter = boLogGetFilter();
+$resultItems = boLogFilter($filter);
 
 if (!$resultItems['items'] && $resultItems['total'] > 0 && $filter['page'] != 1) {
     $filter['page'] = 1;
-    $resultItems = bo_log_filter($filter);
+    $resultItems = boLogFilter($filter);
 }
 
 $page = new App_Cms_Page();
@@ -48,7 +48,7 @@ if ($resultItems['items']) {
             $appendXml .= Ext_Xml::cdata($name, $value);
         }
 
-        $page->addContent($item->getBackOfficeXml($appendXml));
+        $page->addContent($item->getBackOfficeXml(null, $appendXml));
     }
 
     $page->addContent(Ext_Xml::node('list-navigation', null, array(

@@ -209,7 +209,7 @@ foreach ($frontDocuments as $level) {
             $links = array();
             foreach ($i['navigations'] as $j) {
                 if (isset($frontNavigationObjs[$j])) {
-                    array_push($links, $frontNavigationObjs[$j]->getId());
+                    $links[] = $frontNavigationObjs[$j]->getId();
                 }
             }
 

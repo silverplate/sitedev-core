@@ -16,6 +16,10 @@ abstract class Core_Cms_Back_Page extends App_Cms_Page
             $this->setTemplate(TEMPLATES . "back/$template");
         }
 
+        if (App_Cms_Back_Section::get()) {
+            $this->setTitle(App_Cms_Back_Section::get()->getTitle());
+        }
+
         $this->addSystem($this->_getUserNavigationXml());
     }
 

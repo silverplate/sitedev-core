@@ -605,8 +605,7 @@ abstract class Core_ActiveRecord
         return (boolean) App_Db::get()->execute(
             'UPDATE ' . $this->getTable() .
             App_Db::get()->getQueryFields($attrs, 'update', true) .
-            'WHERE ' . $this->getPrimaryKeyWhere() .
-            ' LIMIT 1'
+            'WHERE ' . $this->getPrimaryKeyWhere() . ' LIMIT 1'
         );
     }
 
@@ -626,8 +625,7 @@ abstract class Core_ActiveRecord
         return (boolean) App_Db::get()->execute(
             'UPDATE ' . $this->getTable() .
             App_Db::get()->getQueryFields($attrs, 'update', true) .
-            'WHERE ' . $this->getPrimaryKeyWhere() .
-            ' LIMIT 1'
+            'WHERE ' . $this->getPrimaryKeyWhere() . ' LIMIT 1'
         );
     }
 
@@ -650,8 +648,7 @@ abstract class Core_ActiveRecord
 
         return (boolean) App_Db::get()->execute(
             "DELETE FROM {$this->_table} WHERE " .
-            $this->getPrimaryKeyWhere() .
-            'LIMIT 1'
+            $this->getPrimaryKeyWhere() . ' LIMIT 1'
         );
     }
 

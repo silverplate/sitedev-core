@@ -32,12 +32,13 @@
 
                 <script src="/cms/f/js/jquery.js" type="text/javascript" />
                 <script src="/cms/f/js/jquery-ui.js" type="text/javascript" />
-                <script src="/cms/f/js/common.js" type="text/javascript" />
-                <script src="/cms/f/js/scripts.js" type="text/javascript" />
-                <script src="/cms/f/js/module-documents.js" type="text/javascript" />
                 <script src="/cms/f/js/cookies.js" type="text/javascript" />
+                <script src="/cms/f/js/scripts.js" type="text/javascript" />
+                <script src="/cms/f/js/common.js" type="text/javascript" />
+                <script src="/cms/f/js/module-documents.js" type="text/javascript" />
                 <script src="/cms/f/js/tree.js" type="text/javascript" />
                 <script src="/cms/f/calendar/calendar.js" type="text/javascript" />
+                <script src="/cms/f/js/filter.js" type="text/javascript" />
             </head>
             <body>
                 <div id="loading" />
