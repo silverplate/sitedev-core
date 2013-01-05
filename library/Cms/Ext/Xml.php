@@ -7,19 +7,28 @@ class Core_Cms_Ext_Xml extends Ext_Xml
         return CORE_TEMPLATES . 'entities.dtd';
     }
 
-    public static function getHead($_root = 'root')
+    public static function getHead($_dtd = null, $_root = null)
     {
-        return parent::getHead(self::getEntitiesPath(), $_root);
+        return parent::getHead($_dtd ? $_dtd : self::getEntitiesPath(), $_root);
     }
 
-    public static function getDocument($_xml, $_attrs = null, $_root = 'root')
+    public static function getDocument($_xml, $_attrs = null, $_root = null, $_dtd = null)
     {
-        return parent::getDocument($_xml, $_attrs, $_root, self::getEntitiesPath());
+        return parent::getDocument(
+            $_xml,
+            $_attrs,
+            $_root,
+            $_dtd ? $_dtd : self::getEntitiesPath()
+        );
     }
 
-    public static function getDocumentForXml($_xml, $_root = 'root')
+    public static function getDocumentForXml($_xml, $_root = null, $_dtd = null)
     {
-        return parent::getDocumentForXml($_xml, $_root, self::getEntitiesPath());
+        return parent::getDocumentForXml(
+            $_xml,
+            $_root,
+            $_dtd ? $_dtd : self::getEntitiesPath()
+        );
     }
 
     /**
