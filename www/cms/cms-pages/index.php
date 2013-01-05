@@ -150,7 +150,7 @@ if ($page->IsAuthorized()) {
                     }
 
                     $filesHaveBeenChanged = false;
-                    $files = &$form->Elements['files']->GetValue();
+                    $files = $form->Elements['files']->GetValue();
 
                     if ($files && is_array($files) && isset($files[0])) {
                         foreach ($files as $file) {

@@ -81,6 +81,10 @@ if (is_null($document_id) || !App_Cms_Front_Document::Load($document_id)) {
     if ($form->UpdateStatus == FORM_UPDATED) {
         $obj->fillWithData($form->GetSqlValues());
 
+        if (!$obj->authStatusId) {
+            $obj->authStatusId = App_Cms_User::AUTH_GROUP_ALL;
+        }
+
         if (isset($form->Buttons['delete']) && $form->Buttons['delete']->IsSubmited()) {
             $obj->Delete();
             App_Cms_Back_Log::LogModule(App_Cms_Back_Log::ACT_DELETE, $obj->getId(), 'Блоки данных. Документ ' . $obj->frontDocumentId);
