@@ -11,7 +11,7 @@ if (App_Cms_Back_User::get() && !empty($_POST['f']) && is_file($_POST['f'])) {
         Ext_File::deleteDir($dir);
     }
 
-	$result = 1;
+    $result = 1;
 }
 
 header('Content-type: text/html');

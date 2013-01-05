@@ -4,46 +4,46 @@
 
 body
 {
-	font-family: Arial, sans-serif;
-	margin: 0;
-	padding: 20px;
-	background: white;
-	color: #333;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: white;
+    color: #333;
 }
 
 table
 {
-	border-collapse: collapse;
+    border-collapse: collapse;
 }
 
 td
 {
-	padding: 0;
+    padding: 0;
 }
 
 form
 {
-	margin: 0;
+    margin: 0;
 }
 
 img
 {
-	border: 0;
+    border: 0;
 }
 
 a
 {
-	color: black;
+    color: black;
 }
 
 table.debug td, table.debug th
 {
-	border: 1px dotted red;
+    border: 1px dotted red;
 }
 
 body.wait
 {
-	cursor: wait;
+    cursor: wait;
 }
 
 
@@ -53,75 +53,75 @@ body.wait
 
 td#logo
 {
-	text-align: center;
-	width: 7%;
-	vertical-align: top;
-	line-height: 0.84em;
-	white-space: nowrap;
+    text-align: center;
+    width: 7%;
+    vertical-align: top;
+    line-height: 0.84em;
+    white-space: nowrap;
 }
 
 #user-info
 {
-	float: right;
-	margin: 0 0 20px 20px;
-	font-size: 0.7em;
+    float: right;
+    margin: 0 0 20px 20px;
+    font-size: 0.7em;
 /*
     border: 1px solid #ccc;
-	padding: 1em 0.7em;
+    padding: 1em 0.7em;
 */
 }
 
 div.workmate-warning
 {
-	margin: 10px 0;
-	color: #f60;
+    margin: 10px 0;
+    color: #f60;
 }
 
 td#navigation
 {
-	width: 93%;
-	vertical-align: top;
+    width: 93%;
+    vertical-align: top;
 }
 
 td#navigation div.nav-item
 {
-	float: left;
-	font-size: 0.84em;
-/*	margin: 0 0 5px 20px;*/
-	margin-left: 20px;
+    float: left;
+    font-size: 0.84em;
+/*    margin: 0 0 5px 20px;*/
+    margin-left: 20px;
 }
 
 td#navigation div.nav-item a,
 td#navigation div.selected
 {
-	white-space: nowrap;
+    white-space: nowrap;
 }
 
 td#navigation div.selected a,
 td#navigation div.selected
 {
-	color: #36c;
-	font-weight: bold;
+    color: #36c;
+    font-weight: bold;
 }
 
 /*
 td#navigation div.group-item
 {
-	float: left;
-	font-size:0.84em;
-	margin-left:20px;
-	_line-height:1.3em;
+    float: left;
+    font-size:0.84em;
+    margin-left:20px;
+    _line-height:1.3em;
 }
 
 td#navigation div.group-item a
 {
-	text-decoration: none;
-	border-bottom: 1px dashed #000;
+    text-decoration: none;
+    border-bottom: 1px dashed #000;
 }
 
 td#navigation div.group-item a:hover
 {
-	border-bottom: none;
+    border-bottom: none;
 }
 */
 
@@ -132,14 +132,14 @@ td#navigation div.group-item a:hover
 
 div#footer
 {
-	font-size: 0.7em;
-	margin-top: 60px;
+    font-size: 0.7em;
+    margin-top: 60px;
 }
 
 div#footer,
 div#footer a
 {
-	color: #999;
+    color: #999;
 }
 
 
@@ -149,70 +149,70 @@ div#footer a
 
 #content
 {
-	margin-top: 30px;
+    margin-top: 30px;
     position: relative;
 }
 
 #title
 {
-	height: 40px;
-	margin-bottom: 20px;
+    height: 40px;
+    margin-bottom: 20px;
 }
 
 h1
 {
-	margin: 0;
-	font-size: 1.5em;
-	line-height: 1em;
+    margin: 0;
+    font-size: 1.5em;
+    line-height: 1em;
 }
 
 table.cms-sections tr td
 {
-	padding: 0 40px 20px 0;
-	vertical-align: top;
-	width: 50%;
+    padding: 0 40px 20px 0;
+    vertical-align: top;
+    width: 50%;
 }
 
 table.cms-sections tr td.last
 {
-	padding-right: 0;
+    padding-right: 0;
 }
 
 table.cms-sections tr.last td
 {
-	padding-bottom: 0;
+    padding-bottom: 0;
 }
 
 table.cms-sections tr td a.title
 {
-	font-size: 1.15em;
+    font-size: 1.15em;
 }
 
 table.cms-sections tr td div.description
 {
-	margin-top: 3px;
-	font-size: 0.84em;
+    margin-top: 3px;
+    font-size: 0.84em;
 }
 
 table.cms-sections tr td h3
 {
-	margin: 1.5em 0 1em 0;
-	font-size: 1.2em;
+    margin: 1.5em 0 1em 0;
+    font-size: 1.2em;
 }
 
 table.cms-sections tr td h3.first
 {
-	margin-top: 0;
+    margin-top: 0;
 }
 
 p.first
 {
-	margin-top: 0;
+    margin-top: 0;
 }
 
 td.text,
 p.text,
 div.text
 {
-	font-size: 0.8em;
+    font-size: 0.8em;
 }

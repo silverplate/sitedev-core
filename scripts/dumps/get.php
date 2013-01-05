@@ -9,32 +9,32 @@ $conf['dbname'] = trim($conf['path'], '/');
 $return = null;
 
 if (empty($argv[1])) {
-	$patchesDir = realpath(WD . 'scripts/dumps');
-	$dumpFile = date('Y-m-d') . '.sql';
-	$dumpFilePath = $patchesDir . '/' . $dumpFile;
-	$dumpArchivePath = $dumpFilePath . '.tgz';
+    $patchesDir = realpath(WD . 'scripts/dumps');
+    $dumpFile = date('Y-m-d') . '.sql';
+    $dumpFilePath = $patchesDir . '/' . $dumpFile;
+    $dumpArchivePath = $dumpFilePath . '.tgz';
 
 } else {
-	$dumpFilePath = $argv[1];
-	$patchesDir = dirname($dumpFilePath);
+    $dumpFilePath = $argv[1];
+    $patchesDir = dirname($dumpFilePath);
 }
 
 if (is_dir($patchesDir)) {
-	exec("mysqldump -u{$conf['user']} -p{$conf['pass']} -h{$conf['host']} {$conf['dbname']} > $dumpFilePath", $return);
+    exec("mysqldump -u{$conf['user']} -p{$conf['pass']} -h{$conf['host']} {$conf['dbname']} > $dumpFilePath", $return);
 
-	if (empty($return)) {
-	    exec("tar -C $patchesDir -czf $dumpArchivePath $dumpFile", $return);
+    if (empty($return)) {
+        exec("tar -C $patchesDir -czf $dumpArchivePath $dumpFile", $return);
 
         if (empty($return)) {
             unlink($dumpFilePath);
-    		exit($dumpArchivePath . "\n");
-    	}
-	}
+            exit($dumpArchivePath . "\n");
+        }
+    }
 
-	if (!empty($return)) {
-		exit($return . "\n");
-	}
+    if (!empty($return)) {
+        exit($return . "\n");
+    }
 
 } else {
-	exit("invalid path\n");
+    exit("invalid path\n");
 }

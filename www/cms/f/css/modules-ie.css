@@ -5,13 +5,13 @@
 /*
 body
 {
-	background-attachment: fixed;
+    background-attachment: fixed;
 }
 */
 
 #loading
 {
-	position: absolute;
-	top: expression(parseInt(document.body.scrollTop) + "px");
-	filter: alpha(opacity=85);
+    position: absolute;
+    top: expression(parseInt(document.body.scrollTop) + "px");
+    filter: alpha(opacity=85);
 }

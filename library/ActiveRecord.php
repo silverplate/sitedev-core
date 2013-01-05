@@ -39,14 +39,14 @@ abstract class Core_ActiveRecord
         return new $class;
     }
 
-	/**
-	 * @return string
-	 */
-	public static function computeTable()
-	{
-	    $name = str_replace(array('Core_', 'App_', 'Cms_'), '', get_called_class());
-	    return DB_PREFIX . Ext_String::underline($name);
-	}
+    /**
+     * @return string
+     */
+    public static function computeTable()
+    {
+        $name = str_replace(array('Core_', 'App_', 'Cms_'), '', get_called_class());
+        return DB_PREFIX . Ext_String::underline($name);
+    }
 
     /**
      * @return string
@@ -370,13 +370,13 @@ abstract class Core_ActiveRecord
         return $instances[1]->getTable();
     }
 
-	/**
-	 * @return string
-	 */
-	public function computePrimaryKeyName()
-	{
-	    return $this->getTable() . '_id';
-	}
+    /**
+     * @return string
+     */
+    public function computePrimaryKeyName()
+    {
+        return $this->getTable() . '_id';
+    }
 
     /**
      * @param string|array $_value

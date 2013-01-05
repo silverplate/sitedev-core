@@ -1,11 +1,11 @@
 function documentDataUpdateBranch(_eleId, _documentId, _dataBlockId)
 {
-	showLoadingBar();
+    showLoadingBar();
 
-	var postBody = "id=" + _documentId;
-	if (_dataBlockId) {
-	    postBody += "&data_id=" + _dataBlockId;
-	}
+    var postBody = "id=" + _documentId;
+    if (_dataBlockId) {
+        postBody += "&data_id=" + _dataBlockId;
+    }
 
     $.post(
         "http-request-data.php",
@@ -20,7 +20,7 @@ function documentDataUpdateBranch(_eleId, _documentId, _dataBlockId)
             });
 
             replaceTextareaCdata();
-			hideLoadingBar();
+            hideLoadingBar();
         }
     );
 }

@@ -26,7 +26,7 @@ if ($resultItems['items']) {
         $page->addContent($item->getBackOfficeXml());
     }
 
-	$page->addContent(Ext_Xml::node('list-navigation', null, array(
+    $page->addContent(Ext_Xml::node('list-navigation', null, array(
         'page' => $filter['page'],
         'per-page' => $filter['per_page'],
         'total' => $resultItems['total']

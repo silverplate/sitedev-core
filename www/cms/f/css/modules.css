@@ -4,48 +4,48 @@
 
 a.add-element
 {
-	font-size: 0.84em;
-	color: black;
-	text-decoration: underline;
-	cursor: pointer;
-	display: block;
-	margin-top: 3px;
+    font-size: 0.84em;
+    color: black;
+    text-decoration: underline;
+    cursor: pointer;
+    display: block;
+    margin-top: 3px;
 }
 
 a.selected,
 span.selected
 {
-	color: #36c;
+    color: #36c;
 }
 
 label.hidden,
 a.hidden,
 span.hidden
 {
-	color: #999;
+    color: #999;
 }
 
 a.active,
 span.active
 {
-	color: green;
+    color: green;
 }
 
 a.denied,
 span.denied
 {
-	color: red;
+    color: red;
 }
 
 a.visible,
 span.visible
 {
-	color: black;
+    color: black;
 }
 
 table.module
 {
-	width: 100%;
+    width: 100%;
 }
 
 table.module tr td.title,
@@ -53,23 +53,23 @@ table.module tr td.subtitle,
 table.module tr td.navigation,
 table.module tr td.content
 {
-	vertical-align: top;
+    vertical-align: top;
 }
 
 table.module tr td.title
 {
-	padding-right: 40px;
+    padding-right: 40px;
 }
 
 table.module tr td.navigation
 {
-	padding: 20px 40px 0 0;
-	width: 30%;
+    padding: 20px 40px 0 0;
+    width: 30%;
 }
 
 table.module tr td.subtitle
 {
-	width: 70%;
+    width: 70%;
 }
 
 table.module tr td.subtitle h1
@@ -80,15 +80,15 @@ table.module tr td.subtitle h1
 
 table.module tr td.content
 {
-	padding-top: 20px;
-	width: 70%;
+    padding-top: 20px;
+    width: 70%;
 }
 
 .function
 {
-	cursor: pointer;
-	border-bottom-width: 1px;
-	border-bottom-style: dashed;
+    cursor: pointer;
+    border-bottom-width: 1px;
+    border-bottom-style: dashed;
 }
 
 div.error
@@ -108,32 +108,32 @@ div.success
 
 ul#filter-content
 {
-	font-size: 0.84em;
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
+    font-size: 0.84em;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 ul#filter-content li
 {
-	font-size: 0.84em;
-	margin-bottom: 5px;
-	line-height: 1.3em;
+    font-size: 0.84em;
+    margin-bottom: 5px;
+    line-height: 1.3em;
 }
 
 ul#filter-content.sortable li
 {
-	cursor: move;
+    cursor: move;
 }
 
 ul#filter-content.sortable li a
 {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 span.sort-only
 {
-	font-style: italic;
+    font-style: italic;
 }
 
 
@@ -143,29 +143,29 @@ span.sort-only
 
 #document-data-blocks
 {
-	font-size: 0.84em;
+    font-size: 0.84em;
 }
 
 a.new-window-link
 {
-	text-decoration: underline;
-	cursor: pointer;
-	display: block;
-	float: left;
-	clear: left;
-	margin: 0 0 3px 0;
+    text-decoration: underline;
+    cursor: pointer;
+    display: block;
+    float: left;
+    clear: left;
+    margin: 0 0 3px 0;
 /*
-	padding-right: 17px;
-	background: url('/cms/f/icon-window.gif') no-repeat right;
+    padding-right: 17px;
+    background: url('/cms/f/icon-window.gif') no-repeat right;
 */
 }
 
 div.document-data
 {
-	clear: both;
-	width: 90%;
-	margin-bottom: 15px;
-	cursor: move;
+    clear: both;
+    width: 90%;
+    margin-bottom: 15px;
+    cursor: move;
 }
 
 
@@ -175,15 +175,15 @@ div.document-data
 
 #loading
 {
-	display: none;
-	position: fixed;
-	width: 220px;
-	height: 30px;
-	z-index: 999;
-	opacity: 0.85;
-	background: url('/cms/f/loading.gif') no-repeat;
-	left: 0;
-	top: 0;
+    display: none;
+    position: fixed;
+    width: 220px;
+    height: 30px;
+    z-index: 999;
+    opacity: 0.85;
+    background: url('/cms/f/loading.gif') no-repeat;
+    left: 0;
+    top: 0;
 }
 
 
@@ -193,117 +193,117 @@ div.document-data
 
 table.date-filter td
 {
-	padding-bottom: 5px;
+    padding-bottom: 5px;
 }
 
 table.date-filter td.label
 {
-	font-size: 0.7em;
-	padding-right: 10px;
+    font-size: 0.7em;
+    padding-right: 10px;
 }
 
 table.date-filter-periods td
 {
-	font-size: 0.7em;
-	padding-right: 10px;
+    font-size: 0.7em;
+    padding-right: 10px;
 }
 
 table.date-filter-periods a
 {
-	text-decoration: none;
-	border-bottom: 1px dashed black;
-	cursor: pointer;
-	display: block;
+    text-decoration: none;
+    border-bottom: 1px dashed black;
+    cursor: pointer;
+    display: block;
 }
 
 div#filter-link
 {
-	background-color: #36c;
-	padding: 5px 10px;
-	float: left;
-	margin-bottom: 20px;
+    background-color: #36c;
+    padding: 5px 10px;
+    float: left;
+    margin-bottom: 20px;
 }
 
 div#filter-link a
 {
-	font-size: 0.7em;
-	text-decoration: none;
-	cursor: pointer;
-	border-bottom: 1px dashed white;
-	color: white;
-	margin-bottom: 20px;
+    font-size: 0.7em;
+    text-decoration: none;
+    cursor: pointer;
+    border-bottom: 1px dashed white;
+    color: white;
+    margin-bottom: 20px;
 }
 
 form#filter
 {
-	display: none;
-	border: 1px solid #ccc;
-	float: left;
-	padding: 10px;
-	margin-bottom: 20px;
+    display: none;
+    border: 1px solid #ccc;
+    float: left;
+    padding: 10px;
+    margin-bottom: 20px;
 }
 
 div.filter-close
 {
-	text-align: right;
-	margin: -5px -5px 5px 5px;
-	line-height: 0.5em;
+    text-align: right;
+    margin: -5px -5px 5px 5px;
+    line-height: 0.5em;
 }
 
 div.filter-close a
 {
-	cursor: pointer;
-	font-weight: bold;
-	color: #ccc;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ccc;
 }
 
 html>body div.filter-close a
 {
-	font-weight: normal;
+    font-weight: normal;
 }
 
 div.filter-input
 {
-	margin: 10px 0;
-	font-size: 0.84em;
+    margin: 10px 0;
+    font-size: 0.84em;
 }
 
 div.filter-input table.chooser-item td.chooser-label
 {
-	font-size: 0.7em;
+    font-size: 0.7em;
 }
 
 div.filter-input input.string
 {
-	display: block;
-	width: 100%;
+    display: block;
+    width: 100%;
 }
 
 div.filter-input table.chooser-item
 {
-	width: 100%;
-	margin-bottom: 0;
+    width: 100%;
+    margin-bottom: 0;
 }
 
 div.filter-input table.chooser-item table.chooser-item
 {
-	margin-top: 5px;
+    margin-top: 5px;
 }
 
 div.filter-input td.chooser-label
 {
-	width: 99%;
+    width: 99%;
 }
 
 div.filter-input label.filter-name
 {
-	font-size: 1.2em;
-	border-bottom: 1px dashed black;
+    font-size: 1.2em;
+    border-bottom: 1px dashed black;
 }
 
 #filter-content
 {
-	font-size: 0.84em;
+    font-size: 0.84em;
 }
 
 
@@ -313,23 +313,23 @@ div.filter-input label.filter-name
 
 #list-navigation
 {
-	float:left;
-	border: 1px solid #ddd;
-	margin: 2em 0;
-	padding: 0.5em;
-	font-size: 0.84em;
-	clear: both;
+    float:left;
+    border: 1px solid #ddd;
+    margin: 2em 0;
+    padding: 0.5em;
+    font-size: 0.84em;
+    clear: both;
 }
 
 .list-navigation-selected
 {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .list-navigation-spacer
 {
-	margin: 0 0.5em;
-	color: grey;
+    margin: 0 0.5em;
+    color: grey;
 }
 
 
@@ -339,35 +339,35 @@ div.filter-input label.filter-name
 
 table.back-logs
 {
-	width: 100%;
+    width: 100%;
 }
 
 table.back-logs td
 {
-	vertical-align: top;
-	font-size: 0.84em;
-	padding-bottom: 1em;
+    vertical-align: top;
+    font-size: 0.84em;
+    padding-bottom: 1em;
 }
 
 table.back-logs td.date
 {
-	padding-right: 2em;
-	width: 5%;
-	font-size: 0.7em;
-	white-space: nowrap;
+    padding-right: 2em;
+    width: 5%;
+    font-size: 0.7em;
+    white-space: nowrap;
 }
 
 table.back-logs a.section
 {
-	cursor: pointer;
-	text-decoration: none;
-	border-bottom: 1px dashed black;
+    cursor: pointer;
+    text-decoration: none;
+    border-bottom: 1px dashed black;
 }
 
 table.back-logs div.section
 {
-	display: none;
-	padding: 0.5em 2em 1em 2em;
+    display: none;
+    padding: 0.5em 2em 1em 2em;
 }
 
 table.back-logs .action-1,
@@ -375,20 +375,20 @@ table.back-logs .action-2,
 table.back-logs .action-6,
 table.back-logs .action-7
 {
-	color: grey;
+    color: grey;
 }
 
 table.back-logs .action-3
 {
-	color: green;
+    color: green;
 }
 
 table.back-logs .action-4
 {
-	color: orange;
+    color: orange;
 }
 
 table.back-logs .action-5
 {
-	color: red;
+    color: red;
 }
