@@ -8,6 +8,142 @@ abstract class Core_Cms_Back_Office
     public static $uriStartsWith = '/cms/';
 
     /**
+     * Авторизация в бэк-офисе системы управления.
+     */
+    public static function auth()
+    {
+        if (
+            key_exists('auth_submit', $_POST) &&
+            key_exists('auth_login', $_POST) &&
+            key_exists('auth_password', $_POST)
+        ) {
+            $user = App_Cms_Back_User::auth(
+                $_POST['auth_login'],
+                $_POST['auth_password']
+            );
+
+            if ($user) {
+                App_Cms_Session::get()->login(
+                    $user->getId(),
+                    !empty($_POST['auth_is_ip_match']),
+                    empty($_POST['auth_life_span']) ? null : (int) $_POST['auth_life_span'],
+                    empty($_POST['auth_timeout']) ? null : (int) $_POST['auth_timeout'],
+                    empty($_POST['auth_is_remember_me']) ? null : time() + 60 * 60 * 24 * 356
+                );
+
+                App_Cms_Session::get()->setParam(
+                    App_Cms_Session::ACT_PARAM_NEXT,
+                    App_Cms_Session::ACT_LOGIN
+                );
+
+                App_Cms_Back_Log::log(
+                    App_Cms_Back_Log::ACT_LOGIN,
+                    array('user' => $user)
+                );
+
+            } else {
+                App_Cms_Session::get()->setParam(
+                    App_Cms_Session::ACT_PARAM_NEXT,
+                    App_Cms_Session::ACT_LOGIN_ERROR
+                );
+            }
+
+            if (empty($_GET['id'])) reload();
+            else                    reload('?id=' . $_GET['id']);
+
+        } else if (key_exists('auth_reminder_submit', $_POST)) {
+            $users = empty($_POST['auth_email']) ? false : App_Cms_Back_User::getList(
+                array('email' => $_POST['auth_email'], 'status_id' => 1),
+                array('limit' => 1)
+            );
+
+            if ($users) {
+                $user = current($users);
+                App_Cms_Session::get()->setParam(
+                    App_Cms_Session::ACT_PARAM_NEXT,
+                    App_Cms_Session::ACT_REMIND_PWD
+                );
+
+                App_Cms_Back_Log::log(
+                    App_Cms_Back_Log::ACT_REMIND_PWD,
+                    array('user' => $user)
+                );
+
+                $user->remindPassword();
+
+            } else {
+                App_Cms_Session::get()->setParam(
+                    App_Cms_Session::ACT_PARAM_NEXT,
+                    App_Cms_Session::ACT_REMIND_PWD_ERROR
+                );
+            }
+
+            reload();
+
+        } else if (
+            key_exists('r', $_GET) ||
+           (key_exists('e', $_GET) && App_Cms_Session::get()->isLoggedIn())
+        ) {
+            if (App_Cms_Session::get()->isLoggedIn()) {
+                App_Cms_Back_Log::log(
+                    App_Cms_Back_Log::ACT_LOGOUT,
+                    array('user' => App_Cms_Back_User::getById(
+                        App_Cms_Session::get()->getUserId()
+                    ))
+                );
+                App_Cms_Session::get()->logout();
+            }
+
+            if (key_exists('r', $_GET)) {
+                $user = empty($_GET['r'])
+                      ? false
+                      : App_Cms_Back_User::load($_GET['r'], 'reminder_key');
+
+                if ($user && $user->changePassword() === 0) {
+                    App_Cms_Session::get()->setParam(
+                        App_Cms_Session::ACT_PARAM_NEXT,
+                        App_Cms_Session::ACT_CHANGE_PWD
+                    );
+
+                    App_Cms_Back_Log::log(
+                        App_Cms_Back_Log::ACT_CHANGE_PWD,
+                        array('user' => $user)
+                    );
+
+                } else {
+                    App_Cms_Session::get()->setParam(
+                        App_Cms_Session::ACT_PARAM_NEXT,
+                        App_Cms_Session::ACT_CHANGE_PWD_ERROR
+                    );
+                }
+
+            } else {
+                App_Cms_Session::get()->setParam(
+                    App_Cms_Session::ACT_PARAM_NEXT,
+                    App_Cms_Session::ACT_LOGOUT
+                );
+            }
+
+            reload();
+
+        } else {
+            $param = App_Cms_Session::get()->getParam(
+                App_Cms_Session::ACT_PARAM_NEXT
+            );
+
+            App_Cms_Session::get()->setParam(
+                App_Cms_Session::ACT_PARAM,
+                $param ? $param : App_Cms_Session::ACT_START
+            );
+
+            App_Cms_Session::get()->setParam(
+                App_Cms_Session::ACT_PARAM_NEXT,
+                App_Cms_Session::ACT_CONTINUE
+            );
+        }
+    }
+
+    /**
      * Сортировка списка.
      *
      * @param string $_class Название класса объекты, которого нужно сортировать.
