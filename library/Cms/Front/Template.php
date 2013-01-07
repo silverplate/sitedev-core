@@ -7,7 +7,7 @@ abstract class Core_Cms_Front_Template extends App_Model
      */
     protected $_file;
 
-    protected $_originalFilename;
+    protected $_originalFilePath;
 
     public function __construct()
     {
@@ -37,11 +37,8 @@ abstract class Core_Cms_Front_Template extends App_Model
 
     public function update()
     {
-        if ($this->filename != $this->_originalFilename) {
-            App_File::moveFile(
-                $this->getFolder() . '/' . $this->_originalFilename,
-                $this->getFilePath()
-            );
+        if ($this->getFilePath() != $this->_originalFilePath) {
+            App_File::moveFile($this->_originalFilePath, $this->getFilePath());
         }
 
         return parent::update();
@@ -51,8 +48,8 @@ abstract class Core_Cms_Front_Template extends App_Model
     {
         parent::fillWithData($_data);
 
-        if (!isset($this->_originalFilename)) {
-            $this->_originalFilename = $this->filename;
+        if (!isset($this->_originalFilePath)) {
+            $this->_originalFilePath = $this->getFilePath();
         }
     }
 

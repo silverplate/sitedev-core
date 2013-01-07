@@ -23,13 +23,10 @@ if ($page->isAuthorized()) {
 
     if ($obj) {
         $form = App_Cms_Ext_Form::load('form.xml');
+        $form->fillWithObject($obj);
 
         foreach (App_Cms_Front_Navigation::getTypes() as $id => $params) {
             $form->type->addOption($id, Ext_String::toLower($params['title']));
-        }
-
-        if ($obj->id) {
-            $form->fillWithObject($obj);
         }
 
         $form->run();

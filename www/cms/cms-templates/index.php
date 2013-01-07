@@ -23,9 +23,9 @@ if ($page->isAuthorized()) {
 
     if ($obj) {
         $form = App_Cms_Ext_Form::load('form.xml');
+        $form->fillWithObject($obj);
 
         if ($obj->id) {
-            $form->fillWithObject($obj);
             $form->content = $obj->getContent();
         }
 
@@ -59,7 +59,7 @@ if ($page->isAuthorized()) {
 
                     if (
                         $form->isSubmited('update') ||
-                        (!is_file($obj->getFilename()) && $form->content != '')
+                        (!is_file($obj->getFilePath() && $form->content != ''))
                     ) {
                         $obj->saveContent($form->content);
                     }

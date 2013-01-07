@@ -23,13 +23,13 @@ if ($page->isAuthorized()) {
 
     if ($obj) {
         $form = App_Cms_Ext_Form::load('form.xml');
+        $form->fillWithObject($obj);
 
         foreach (App_Cms_Back_User::getList() as $item) {
             $form->users->addOption($item->id, $item->getTitle());
         }
 
         if ($obj->id) {
-            $form->fillWithObject($obj);
             $form->users->setValue($obj->getLinkIds('users'));
         }
 
