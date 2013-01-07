@@ -28,7 +28,10 @@ if ($page->isAuthorized()) {
             $form->type->addOption($id, Ext_String::toLower($params['title']));
         }
 
-        $form->fillWithObject($obj);
+        if ($obj->id) {
+            $form->fillWithObject($obj);
+        }
+
         $form->run();
 
         if ($form->isSubmited() && $form->isSuccess()) {

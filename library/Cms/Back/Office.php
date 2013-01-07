@@ -7,6 +7,11 @@ abstract class Core_Cms_Back_Office
      */
     public static $uriStartsWith = '/cms/';
 
+    public static function bootstrap()
+    {
+        self::auth();
+    }
+
     /**
      * Авторизация в бэк-офисе системы управления.
      */
@@ -151,10 +156,9 @@ abstract class Core_Cms_Back_Office
     public static function ajaxSort($_class)
     {
         if (!empty($_POST['items'])) {
-            $tmp = new $_class;
-            $key = $_class->getPrimaryKeyName();
-
+            $key = $_class::getPri();
             $newSortOrder = array();
+
             for ($i = 0; $i < count($_POST['items']); $i++) {
                 $newSortOrder[$_POST['items'][$i]] = $i;
             }
@@ -174,7 +178,11 @@ abstract class Core_Cms_Back_Office
                 }
             }
 
-            App_Cms_Back_Log::logModule(App_Cms_Back_Log::ACT_MODIFY, null, 'Сортировка');
+            App_Cms_Back_Log::logModule(
+                App_Cms_Back_Log::ACT_MODIFY,
+                null,
+                'Сортировка'
+            );
         }
     }
 
@@ -304,10 +312,5 @@ abstract class Core_Cms_Back_Office
         }
 
         return $result;
-    }
-
-    public static function bootstrap()
-    {
-        self::auth();
     }
 }
