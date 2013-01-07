@@ -84,9 +84,12 @@ abstract class Core_Cms_Front_Template extends App_Model
              : false;
     }
 
-    public function setContent($_content)
+    public function saveContent($_content)
     {
-        App_File::write($this->getFilePath(), $_content);
+        $content = str_replace(array("\r\n", "\r"), "\n", $_content);
+        $content = preg_replace('~[/n]{3,}~', "\n\n", $content);
+
+        Ext_File::write($this->getFilePath(), $content);
     }
 
     public function getBackOfficeXml($_xml = array(), $_attrs = array())
@@ -98,5 +101,18 @@ abstract class Core_Cms_Front_Template extends App_Model
         }
 
         return parent::getBackOfficeXml($_xml, $attrs);
+    }
+
+    public function checkUnique()
+    {
+        $where = array(
+            'filename' => $this->filename
+        );
+
+        if ($this->id) {
+            $where[] = $this->getPrimaryKeyWhereNot();
+        }
+
+        return 0 == count(self::getList($where, array('limit' => 1)));
     }
 }

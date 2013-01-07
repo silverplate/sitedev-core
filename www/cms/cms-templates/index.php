@@ -5,129 +5,136 @@ require_once '../prepend.php';
 $page = new App_Cms_Back_Page();
 
 if ($page->isAuthorized()) {
-    if (isset($_GET['id'])) {
+
+    // Инициализация объекта
+
+    $obj = null;
+
+    if (!empty($_GET['id'])) {
         $obj = App_Cms_Front_Template::getById($_GET['id']);
-        if (!$obj) {
-            unset($obj);
-        }
+        if (!$obj) reload();
 
     } else if (key_exists('add', $_GET)) {
         $obj = new App_Cms_Front_Template();
     }
 
-    if (isset($obj)) {
-        $form = new App_Form();
-        $form->load('form.xml');
 
-        if ($obj->getId()) {
-            $form->fillFields($obj->toArray());
-            $form->Elements['content']->setValue($obj->getContent());
+    // Форма редактирования или добавления объекта
 
-            $form->createButton('Сохранить', 'update');
-            $form->createButton('Удалить', 'delete');
+    if ($obj) {
+        $form = App_Cms_Ext_Form::load('form.xml');
 
-        } else {
-            $form->createButton('Сохранить', 'insert');
+        if ($obj->id) {
+            $form->fillWithObject($obj);
+            $form->content = $obj->getContent();
         }
 
-        $form->execute();
+        $form->run();
 
-        if ($form->UpdateStatus == FORM_UPDATED) {
-            $obj->fillWithData($form->getSqlValues());
-
-            if (
-                isset($form->Buttons['delete']) &&
-                $form->Buttons['delete']->isSubmited()
-            ) {
+        if ($form->isSubmited() && $form->isSuccess()) {
+            if ($form->isSubmited('delete')) {
                 $obj->delete();
-                App_Cms_Back_Log::LogModule(App_Cms_Back_Log::ACT_DELETE, $obj->getId(), $obj->getTitle());
-                goToUrl($page->getUrl('path') . '?DEL');
 
-            } else if (
-                (isset($form->Buttons['insert']) && $form->Buttons['insert']->isSubmited()) ||
-                (isset($form->Buttons['update']) && $form->Buttons['update']->isSubmited())
-            ) {
-                if (App_Cms_Front_Template::isUnique('filename', $obj->filename, $obj->getId())) {
+                App_Cms_Back_Log::logModule(
+                    App_Cms_Back_Log::ACT_DELETE,
+                    $obj->id,
+                    $obj->getTitle()
+                );
+
+                App_Cms_Ext_Form::saveCookieStatus();
+
+                redirect($page->getUrl('path'));
+
+            } else {
+                $obj->fillWithData($form->toArray());
+
+                if ($obj->checkUnique()) {
+                    $obj->save();
+
+                    App_Cms_Back_Log::logModule(
+                        $form->isSubmited('insert') ? App_Cms_Back_Log::ACT_CREATE : App_Cms_Back_Log::ACT_MODIFY,
+                        $obj->id,
+                        $obj->getTitle()
+                    );
+
                     if (
-                        isset($form->Buttons['insert']) &&
-                        $form->Buttons['insert']->isSubmited()
+                        $form->isSubmited('update') ||
+                        (!is_file($obj->getFilename()) && $form->content != '')
                     ) {
-                        $obj->create();
-
-                        $content = $form->Elements['content']->getValue();
-                        if (!$obj->getFile() || $content != '') {
-                            $obj->setContent($content);
-                        }
-
-                        App_Cms_Back_Log::LogModule(App_Cms_Back_Log::ACT_CREATE, $obj->GetId(), $obj->getTitle());
-
-                    } else {
-                        $obj->update();
-                        $obj->setContent($form->Elements['content']->getValue());
-
-                        App_Cms_Back_Log::LogModule(App_Cms_Back_Log::ACT_MODIFY, $obj->getId(), $obj->getTitle());
+                        $obj->saveContent($form->content);
                     }
 
                     if ($obj->isDocumentMain) {
                         App_Db::get()->execute(
-                            'UPDATE ' . App_Cms_Front_Template::getTbl() . ' ' .
-                            'SET is_document_main = 0 ' .
-                            'WHERE is_document_main = 1 AND ' . App_Cms_Front_Template::getPri() . ' != ' . $obj->getSqlId()
+                            'UPDATE ' . $obj->getTable() .
+                            ' SET is_document_main = 0' .
+                            ' WHERE is_document_main = 1 AND ' .
+                            $obj->getPrimaryKeyWhereNot()
                         );
                     }
 
-                    reload('?id=' . $obj->getId() . '&OK');
+                    App_Cms_Ext_Form::saveCookieStatus();
+
+                    reload('?id=' . $obj->id);
 
                 } else {
-                    $form->UpdateStatus = FORM_ERROR;
-                    $form->Elements['filename']->setUpdateType(FIELD_ERROR_EXIST);
-                    $form->Elements['filename']->setErrorValue($form->Elements['filename']->getValue());
-                    $form->Elements['filename']->setValue($obj->filename);
+                    $form->setUpdateStatus(App_Cms_Ext_Form::ERROR);
+                    $form->filename->setUpdateStatus(Ext_Form_Element::ERROR_EXIST);
                 }
             }
-
-        } else if ($form->UpdateStatus == FORM_ERROR) {
-            $page->setUpdateStatus('error');
-
-        } else if (isset($_GET['OK'])) {
-            $page->setUpdateStatus('success');
-
         }
-
-    } else if (isset($_GET['DEL'])) {
-        $page->setUpdateStatus('success', 'Шаблон удален');
     }
 
-    $listXml = '<local-navigation>';
+
+    // Статус обработки формы
+
+    $formStatusXml = '';
+
+    if (!isset($form) || !$form->isSubmited()) {
+        $formStatusXml = App_Cms_Ext_Form::getCookieStatusXml(
+            empty($obj) ? 'Выполнено' : 'Данные сохранены'
+        );
+
+        App_Cms_Ext_Form::clearCookieStatus();
+    }
+
+
+    // Внутренняя навигация
+
+    $listXml = '';
 
     foreach (App_Cms_Front_Template::getList() as $item) {
         $listXml .= $item->getBackOfficeXml();
     }
 
-    $listXml .= '</local-navigation>';
+    $listXml = Ext_Xml::node('local-navigation', $listXml);
 
-    if (isset($obj)) {
-        $module = '<module type="simple" is-able-to-add="true"';
 
-        if ($obj->getId()) {
-            $module .= ' id="' . $obj->getId() . '">';
-            $module .= '<title><![CDATA[' . $obj->getTitle() . ']]></title>';
+    // XML модуля
 
-        } else {
-            $module .= ' is-new="true">';
-            $module .= '><title>Добавление</title>';
+    $xml = $listXml . $formStatusXml;
+    $attrs = array('type' => 'simple', 'is-able-to-add' => 'true');
+
+    if (empty($obj)) {
+        if (App_Cms_Back_Section::get()->description) {
+            $xml .= Ext_Xml::notEmptyNode('content', Ext_Xml::cdata(
+                'html',
+                '<p class="first">' . App_Cms_Back_Section::get()->description . '</p>'
+            ));
         }
 
-        $module .= $form->getXml();
-        $module .= $listXml;
-        $module .= '</module>';
-
-        $page->addContent($module);
+    } else if ($obj->getId()) {
+        $attrs['id'] = $obj->id;
+        $xml .= Ext_Xml::cdata('title', $obj->getTitle());
+        $xml .= $form->getXml();
 
     } else {
-        $about = App_Cms_Back_Section::get()->description ? '<p class="first">' . App_Cms_Back_Section::get()->description . '</p>' : '';
-        $page->addContent('<module type="simple" is-able-to-add="true">' . $listXml . '<content><html><![CDATA[' . $about . ']]></html></content></module>');
+        $attrs['is-new'] = 1;
+        $xml .= Ext_Xml::cdata('title', 'Добавление');
+        $xml .= $form->getXml();
     }
+
+    $page->addContent(Ext_Xml::node('module', $xml, $attrs));
 }
 
 $page->output();
