@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `~db prefix~back_user` (
     `status_id` TINYINT UNSIGNED NOT NULL DEFAULT 1,
     `login` VARCHAR(255) NOT NULL,
     `passwd` VARCHAR(255) NOT NULL,
-    `email` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) NULL,
     `title` VARCHAR(255) NULL,
     `ip_restriction` TEXT NULL,
     `reminder_key` CHAR(30) NULL,

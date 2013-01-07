@@ -26,9 +26,13 @@ abstract class Core_Cms_Back_User extends App_Model
         $this->addAttr('reminder_date', 'datetime');
     }
 
-    public static function checkUnique($_value, $_excludeId = null)
+    public function checkUnique()
     {
-        return self::isUnique('login', $_value, $_excludeId);
+        return self::isUnique(
+            'login',
+            $this->login,
+            $this->id ? $this->id : null
+        );
     }
 
     /**

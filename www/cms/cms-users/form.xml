@@ -4,7 +4,8 @@
 <form>
     <element name="login" type="login" is-required="true">
         <label>Логин</label>
-        <description>Можно использовать латинские буквы, цифры и&nbsp;знак подчеркивания.</description>
+        <description>Можно использовать латинские буквы,
+        цифры и&nbsp;знак подчеркивания.</description>
     </element>
 
     <element name="passwd" type="password">
@@ -13,10 +14,9 @@
 
     <element name="status_id" type="boolean">
         <label>Доступ разрешён</label>
-        <value>1</value>
     </element>
 
-    <element name="ip_restriction" type="short_text">
+    <element name="ip_restriction" type="text">
         <label>Разрешённые IP-адреса</label>
     </element>
 

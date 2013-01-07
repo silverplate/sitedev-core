@@ -30,13 +30,11 @@ abstract class Core_Cms_Back_Section extends App_Model
 
     public function checkUnique()
     {
-        $where = array('uri' => $this->uri);
-
-        if ($this->id) {
-            $where[] = $this->getPrimaryKeyWhereNot();
-        }
-
-        return 0 == count(self::getList($where, array('limit' => 1)));
+        return self::isUnique(
+            'uri',
+            $this->uri,
+            $this->id ? $this->id : null
+        );
     }
 
     public static function get()

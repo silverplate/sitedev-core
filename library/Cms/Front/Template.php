@@ -102,14 +102,10 @@ abstract class Core_Cms_Front_Template extends App_Model
 
     public function checkUnique()
     {
-        $where = array(
-            'filename' => $this->filename
+        return self::isUnique(
+            'filename',
+            $this->filename,
+            $this->id ? $this->id : null
         );
-
-        if ($this->id) {
-            $where[] = $this->getPrimaryKeyWhereNot();
-        }
-
-        return 0 == count(self::getList($where, array('limit' => 1)));
     }
 }

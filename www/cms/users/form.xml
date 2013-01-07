@@ -20,6 +20,5 @@
 
     <element name="status_id" type="boolean">
         <label>Доступ разрешён</label>
-        <value>1</value>
     </element>
 </form>
