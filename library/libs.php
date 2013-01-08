@@ -269,13 +269,7 @@ function redirect($_url)
 
 function reload($_append = null)
 {
-//     $uri = empty($_SERVER['REQUEST_URI'])
-//          ? './'
-//          : preg_replace('/\?.*$/', '', $_SERVER['REQUEST_URI']);
-//
-//     goToUrl($uri . $_append);
-
-    goToUrl('./' . $_append);
+    goToUrl(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . $_append);
 }
 
 function documentNotFound()
