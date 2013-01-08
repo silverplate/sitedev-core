@@ -260,10 +260,10 @@ abstract class Core_Cms_Back_Office
                 $obj->id = 0;
             }
 
-            if ($obj->hasAttribute('title')) {
+            if ($obj->hasAttr('title')) {
                 $obj->title = 'Нет';
 
-            } else if ($obj->hasAttribute('name')) {
+            } else if ($obj->hasAttr('name')) {
                 $obj->name = 'Нет';
             }
 
@@ -297,10 +297,10 @@ abstract class Core_Cms_Back_Office
         foreach ($list as $item) {
             if (
                 $item->isChildren($_excludeId) &&
-                in_array($item->getId(), $gOpenBranches)
+                in_array($item->id, $gOpenBranches)
             ) {
                 $result .= $item->getBackOfficeXml(
-                    self::ajaxGetBranchXml($_className, $item->getId(), $_excludeId)
+                    self::ajaxGetBranchXml($_className, $item->id, $_excludeId)
                 );
 
             } else if ($item->isChildren($_excludeId)) {

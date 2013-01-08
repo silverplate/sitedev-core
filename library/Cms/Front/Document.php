@@ -311,17 +311,22 @@ abstract class Core_Cms_Front_Document extends App_Model
         return $this->_template;
     }
 
-    public static function checkUnique($_parentId, $_folder, $_exceptId = null)
+    public function checkUnique()
     {
         $where = array(
-            'parent_id' => $_parentId,
-            'folder' => $_folder
+            'parent_id' => $this->parentId,
+            'folder' => $this->folder
         );
 
-        if ($_exceptId) {
-            $where[] = self::getPri() . ' != ' . App_Db::escape($_exceptId);
+        if ($this->id) {
+            $where[] = $this->getPrimaryKeyWhereNot();
         }
 
         return 0 == count(self::getList($where, array('limit' => 1)));
+    }
+
+    public function checkRoot()
+    {
+        return $this->folder && ($this->folder != '/' || !$this->parentId);
     }
 }

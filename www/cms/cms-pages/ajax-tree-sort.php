@@ -1,6 +1,6 @@
 <?php
 
-require('../prepend.php');
+require_once '../prepend.php';
 
 global $gCustomUrls;
 $data = $_POST;
@@ -15,6 +15,7 @@ if (!empty($data['branches'])) {
 
         for ($j = 0; $j < count($data['branch_' . $i]); $j++) {
             $id = $data['branch_' . $i][$j];
+
             if (!isset($objects[$id])) {
                 return false;
             }
@@ -39,8 +40,7 @@ if (!empty($data['branches'])) {
 
     foreach ($objects as $i) {
         if (isset($parent[$i->getId()])) {
-            $isRoot = $i->folder != '/'
-                   || $parent[$i->getId()] == '';
+            $isRoot = $i->folder != '/' || $parent[$i->getId()] == '';
 
             $isUnique = App_Cms_Front_Document::checkUnique(
                 $parent[$i->getId()],

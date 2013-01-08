@@ -6,7 +6,7 @@ function getRandom()
 function openWindow(_url, _width, _height, _name)
 {
     var w = _width ? _width : 600;
-    var h = _height ? _height : 640;
+    var h = _height ? _height : 660;
 
     window.open(
         _url,

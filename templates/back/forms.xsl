@@ -187,9 +187,11 @@
                             </label>
                         </xsl:otherwise>
                     </xsl:choose>
-
-                    <xsl:if test="description/text() and (@type = 'image' or @type = 'text' or @type = 'large_text' or string-length(description/text()) &lt;= 50) and not(@type = 'adding_files')">
-                        <div class="description"><xsl:value-of select="description/text()" disable-output-escaping="yes" /></div>
+                    
+                    <xsl:if test="label-description">
+                        <div class="description">
+                            <xsl:value-of select="label-description" disable-output-escaping="yes" />
+                        </div>
                     </xsl:if>
                 </td>
             </xsl:if>
@@ -241,17 +243,9 @@
                     </div>
                 </xsl:if>
 
-                <xsl:if test="
-                    description and
-                    @type != 'image' and
-                    @type != 'text' and
-                    @type != 'large_text'
-                    and string-length(description/text()) > 50 and
-                    not(@type = 'adding_files')
-                ">
+                <xsl:if test="input-description">
                     <div class="description">
-                        <xsl:value-of select="description"
-                                      disable-output-escaping="yes" />
+                        <xsl:value-of select="input-description" disable-output-escaping="yes" />
                     </div>
                 </xsl:if>
             </td>
@@ -918,11 +912,14 @@
                 </div>
             </xsl:when>
 
-            <xsl:when test="@type = 'adding_files'">
+            <xsl:when test="@type = 'files'">
                 <div>
-                    <xsl:if test="description">
-                        <div class="add-files-description"><xsl:value-of select="description/text()" disable-output-escaping="yes" /></div>
-                    </xsl:if>
+                    <!-- <xsl:if test="description">
+                        <div class="add-files-description">
+                            <xsl:value-of select="description/text()" disable-output-escaping="yes" />
+                        </div>
+                    </xsl:if> -->
+
                     <div id="add-form-files-{@name}" class="add-files" onclick="addFormFileInputs('{@name}');">Добавить</div>
                 </div>
 

@@ -37,6 +37,9 @@ abstract class Core_Cms_Back_Section extends App_Model
         );
     }
 
+    /**
+     * @return App_Cms_Back_Section|false
+     */
     public static function get()
     {
         if (!isset(self::$_current)) {
@@ -46,6 +49,9 @@ abstract class Core_Cms_Back_Section extends App_Model
         return self::$_current;
     }
 
+    /**
+     * @return App_Cms_Back_Section|false
+     */
     public static function compute()
     {
         $url = parse_url($_SERVER['REQUEST_URI']);

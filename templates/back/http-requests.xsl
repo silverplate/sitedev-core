@@ -57,7 +57,15 @@
                     <xsl:for-each select="@*[name() = 'xml:lang' or name() = 'prefix']"><xsl:value-of select="concat(., '&nbsp;')" /></xsl:for-each>
                     <label for="{generate-id()}">
                         <xsl:if test="not(@is-published)"><xsl:attribute name="class">hidden</xsl:attribute></xsl:if>
-                        <xsl:value-of select="title/text()" disable-output-escaping="yes" />
+                            
+                        <xsl:choose>
+                            <xsl:when test="title-compact">
+                                <xsl:value-of select="title-compact" disable-output-escaping="yes" />
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="title" disable-output-escaping="yes" />
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </label>
                 </td>
             </tr>
@@ -95,7 +103,15 @@
                                 <xsl:when test="/node()/content/selected/text() = @id"><xsl:attribute name="class">selected</xsl:attribute></xsl:when>
                                 <xsl:when test="not(@is-published)"><xsl:attribute name="class">hidden</xsl:attribute></xsl:when>
                             </xsl:choose>
-                            <xsl:value-of select="title/text()" disable-output-escaping="yes" />
+                            
+                            <xsl:choose>
+                                <xsl:when test="title-compact">
+                                    <xsl:value-of select="title-compact" disable-output-escaping="yes" />
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="title" disable-output-escaping="yes" />
+                                </xsl:otherwise>
+                            </xsl:choose>
                         </a>
                     </td>
                 </tr>

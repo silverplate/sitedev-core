@@ -60,7 +60,7 @@ if ($page->isAllowed()) {
 
     foreach (App_Cms_Front_Controller::getList(array('type_id' => 2)) as $item) {
         if (
-            $item->id == $form->frontControllerId || (
+            $item->id == $obj->frontControllerId || (
                 $item->isPublished &&
                 $item->isMultiple || !in_array($item->id, $used)
             )
