@@ -22,20 +22,23 @@ function getBranchXml($_parentId)
     $result = '';
     $document = App_Cms_Front_Document::load($_parentId);
 
-    foreach (App_Cms_Front_Data::getList(array(App_Cms_Front_Document::getPri() => $_parentId)) as $item) {
-        $additionalXml = '';
+    foreach (
+        App_Cms_Front_Data::getList(array(App_Cms_Front_Document::getPri() => $_parentId)) as
+        $item
+    ) {
+        $xml = '';
 
         switch ($item->getTypeId()) {
             case 'image':
                 if ($document && is_dir($document->getFilePath())) {
                     if ($document->getImages()) {
-                        $additionalXml .= '<self>';
+                        $xml .= '<self>';
 
                         foreach ($document->getImages() as $image) {
-                            $additionalXml .= $image->getXml();
+                            $xml .= $image->getXml();
                         }
 
-                        $additionalXml .= '</self>';
+                        $xml .= '</self>';
                     }
                 }
 
@@ -47,19 +50,19 @@ function getBranchXml($_parentId)
                 }
 
                 if ($otherImages) {
-                    $additionalXml .= '<others>';
+                    $xml .= '<others>';
 
                     foreach ($otherImages as $image) {
-                        $additionalXml .= $image->GetXml();
+                        $xml .= $image->getXml();
                     }
 
-                    $additionalXml .= '</others>';
+                    $xml .= '</others>';
                 }
 
                 break;
         }
 
-        $result .= $item->getXml($additionalXml);
+        $result .= $item->getXml($xml);
     }
 
     return $result;

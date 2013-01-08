@@ -4,14 +4,17 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:template match="module[@type = 'tree' or @type = 'simple']">
         <xsl:choose>
-            <xsl:when test="form[@status != 'no-update' and @status != 'no_update']">
-                <xsl:for-each select="form">
-                    <xsl:call-template name="form-status" />
-                </xsl:for-each>
+            <xsl:when test="form-status[@status != 'no-update']">
+                <xsl:apply-templates
+                    select="form-status[@status != 'no-update']"
+                    mode="form-status"
+                />
             </xsl:when>
             <xsl:otherwise>
                 <xsl:apply-templates
-                    select="../update-status|form-status[@status != 'no-update']" />
+                    select="form[@status != 'no-update']"
+                    mode="form-status"
+                />
             </xsl:otherwise>
         </xsl:choose>
 
@@ -92,27 +95,6 @@
                 </td>
             </tr>
         </table>
-    </xsl:template>
-
-    <xsl:template match="form-status" name="form-status">
-        <div class="form-message-success">
-            <xsl:if test="@status = 'error'">
-                <xsl:attribute name="class">form-message-error</xsl:attribute>
-            </xsl:if>
-
-            <xsl:choose>
-                <xsl:when test="result-message">
-                    <xsl:value-of select="result-message"
-                                  disable-output-escaping="yes" />
-                </xsl:when>
-                <xsl:when test="@status = 'error'">
-                    Данные не&nbsp;сохранены из-за&nbsp;допущенных ошибок
-                </xsl:when>
-                <xsl:otherwise>
-                    Изменения сохранены
-                </xsl:otherwise>
-            </xsl:choose>
-        </div>
     </xsl:template>
 
     <xsl:template match="content" mode="module">

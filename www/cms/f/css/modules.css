@@ -67,12 +67,18 @@ table.module tr td.navigation
     width: 30%;
 }
 
+div#title
+{
+    position: relative;
+}
+
 table.module tr td.subtitle
 {
     width: 70%;
 }
 
-table.module tr td.subtitle h1
+table.module tr td.subtitle h1,
+div#title h1
 {
     margin: 0;
     padding: 0 230px 0 0;

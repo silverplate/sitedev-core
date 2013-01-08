@@ -226,7 +226,7 @@
         </h1>
     </xsl:template>
 
-    <xsl:template match="update-status">
+    <!-- <xsl:template match="update-status">
         <xsl:choose>
             <xsl:when test="@type = 'error'">
                 <div class="form-message-error">
@@ -245,6 +245,27 @@
                 </div>
             </xsl:when>
         </xsl:choose>
+    </xsl:template> -->
+
+    <xsl:template match="form|form-status" mode="form-status">
+        <div class="form-message-success">
+            <xsl:if test="@status = 'error'">
+                <xsl:attribute name="class">form-message-error</xsl:attribute>
+            </xsl:if>
+
+            <xsl:choose>
+                <xsl:when test="result-message">
+                    <xsl:value-of select="result-message"
+                                  disable-output-escaping="yes" />
+                </xsl:when>
+                <xsl:when test="@status = 'error'">
+                    Данные не&nbsp;сохранены из-за&nbsp;допущенных ошибок
+                </xsl:when>
+                <xsl:otherwise>
+                    Изменения сохранены
+                </xsl:otherwise>
+            </xsl:choose>
+        </div>
     </xsl:template>
 
     <xsl:template name="get-page-link">

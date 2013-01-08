@@ -8,7 +8,7 @@
 
     <element name="tag" type="folder" is-required="true">
         <label>Тэг</label>
-        <description>Можно использовать латинские буквы, цифры и&nbsp;знак подчеркивания.</description>
+        <description>Можно использовать латинские буквы, цифры и&nbsp;дефис.</description>
     </element>
 
     <element name="front_data_content_type_id" type="chooser">

@@ -43,18 +43,21 @@
     <xsl:template match="content">
         <div id="title">
             <xsl:choose>
-                <xsl:when test="update-status">
-                    <table width="100%">
-                        <tr valign="top">
-                            <td width="99%"><h1><xsl:call-template name="get-page-title" /></h1></td>
-                            <td width="1%"><xsl:apply-templates select="update-status" /></td>
-                        </tr>
-                    </table>
+                <xsl:when test="form-status[@status != 'no-update']">
+                    <xsl:apply-templates
+                        select="form-status[@status != 'no-update']"
+                        mode="form-status"
+                    />
                 </xsl:when>
                 <xsl:otherwise>
-                    <h1><xsl:call-template name="get-page-title" /></h1>
+                    <xsl:apply-templates
+                        select="form[@status != 'no-update']"
+                        mode="form-status"
+                    />
                 </xsl:otherwise>
             </xsl:choose>
+
+            <h1><xsl:call-template name="get-page-title" /></h1>
         </div>
 
         <xsl:apply-templates select="form|update-parent" />
