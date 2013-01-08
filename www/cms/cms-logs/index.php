@@ -5,7 +5,7 @@ require_once 'filter-lib.php';
 
 $page = new App_Cms_Back_Page();
 
-if ($page->isAuthorized()) {
+if ($page->isAllowed()) {
     $filter = boLogGetFilter();
 
     $xml = '';

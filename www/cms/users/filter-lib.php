@@ -34,21 +34,21 @@ function objGetFilter()
         'is_email' => true
     );
 
-	foreach (array('name', 'email') as $item) {
-		if (!empty($_POST["filter_$item"])) {
-			$result[$item] = $_POST["filter_$item"];
+    foreach (array('name', 'email') as $item) {
+        if (!empty($_POST["filter_$item"])) {
+            $result[$item] = $_POST["filter_$item"];
 
-		} else if (!empty($_COOKIE["filter-$item"])) {
-			$result[$item] = preg_replace(
-		        '/%u([0-9A-F]{4})/se',
-		        'iconv("UTF-16BE", "utf-8", pack("H4", "$1"))',
-		        $_COOKIE["filter-$item"]
-		    );
+        } else if (!empty($_COOKIE["filter-$item"])) {
+            $result[$item] = preg_replace(
+                '/%u([0-9A-F]{4})/se',
+                'iconv("UTF-16BE", "utf-8", pack("H4", "$1"))',
+                $_COOKIE["filter-$item"]
+            );
 
-		} else {
-			$result[$item] = false;
-		}
-	}
+        } else {
+            $result[$item] = false;
+        }
+    }
 
     if (isset($_POST['page']) && (int) $_POST['page']) {
         $result['page'] = (int) $_POST['page'];

@@ -4,7 +4,7 @@ require_once '../prepend.php';
 
 $page = new App_Cms_Back_Page();
 
-if ($page->isAuthorized()) {
+if ($page->isAllowed()) {
 
     // Инициализация объекта
 
