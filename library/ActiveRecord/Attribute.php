@@ -29,7 +29,7 @@ abstract class Core_ActiveRecord_Attribute
     {
         switch ($this->_type) {
             case 'integer':
-                $this->_value = (integer) $_value;
+                $this->_value = (string) $_value == '' ? $_value : (integer) $_value;
                 break;
 
             case 'float':
