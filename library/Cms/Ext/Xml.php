@@ -100,6 +100,6 @@ class Core_Cms_Ext_Xml extends Ext_Xml
             }
         }
 
-        return Ext_Dom::getInnerXml($dom);
+        return Ext_Dom::getInnerXml($dom->documentElement);
     }
 }
