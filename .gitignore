@@ -1,6 +1,5 @@
-/.settings
-/.buildpath
-/.project
+.settings
+.buildpath
+.project
 
-/sets/local.php
-/core/docs/*.mwb.bak
+docs/*.mwb.bak
