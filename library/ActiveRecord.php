@@ -68,7 +68,7 @@ abstract class Core_ActiveRecord
      * @param string $_name
      * @return boolean
      */
-    public function hasAttribute($_name)
+    public function hasAttr($_name)
     {
         return key_exists($_name, $this->_attributes) ||
                key_exists(Ext_String::underline($_name), $this->_attributes);
@@ -80,7 +80,7 @@ abstract class Core_ActiveRecord
      */
     public function __isset($_name)
     {
-        return property_exists($this, $_name) || $this->hasAttribute($_name);
+        return property_exists($this, $_name) || $this->hasAttr($_name);
     }
 
     /**
@@ -91,7 +91,7 @@ abstract class Core_ActiveRecord
      * @param string $_name
      * @return string|array|false
      */
-    public function getAttributeName($_name)
+    public function getAttrName($_name)
     {
         if (!property_exists($this, $_name)) {
             if (key_exists($_name, $this->_attributes)) {
@@ -152,7 +152,7 @@ abstract class Core_ActiveRecord
      */
     public function getAttr($_name)
     {
-        $name = $this->getAttributeName($_name);
+        $name = $this->getAttrName($_name);
         if ($name) {
             return $this->_attributes[$name];
         }
@@ -733,7 +733,7 @@ abstract class Core_ActiveRecord
     public function getSortAttrName()
     {
         foreach (array('sort_order', 'title', 'name') as $name) {
-            if ($this->hasAttribute($name)) {
+            if ($this->hasAttr($name)) {
                 return $name;
             }
         }
