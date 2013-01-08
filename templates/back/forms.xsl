@@ -321,12 +321,12 @@
                                 </xsl:attribute>
                             </input>
                         </td>
-                        <td class="patronymic-name">
-                            <input type="text" name="{@name}_patronymic_name" id="form-ele-{@name}-patronymic-name" maxlength="255">
+                        <td class="middle-name">
+                            <input type="text" name="{@name}_middle_name" id="form-ele-{@name}-middle-name" maxlength="255">
                                 <xsl:attribute name="value">
                                     <xsl:choose>
-                                        <xsl:when test="error/value/patronymic-name"><xsl:value-of select="error/value/patronymic-name" /></xsl:when>
-                                        <xsl:otherwise><xsl:value-of select="value/patronymic-name" /></xsl:otherwise>
+                                        <xsl:when test="error/value/middle-name"><xsl:value-of select="error/value/middle-name" /></xsl:when>
+                                        <xsl:otherwise><xsl:value-of select="value/middle-name" /></xsl:otherwise>
                                     </xsl:choose>
                                 </xsl:attribute>
                             </input>
@@ -350,7 +350,7 @@
                                     </xsl:if>
                                 </label>
                             </td>
-                            <td><label for="form-ele-{@name}-patronymic-name">Отчество</label></td>
+                            <td><label for="form-ele-{@name}-middle-name">Отчество</label></td>
                         </tr>
                     </xsl:if>
                 </table>

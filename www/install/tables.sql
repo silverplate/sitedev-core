@@ -214,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `~db prefix~user` (
     `status_id` TINYINT UNSIGNED NOT NULL DEFAULT 0,
     `first_name` VARCHAR(255) NULL,
     `last_name` VARCHAR(255) NULL,
-    `patronymic_name` VARCHAR(255) NULL,
+    `middle_name` VARCHAR(255) NULL,
     `email` VARCHAR(255) NOT NULL,
     `phone_code` VARCHAR(255) NULL,
     `phone` VARCHAR(255) NULL,

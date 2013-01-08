@@ -124,7 +124,7 @@ table.form-name td.first-name
 
 table.form-name td.last-name input,
 table.form-name td.first-name input,
-table.form-name td.patronymic-name input
+table.form-name td.middle-name input
 {
     width: 10em;
 }
