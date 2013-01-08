@@ -21,9 +21,9 @@ abstract class Core_Cms_User extends App_Model
         $this->addAttr('phone_code', 'string');
         $this->addAttr('phone', 'string');
         $this->addAttr('passwd', 'string');
+        $this->addAttr('creation_time', 'integer');
         $this->addAttr('reminder_key', 'string');
-        $this->addAttr('reminder_date', 'datetime');
-        $this->addAttr('creation_date', 'datetime');
+        $this->addAttr('reminder_time', 'integer');
     }
 
     public static function getAuthGroups()
@@ -223,18 +223,16 @@ abstract class Core_Cms_User extends App_Model
         global $g_mail;
 
         if ($this->email) {
-            $date = $this->getDate('reminder_date');
-
             if (
                 $this->statusId == 1 &&
-                $date &&
-                $date > time() - 60 * 60 * 24
+                $this->reminderTime &&
+                $this->reminderTime > time() - 60 * 60 * 24
             ) {
                 $password = $this->generatePassword();
 
                 $this->setPassword($password);
                 $this->reminderKey = '';
-                $this->reminderDate = '';
+                $this->reminderTime = '';
                 $this->update();
 
                 $message = 'Доступ к сайту http://' . $_SERVER['HTTP_HOST'] .

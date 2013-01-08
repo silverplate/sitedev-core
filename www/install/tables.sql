@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `~db prefix~back_user` (
     `title` VARCHAR(255) NULL,
     `ip_restriction` TEXT NULL,
     `reminder_key` CHAR(30) NULL,
-    `reminder_date` DATETIME NULL,
+    `reminder_time` INT NULL,
     PRIMARY KEY (`~db prefix~back_user_id`)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 
@@ -219,9 +219,9 @@ CREATE TABLE IF NOT EXISTS `~db prefix~user` (
     `phone_code` VARCHAR(255) NULL,
     `phone` VARCHAR(255) NULL,
     `passwd` CHAR(32) NOT NULL,
-    `reminder_key` CHAR(30) NULL,
-    `reminder_time` DATETIME NULL,
     `creation_time` INT NULL,
+    `reminder_key` CHAR(30) NULL,
+    `reminder_time` INT NULL,
     PRIMARY KEY (`~db prefix~user_id`),
     UNIQUE INDEX `~db prefix~user_email_unq` (`email` ASC)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;

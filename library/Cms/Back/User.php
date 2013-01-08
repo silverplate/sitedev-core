@@ -23,7 +23,7 @@ abstract class Core_Cms_Back_User extends App_Model
         $this->addAttr('email', 'string');
         $this->addAttr('ip_restriction', 'string');
         $this->addAttr('reminder_key', 'string');
-        $this->addAttr('reminder_date', 'datetime');
+        $this->addAttr('reminder_time', 'integer');
     }
 
     public function checkUnique()
@@ -95,18 +95,16 @@ abstract class Core_Cms_Back_User extends App_Model
         global $g_bo_mail;
 
         if ($this->email) {
-            $date = $this->getDate('reminder_date');
-
             if (
                 $this->statusId == 1 &&
-                $date &&
-                $date > time() - 60 * 60 * 24
+                $this->reminderTime &&
+                $this->reminderTime > time() - 60 * 60 * 24
             ) {
                 $password = $this->generatePassword();
 
                 $this->setPassword($password);
                 $this->reminderKey = '';
-                $this->reminderDate = '';
+                $this->reminderTime = '';
                 $this->update();
 
                 $message = 'Доступ к системе управления сайта http://' .
