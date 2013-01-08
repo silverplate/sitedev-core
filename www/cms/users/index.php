@@ -5,125 +5,142 @@ require_once 'filter-lib.php';
 
 $page = new App_Cms_Back_Page();
 
-if ($page->IsAuthorized()) {
-    if (isset($_GET['id'])) {
-        $obj = App_Cms_User::Load($_GET['id']);
-        if (!$obj) unset($obj);
+if ($page->isAuthorized()) {
+
+    // Инициализация объекта
+
+    $obj = null;
+
+    if (!empty($_GET['id'])) {
+        $obj = App_Cms_User::getById($_GET['id']);
+        if (!$obj) reload();
 
     } else if (key_exists('add', $_GET)) {
         $obj = new App_Cms_User();
     }
 
-    if (isset($obj)) {
-        $form = new App_Form();
-        $form->Load('form.xml');
 
-        if ($obj->GetId()) {
-            $form->FillFields($obj->toArray());
-            $form->Elements['passwd']->SetValue();
+    // Форма редактирования или добавления объекта
 
+    if ($obj) {
+        $form = App_Cms_Ext_Form::load('form.xml');
+        $form->fillWithObject($obj);
+
+        if ($obj->id) {
             if ($obj->statusId != 1) {
-                $form->Elements['status_id']->SetValue(0);
+                $form->statusId = 0;
             }
 
-            $form->CreateButton('Сохранить', 'update');
-            $form->CreateButton('Удалить', 'delete');
-
         } else {
-            $form->CreateButton('Сохранить', 'insert');
-            $form->Elements['passwd']->SetRequired(true);
+            $form->getElement('passwd')->isRequired(true);
         }
 
-        $form->Execute();
+        $form->run();
 
-        if ($form->UpdateStatus == FORM_UPDATED) {
-            if (isset($form->Buttons['delete']) && $form->Buttons['delete']->IsSubmited()) {
-                $obj->Delete();
-                App_Cms_Back_Log::LogModule(App_Cms_Back_Log::ACT_DELETE, $obj->GetId(), $obj->getTitle());
-                goToUrl($page->getUrl('path') . '?DEL');
+        if ($form->isSubmited() && $form->isSuccess()) {
+            if ($form->isSubmited('delete')) {
+                $obj->delete();
 
-            } else if ((isset($form->Buttons['insert']) && $form->Buttons['insert']->IsSubmited()) || (isset($form->Buttons['update']) && $form->Buttons['update']->IsSubmited())) {
-                if (App_Cms_User::CheckUnique($form->Elements['email']->GetValue(), $obj->GetId())) {
-                    $obj->fillWithData($form->GetSqlValues());
+                App_Cms_Back_Log::logModule(
+                    App_Cms_Back_Log::ACT_DELETE,
+                    $obj->id,
+                    $obj->getTitle()
+                );
 
-                    $password = $form->Elements['passwd']->GetValue();
-                    if (isset($password['password'])) {
-                        $obj->SetPassword($password['password']);
+                App_Cms_Ext_Form::saveCookieStatus();
+                redirect($page->getUrl('path'));
+
+            } else {
+                $obj->fillWithData($form->toArray());
+
+                if ($obj->checkUnique()) {
+                    $password = $form->passwd->getValue('passwd');
+
+                    if ($password) {
+                        $obj->setPassword($password);
                     }
 
-                    if ($form->Elements['status_id']->GetValue() != 1) {
-                        $obj->statusId = 2;
+                    if ($obj->statusId != 0 && $obj->statusId != 1) {
+                        $obj->statusId = 0;
                     }
 
-                    if (isset($form->Buttons['insert']) && $form->Buttons['insert']->IsSubmited()) {
-                        $obj->Create();
-                        App_Cms_Back_Log::LogModule(App_Cms_Back_Log::ACT_CREATE, $obj->GetId(), $obj->getTitle());
-                    } else {
-                        $obj->Update();
-                        App_Cms_Back_Log::LogModule(App_Cms_Back_Log::ACT_MODIFY, $obj->GetId(), $obj->getTitle());
-                    }
+                    $obj->save();
 
-                    goToUrl($page->getUrl('path') . '?id=' . $obj->GetId() . '&OK');
+                    App_Cms_Back_Log::logModule(
+                        $form->isSubmited('insert') ? App_Cms_Back_Log::ACT_CREATE : App_Cms_Back_Log::ACT_MODIFY,
+                        $obj->id,
+                        $obj->getTitle()
+                    );
+
+                    App_Cms_Ext_Form::saveCookieStatus();
+                    reload('?id=' . $obj->id);
 
                 } else {
-                    $form->UpdateStatus = FORM_ERROR;
-                    $form->Elements['email']->SetUpdateType(FIELD_ERROR_EXIST);
-                    $form->Elements['email']->SetErrorValue($form->Elements['email']->GetValue());
-                    $form->Elements['email']->SetValue($obj->email);
+                    $form->setUpdateStatus(App_Cms_Ext_Form::ERROR);
+                    $form->email->setUpdateStatus(Ext_Form_Element::ERROR_EXIST);
                 }
             }
         }
-
-        if ($form->UpdateStatus == FORM_ERROR) {
-            $page->SetUpdateStatus('error');
-
-        } elseif (isset($_GET['OK'])) {
-            $page->SetUpdateStatus('success');
-        }
-
-    } elseif (isset($_GET['DEL'])) {
-        $page->SetUpdateStatus('success', 'Пользователь удален');
     }
 
-    $filter = obj_get_filter();
-    $listXml = '<local-navigation type="filter"';
 
-    $options = array('open', 'name', 'email');
-    foreach ($options as $item) {
-        if (isset($filter['is_' . $item]) && $filter['is_' . $item]) $listXml .= ' is-' . $item . '="true"';
+    // Статус обработки формы
+
+    $formStatusXml = '';
+
+    if (!isset($form) || !$form->isSubmited()) {
+        $formStatusXml = App_Cms_Ext_Form::getCookieStatusXml(
+            empty($obj) ? 'Выполнено' : 'Данные сохранены'
+        );
+
+        App_Cms_Ext_Form::clearCookieStatus();
     }
 
-    $listXml .= '>';
 
-    foreach (array('name', 'email') as $item) {
-        if (isset($filter[$item]) && $filter[$item]) {
-            $listXml .= '<filter-' . $item . '><![CDATA[' . $filter[$item] . ']]></filter-' . $item . '>';
+    // Внутренняя навигация
+
+    $filter = objGetFilter();
+    $filterAttrs = array('type' => 'filter');
+    $listXml = '';
+
+    foreach (array('open', 'name', 'email') as $name) {
+        if (!empty($filter['is_' . $name])) {
+            $filterAttrs["is-$name"] = 1;
+
+            if (!empty($filter[$name])) {
+                $listXml .= Ext_Xml::cdata("filter-$name", $filter[$name]);
+            }
         }
     }
 
-    $listXml .= '</local-navigation>';
+    $listXml = Ext_Xml::node('local-navigation', $listXml, $filterAttrs);
 
-    if (isset($obj)) {
-        $module = '<module type="simple" is-able-to-add="true"';
 
-        if ($obj->GetId()) {
-            $module .= ' id="' . $obj->GetId() . '">';
-            $module .= '<title><![CDATA[' . $obj->getTitle() . ']]></title>';
-        } else {
-            $module .= ' is-new="true">';
-            $module .= '><title><![CDATA[Добавление]]></title>';
+    // XML модуля
+
+    $xml = $listXml . $formStatusXml;
+    $attrs = array('type' => 'simple', 'is-able-to-add' => 'true');
+
+    if (empty($obj)) {
+        if (App_Cms_Back_Section::get()->description) {
+            $xml .= Ext_Xml::notEmptyNode('content', Ext_Xml::cdata(
+                'html',
+                '<p class="first">' . App_Cms_Back_Section::get()->description . '</p>'
+            ));
         }
 
-        $module .= $form->GetXml();
-        $module .= $listXml;
-        $module .= '</module>';
-
-        $page->AddContent($module);
+    } else if ($obj->getId()) {
+        $attrs['id'] = $obj->id;
+        $xml .= Ext_Xml::cdata('title', $obj->getTitle());
+        $xml .= $form->getXml();
 
     } else {
-        $about = App_Cms_Back_Section::get()->description ? '<p class="first">' . App_Cms_Back_Section::get()->description . '</p>' : '';
-        $page->AddContent('<module type="simple" is-able-to-add="true">' . $listXml . '<content><html><![CDATA[' . $about . ']]></html></content></module>');
+        $attrs['is-new'] = 1;
+        $xml .= Ext_Xml::cdata('title', 'Добавление');
+        $xml .= $form->getXml();
     }
+
+    $page->addContent(Ext_Xml::node('module', $xml, $attrs));
 }
 
-$page->Output();
+$page->output();

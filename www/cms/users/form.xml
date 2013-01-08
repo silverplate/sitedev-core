@@ -10,15 +10,16 @@
         <label>Электропочта</label>
     </element>
 
-    <element name="phone" type="phone">
-        <label>Телефон</label>
-    </element>
-
     <element name="passwd" type="password">
         <label>Пароль</label>
     </element>
 
+    <element name="phone" type="word">
+    <!-- <element name="phone" rem-type="phone" type="string"> -->
+        <label>Телефон</label>
+    </element>
+
     <element name="status_id" type="boolean">
-        <label>Доступ разрешён</label>
+        <label>Доступ разрешен</label>
     </element>
 </form>

@@ -103,8 +103,7 @@ function boLogGetFilter()
         } else if (!empty($_COOKIE['is-filter-' . $item])) {
             $result["is_$item"] = true;
             $result[$item] = !empty($_COOKIE["filter-$item"])
-//                            ? explode('|', preg_replace('/%u([0-9A-F]{4})/se', 'iconv("UTF-16BE", "utf-8", pack("H4", "$1"))', $_COOKIE["filter-$item"]))
-                           ? explode('|', $_COOKIE["filter-$item"])
+                           ? explode('|', preg_replace('/%u([0-9A-F]{4})/se', 'iconv("UTF-16BE", "utf-8", pack("H4", "$1"))', $_COOKIE["filter-$item"]))
                            : false;
         }
     }

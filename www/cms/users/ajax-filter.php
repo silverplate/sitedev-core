@@ -3,23 +3,22 @@
 require_once '../prepend.php';
 require_once 'filter-lib.php';
 
-$filter = obj_get_filter(true);
-$resultItems = obj_filter($filter);
+$filter = objGetFilter();
+$resultItems = objFilter($filter);
 
 if (!$resultItems['items'] && $resultItems['total'] > 0 && $filter['page'] != 1) {
     $filter['page'] = 1;
-    $resultItems = obj_filter($filter);
+    $resultItems = objFilter($filter);
 }
 
 $page = new App_Cms_Page();
 $page->setRootName('http-request');
 $page->setRootAttr('type', 'filter');
+$page->setTemplate(TEMPLATES . 'back/http-requests.xsl');
 
-if ($filter['selected_id']) {
+if (!empty($filter['selected_id'])) {
     $page->setRootAttr('selected-id', $filter['selected_id']);
 }
-
-$page->setTemplate(TEMPLATES . 'back/http-requests.xsl');
 
 if ($resultItems['items']) {
     foreach ($resultItems['items'] as $item) {

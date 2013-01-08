@@ -16,7 +16,7 @@ abstract class Core_Cms_User extends App_Model
         $this->addAttr('status_id', 'integer');
         $this->addAttr('first_name', 'string');
         $this->addAttr('last_name', 'string');
-        $this->addAttr('patronymic_name', 'string');
+        $this->addAttr('middle_name', 'string');
         $this->addAttr('email', 'string');
         $this->addAttr('phone_code', 'string');
         $this->addAttr('phone', 'string');
@@ -164,9 +164,13 @@ abstract class Core_Cms_User extends App_Model
         }
     }
 
-    public static function checkUnique($_value, $_excludeId = null)
+    public function checkUnique()
     {
-        return self::isUnique('email', $_value, $_excludeId);
+        return self::isUnique(
+            'email',
+            $this->email,
+            $this->id ? $this->id : null
+        );
     }
 
     /**
@@ -273,7 +277,7 @@ abstract class Core_Cms_User extends App_Model
         $attrs = $_attrs;
 
         if (!isset($attrs['is_published']) && $this->statusId == 1) {
-            $attrs['is_published'] = 1;
+            $attrs['is-published'] = 1;
         }
 
         return parent::getBackOfficeXml($_xml, $attrs);
