@@ -1,40 +1,48 @@
 <?php
 
-require_once realpath(dirname(__FILE__) . '/../../libs') . '/libs.php';
+require_once realpath(dirname(__FILE__) . '/../../../core/library') . '/libs.php';
 require_once SETS . 'project.php';
 
-$conf = parse_url(DB_CONNECTION_STRING);
-$conf['dbname'] = trim($conf['path'], '/');
+$d = App_Db::get()->getDatabase();
+$u = ' -u' . App_Db::get()->getUser();
+$p = ' -p' . App_Db::get()->getPassword();
+$prt = App_Db::get()->getPort() ? ' -P' . App_Db::get()->getPort() : '';
+$h = ' -h' . App_Db::get()->getHost();
 
+$indent = PHP_EOL . PHP_EOL;
 $return = null;
 
 if (empty($argv[1])) {
-    $patchesDir = realpath(WD . 'scripts/dumps');
+    $patchesDir = WD . 'scripts/dumps';
     $dumpFile = date('Y-m-d') . '.sql';
     $dumpFilePath = $patchesDir . '/' . $dumpFile;
     $dumpArchivePath = $dumpFilePath . '.tgz';
 
 } else {
-    $dumpFilePath = $argv[1];
+    $dumpFilePath = realpath($argv[1]);
     $patchesDir = dirname($dumpFilePath);
 }
 
+if (!is_dir($patchesDir)) {
+    Ext_File::createDir($patchesDir);
+}
+
 if (is_dir($patchesDir)) {
-    exec("mysqldump -u{$conf['user']} -p{$conf['pass']} -h{$conf['host']} {$conf['dbname']} > $dumpFilePath", $return);
+    exec("mysqldump $u$p$h$prt $d > $dumpFilePath", $return);
 
     if (empty($return)) {
         exec("tar -C $patchesDir -czf $dumpArchivePath $dumpFile", $return);
 
         if (empty($return)) {
             unlink($dumpFilePath);
-            exit($dumpArchivePath . "\n");
+            exit($dumpArchivePath . $indent);
         }
     }
 
     if (!empty($return)) {
-        exit($return . "\n");
+        exit($return . $indent);
     }
 
 } else {
-    exit("invalid path\n");
+    exit('Invalid path' . $indent);
 }
