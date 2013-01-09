@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * Скрипт предназначен для автоматической загрузки дампа БД из TGZ-архива
+ * на основании настроек проекта на текущем сервере.
+ *
+ * Запускать следует так: $ php set.php
+ * Или так: $ php set.php ~/backup.sql.tgz
+ *
+ * Если запустить скрипт без параметров, то будет осуществленна попытка
+ * применить дамп по адресу ~/scripts/dumps/YYYY-MM-DD.sql.tgz,
+ * где YYYY-MM-DD - текущая дата. Файл в таком формате получается автоматически
+ * путем запуска скрипта get.php.
+ */
+
 require_once realpath(dirname(__FILE__) . '/../../../core/library') . '/libs.php';
 require_once SETS . 'project.php';
 
@@ -16,12 +29,14 @@ if (empty($argv[1])) {
     $patchesDir = realpath(WD . 'scripts/dumps');
     $dumpFile = date('Y-m-d') . '.sql';
     $dumpFilePath = $patchesDir . '/' . $dumpFile;
-    $dumpArchivePath = $dumpFilePath . '.tgz';
 
 } else {
-    $dumpFilePath = realpath($argv[1]);
+    $dumpFilePath = $argv[1];
+    $dumpFile = basename($dumpFilePath);
     $patchesDir = dirname($dumpFilePath);
 }
+
+$dumpArchivePath = $dumpFilePath . '.tgz';
 
 if (is_file($dumpArchivePath)) {
     exec("tar -C $patchesDir -zxf $dumpArchivePath", $return);

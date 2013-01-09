@@ -1,5 +1,20 @@
 <?php
 
+/**
+ * Скрипт для автоматического создания дампа БД проекта. Скрипт берет настройки
+ * БД от текущего сервера, создает дамп, архивирует его и размещает
+ * по адресу ~/scripts/dumps/YYYY-MM-DD.sql.tgz.
+ *
+ * Запускать следует так: $ php get.php
+ *
+ * Дополнительно в скрипт можно передать путь к дампу (не архиву), если нужно
+ * если назвать файл не в YYYY-MM-DD формате: $ php get.php ~/backup.sql
+ * В результате получится архив ~/backup.sql.tgz.
+ *
+ * Полученный архив можно переписать в локальную версию проекта и загрузить
+ * через запуск скрипта set.php.
+ */
+
 require_once realpath(dirname(__FILE__) . '/../../../core/library') . '/libs.php';
 require_once SETS . 'project.php';
 
@@ -16,12 +31,14 @@ if (empty($argv[1])) {
     $patchesDir = WD . 'scripts/dumps';
     $dumpFile = date('Y-m-d') . '.sql';
     $dumpFilePath = $patchesDir . '/' . $dumpFile;
-    $dumpArchivePath = $dumpFilePath . '.tgz';
 
 } else {
-    $dumpFilePath = realpath($argv[1]);
+    $dumpFilePath = $argv[1];
+    $dumpFile = basename($dumpFilePath);
     $patchesDir = dirname($dumpFilePath);
 }
+
+$dumpArchivePath = $dumpFilePath . '.tgz';
 
 if (!is_dir($patchesDir)) {
     Ext_File::createDir($patchesDir);
