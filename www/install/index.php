@@ -189,6 +189,10 @@ foreach ($frontDocuments as $level) {
         $obj->fillWithData($i);
         $obj->isPublished = true;
 
+        if (defined('IS_USERS') && IS_USERS) {
+            $obj->authStatusId = App_Cms_User::AUTH_GROUP_ALL;
+        }
+
         if (isset($i['сontroller']) && isset($frontControllerObjs[$i['сontroller']])) {
             $obj->frontControllerId = $frontControllerObjs[$i['сontroller']]->getId();
         }
@@ -247,10 +251,13 @@ foreach ($frontData as $uri => $blocks) {
         foreach ($blocks as $i) {
             $obj = App_Cms_Front_Data::createInstance();
             $obj->fillWithData($i);
-            $obj->authStatusId = App_Cms_User::AUTH_GROUP_ALL;
             $obj->frontDocumentId = $frontDocumentObjs[$uri]->getId();
             $obj->isPublished = true;
             $obj->isMount = true;
+
+            if (defined('IS_USERS') && IS_USERS) {
+                $obj->authStatusId = App_Cms_User::AUTH_GROUP_ALL;
+            }
 
             if (
                 isset($i['сontroller']) &&

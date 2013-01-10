@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `~db prefix~front_data` (
     `~db prefix~front_document_id` CHAR(30) NOT NULL,
     `~db prefix~front_controller_id` CHAR(10) NULL,
     `~db prefix~front_data_content_type_id` CHAR(10) NULL,
-    `auth_status_id` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    `auth_status_id` SMALLINT UNSIGNED NULL,
     `tag` VARCHAR(255) NOT NULL,
     `title` VARCHAR(255) NOT NULL,
     `content` TEXT NULL,
