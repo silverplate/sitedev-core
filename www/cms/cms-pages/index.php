@@ -35,7 +35,7 @@ if ($page->isAllowed()) {
         // Контроллер
         $used = App_Db::get()->getList(App_Db::get()->getSelect(
             $obj->getTable(),
-            $obj->getPrimaryKeyName(),
+            App_Cms_Front_Controller::getPri(),
             $obj->id ? array($obj->getPrimaryKeyWhereNot()) : null
         ));
 
@@ -53,7 +53,7 @@ if ($page->isAllowed()) {
         // Шаблон
         $used = App_Db::get()->getList(App_Db::get()->getSelect(
             $obj->getTable(),
-            $obj->getPrimaryKeyName(),
+            App_Cms_Front_Template::getPri(),
             $obj->id ? array($obj->getPrimaryKeyWhereNot()) : null
         ));
 
