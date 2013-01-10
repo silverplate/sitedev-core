@@ -11,7 +11,7 @@
     
         <element name="uri" type="folder" is-required="true">
             <label>Локальная папка</label>
-            <description>Можно использовать латинские буквы, цифры и&nbsp;знак подчеркивания.</description>
+            <description>Можно использовать латинские буквы, цифры и&nbsp;дефис.</description>
         </element>
     
         <element name="is_published" type="boolean">
