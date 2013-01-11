@@ -31,7 +31,7 @@ abstract class Core_ActiveRecord
     }
 
     /**
-     * @return App_ActiveRecord
+     * @return App_ActiveRecord|App_Model
      */
     public static function createInstance()
     {
@@ -453,7 +453,7 @@ abstract class Core_ActiveRecord
 
     /**
      * @param string|integer $_id
-     * @return App_ActiveRecord|false
+     * @return App_ActiveRecord|App_Model|false
      */
     public static function getById($_id)
     {
@@ -463,7 +463,7 @@ abstract class Core_ActiveRecord
     /**
      * @param string $_attr
      * @param string|integer $_value
-     * @return App_ActiveRecord|false
+     * @return App_ActiveRecord|App_Model|false
      */
     public static function getBy($_attr, $_value)
     {
@@ -471,9 +471,18 @@ abstract class Core_ActiveRecord
     }
 
     /**
+     * @param string $_name
+     * @return App_ActiveRecord|App_Model|false
+     */
+    public static function getByName($_name)
+    {
+        return self::getBy('name', $_name);
+    }
+
+    /**
      * @param string|integer $_value
      * @param string $_attr
-     * @return App_ActiveRecord|false
+     * @return App_ActiveRecord|App_Model|false
      */
     public static function load($_value, $_attr = null)
     {
@@ -744,7 +753,7 @@ abstract class Core_ActiveRecord
     /**
      * @param array $_where
      * @param array $_params
-     * @return array[App_ActiveRecord]
+     * @return array[App_ActiveRecord|App_Model]
      */
     public static function getList($_where = null, $_params = array())
     {
