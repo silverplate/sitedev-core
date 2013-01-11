@@ -72,7 +72,7 @@ abstract class Core_Cms_Front_Data extends App_Model
         $this->frontDataContentTypeId = $_id;
     }
 
-    public function getXml($_node = null, $_xml = null, array $_attrs = null)
+    public function getXml($_node = null, $_xml = null, $_attrs = null)
     {
         // Name
 
