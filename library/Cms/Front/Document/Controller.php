@@ -7,10 +7,23 @@ abstract class Core_Cms_Front_Document_Controller extends Core_Cms_Front_Page
      */
     protected $_document;
 
+    /**
+     * @var array
+     */
+    protected $_requestPieces;
+
     public function __construct(&$_document)
     {
         parent::__construct();
         $this->_document = $_document;
+
+        $request = trim(str_replace(
+            $this->_document->getUri(),
+            '/',
+            $this->getUrl('path')
+        ), '/');
+
+        $this->_requestPieces = $request ? explode('/', $request) : array();
     }
 
     public function execute()
