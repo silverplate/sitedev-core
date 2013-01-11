@@ -6,9 +6,9 @@
         <label>Название</label>
     </element>
 
-    <element name="name" type="folder" is-required="true">
+    <element name="name" type="system-name" is-required="true">
         <label>Тэг</label>
-        <description>Можно использовать латинские буквы, цифры и&nbsp;знак подчеркивания.</description>
+        <description>Можно использовать латинские буквы, цифры и&nbsp;дефис.</description>
     </element>
 
     <element name="type" type="chooser">

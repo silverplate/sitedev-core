@@ -6,7 +6,7 @@
         <label>Название</label>
     </element>
 
-    <element name="tag" type="folder" is-required="true">
+    <element name="tag" type="system-name" is-required="true">
         <label>Тэг</label>
         <description>Можно использовать латинские буквы, цифры и&nbsp;дефис.</description>
     </element>
