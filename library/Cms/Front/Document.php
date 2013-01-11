@@ -2,6 +2,8 @@
 
 abstract class Core_Cms_Front_Document extends App_Model
 {
+    const FOLDER = 'f';
+
     protected $_isChildren;
     protected $_language;
 
@@ -39,7 +41,7 @@ abstract class Core_Cms_Front_Document extends App_Model
 
     public function getFilePath()
     {
-        return rtrim(DOCUMENT_ROOT . 'f/' . ltrim($this->uri, '/'), '/') . '/';
+        return DOCUMENT_ROOT . self::FOLDER . rtrim($this->uri, '/') . '/';
     }
 
     public function getBackOfficeXml($_xml = array(), $_attrs = array())
@@ -170,8 +172,14 @@ abstract class Core_Cms_Front_Document extends App_Model
     {
         $path = $this->getFilePath();
         $this->_computeUri();
+        $root = DOCUMENT_ROOT . self::FOLDER . '/';
 
-        if ($path != $this->getFilePath() && is_dir($path)) {
+        if (
+            $path != $this->getFilePath() &&
+            is_dir($path) &&
+            $this->getFilePath() != $root &&
+            $path != $root
+        ) {
             Ext_File::moveDir($path, $this->getFilePath());
         }
 
@@ -323,6 +331,11 @@ abstract class Core_Cms_Front_Document extends App_Model
         }
 
         return 0 == count(self::getList($where, array('limit' => 1)));
+    }
+
+    public function checkFolder()
+    {
+        return $this->folder == '/' || Ext_File::checkName($this->folder);
     }
 
     public function checkRoot()

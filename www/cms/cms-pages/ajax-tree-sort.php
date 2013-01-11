@@ -42,22 +42,20 @@ if (!empty($data['branches'])) {
         if (isset($parent[$i->getId()])) {
             $isRoot = $i->folder != '/' || $parent[$i->getId()] == '';
 
-            $isUnique = App_Cms_Front_Document::checkUnique(
-                $parent[$i->getId()],
-                $i->folder,
-                $i->getId()
-            );
-
             $isNotCustomUrl = empty($gCustomUrls) ||
                               !in_array(trim($objects[$i->getId()]->uri, '/'), $gCustomUrls);
 
-            if ($isRoot && $isUnique && $isNotCustomUrl) {
-                $parentId = empty($parent[$i->getId()])
-                          ? null
-                          : $parent[$i->getId()];
+            if ($isRoot && $isNotCustomUrl) {
+                $parentId = empty($parent[$i->id]) ? null : $parent[$i->id];
+                $prevParentId = $objects[$i->id]->parentId;
+                $objects[$i->id]->parentId = $parentId;
 
-                $objects[$i->getId()]->parentId = $parentId;
-                $changed[] = $i->getId();
+                if ($objects[$i->id]->checkUnique()) {
+                    $changed[] = $i->id;
+
+                } else {
+                    $objects[$i->id]->parentId = $prevParentId;
+                }
             }
         }
     }
