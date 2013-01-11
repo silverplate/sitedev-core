@@ -5,7 +5,7 @@
     <group name="main">
         <title>Страница</title>
 
-        <element name="folder" type="folder" is-required="true">
+        <element name="folder" type="string" is-required="true">
             <label>Папка</label>
             <input-description>Можно использовать латинские буквы, цифры и&nbsp;дефис.</input-description>
         </element>

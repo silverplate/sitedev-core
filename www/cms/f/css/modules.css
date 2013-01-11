@@ -80,8 +80,8 @@ table.module tr td.subtitle
 table.module tr td.subtitle h1,
 div#title h1
 {
-    margin: 0;
-    padding: 0 230px 0 0;
+    margin: 0 30% 0 0;
+    padding: 0;
 }
 
 table.module tr td.content

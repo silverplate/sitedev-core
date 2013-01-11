@@ -69,7 +69,7 @@ class Core_Model extends App_ActiveRecord
                 $handle = opendir($this->getFilePath());
 
                 while (false !== $item = readdir($handle)) {
-                    $filePath = $this->getFilePath() . '/' . $item;
+                    $filePath = rtrim($this->getFilePath(), '/') . '/' . $item;
 
                     if ($item{0} != '.' && is_file($filePath)) {
                         $file = App_File::factory($filePath);

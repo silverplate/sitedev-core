@@ -90,7 +90,8 @@ div.form-message-success
 {
     font-size: 0.84em;
 /*     width: 200px; */
-    width: 30%;
+/*     min-width: 200px; */
+    width: 20%;
     text-align: right;
     position: absolute;
     top: 0.4em;
@@ -176,7 +177,7 @@ input.string
     width: 400px;
 }
 
-input.folder,
+input.system-name,
 input.filename,
 input.email,
 input.uri

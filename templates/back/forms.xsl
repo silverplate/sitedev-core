@@ -272,7 +272,15 @@
                 </div>
             </xsl:when>
 
-            <xsl:when test="@type = 'email' or @type = 'string' or @type = 'folder' or @type = 'filename' or @type = 'word' or @type = 'uri' or @type = 'login'">
+            <xsl:when test="
+                @type = 'email' or
+                @type = 'string' or
+                @type = 'system-name' or
+                @type = 'filename' or
+                @type = 'word' or
+                @type = 'uri' or
+                @type = 'login'
+            ">
                 <div class="form-float-ele">
                     <xsl:choose>
                         <xsl:when test="@is-readonly">

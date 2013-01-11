@@ -127,7 +127,7 @@ if ($page->isAllowed()) {
             } else {
                 $obj->fillWithData($form->toArray());
 
-                if (!$obj->checkRoot()) {
+                if (!$obj->checkFolder() || !$obj->checkRoot()) {
                     $form->setUpdateStatus(App_Cms_Ext_Form::ERROR);
                     $form->folder->setUpdateStatus(Ext_Form_Element::ERROR_SPELLING);
 
