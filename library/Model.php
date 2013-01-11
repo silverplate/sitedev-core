@@ -24,7 +24,7 @@ class Core_Model extends App_ActiveRecord
         return !empty($this->$_name) ? Ext_Date::getDate($this->$_name) : false;
     }
 
-    public function getXml($_node = null, $_xml = null, array $_attrs = null)
+    public function getXml($_node = null, $_xml = null, $_attrs = null)
     {
         $node = $_node ? $_node : Ext_String::dash($this->getTable());
 
