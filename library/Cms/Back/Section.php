@@ -15,7 +15,7 @@ abstract class Core_Cms_Back_Section extends App_Model
     {
         parent::__construct();
 
-        $this->addPrimaryKey('string');
+        $this->addPrimaryKey('string')->setLength(10);
         $this->addAttr('title', 'string');
         $this->addAttr('uri', 'string');
         $this->addAttr('description', 'string');

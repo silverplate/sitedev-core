@@ -2,10 +2,11 @@
 
 abstract class Core_ActiveRecord_Attribute
 {
-    private $_name;
-    private $_type;
-    private $_value;
-    private $_isPrimary;
+    protected $_name;
+    protected $_type;
+    protected $_value;
+    protected $_isPrimary;
+    protected $_length;
 
     public function __construct($_name, $_type)
     {
@@ -74,5 +75,15 @@ abstract class Core_ActiveRecord_Attribute
         } else {
             $this->_isPrimary = (boolean) $_isPrimary;
         }
+    }
+
+    public function setLength($_length)
+    {
+        $this->_length = $_length;
+    }
+
+    public function getLength()
+    {
+        return $this->_length;
     }
 }

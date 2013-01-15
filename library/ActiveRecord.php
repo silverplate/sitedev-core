@@ -560,7 +560,8 @@ abstract class Core_ActiveRecord
                     if ($item->getType() == 'string') {
                         $item->setValue(Ext_Db::get()->getUnique(
                             $this->getTable(),
-                            $item->getName()
+                            $item->getName(),
+                            $item->getLength() ? $item->getLength() : null
                         ));
                     }
 
