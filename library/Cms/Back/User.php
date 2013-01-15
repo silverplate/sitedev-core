@@ -72,28 +72,28 @@ abstract class Core_Cms_Back_User extends App_Model
 
     public function remindPassword()
     {
-        global $g_bo_mail;
-
         if ($this->email) {
             $this->reminderKey = Ext_Db::get()->getUnique(self::getTbl(), 'reminder_key');
-            $this->reminderDate = date('Y-m-d H:i:s');
+            $this->reminderTime = time();
             $this->update();
 
             $message = 'Для смены пароля к системе управления сайта http://' .
                        $_SERVER['HTTP_HOST'] . App_Cms_Back_Office::$uriStartsWith .
-                       ' загрузите страницу: http://' .
+                       ' загрузите страницу http://' .
                        $_SERVER['HTTP_HOST'] . App_Cms_Back_Office::$uriStartsWith .
-                       "?r={$this->reminderKey}\r\n\n" .
+                       "?r={$this->reminderKey}\n\n" .
                        'Если вы не просили поменять пароль, проигнорируйте это сообщение.';
 
-            return send_email($g_bo_mail, $this->email, 'Смена пароля', $message, null, false);
+            return App_Cms_Back_Mail::forcePost(
+                $this->email,
+                $message,
+                'Смена пароля'
+            );
         }
     }
 
     public function changePassword()
     {
-        global $g_bo_mail;
-
         if ($this->email) {
             if (
                 $this->statusId == 1 &&
@@ -110,20 +110,21 @@ abstract class Core_Cms_Back_User extends App_Model
                 $message = 'Доступ к системе управления сайта http://' .
                            $_SERVER['HTTP_HOST'] .
                            App_Cms_Back_Office::$uriStartsWith .
-                           ".\r\n\n" .
+                           ".\n\n" .
                            'Логин: ' . $this->login .
-                           "\r\nПароль: $password";
+                           "\nПароль: $password";
 
                 $ips = Ext_String::split($this->ipRestriction);
 
                 if ($ips) {
-                    $message .= "\r\nРазрешённы" .
+                    $message .= "\nРазрешённы" .
                                 (count($ips) > 1 ? 'е IP-адреса' : 'й IP-адрес') .
                                 ': ' . implode(', ', $ips);
                 }
 
-                return send_email($g_bo_mail, $this->email, 'Доступ', $message, null, false) ? 0 : 3;
-
+                return App_Cms_Back_Mail::forcePost($this->email, $message, 'Доступ')
+                     ? 0
+                     : 3;
             }
 
             return 2;

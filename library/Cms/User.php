@@ -193,10 +193,8 @@ abstract class Core_Cms_User extends App_Model
 
     public function remindPassword()
     {
-        global $g_mail;
-
         if ($this->email) {
-            $this->reminderDate = date('Y-m-d H:i:s');
+            $this->reminderTime = time();
             $this->reminderKey = Ext_Db::get()->getUnique(
                 $this->getTable(),
                 'reminder_key',
@@ -207,25 +205,20 @@ abstract class Core_Cms_User extends App_Model
 
             $message =
                 'Для смены пароля к сайту http://' .
-                $_SERVER['HTTP_HOST'] . ' загрузите страницу: http://' .
-                $_SERVER['HTTP_HOST'] . '?r=' . $this->reminderKey . "\r\n\n" .
+                $_SERVER['HTTP_HOST'] . ' загрузите страницу http://' .
+                $_SERVER['HTTP_HOST'] . '?r=' . $this->reminderKey . "\n\n" .
                 'Если вы не просили поменять пароль, проигнорируйте это сообщение.';
 
-            return send_email(
-                $g_mail,
+            return App_Cms_Mail::forcePost(
                 $this->email,
-                'Смена пароля',
                 $message,
-                null,
-                false
+                'Смена пароля'
             );
         }
     }
 
     public function changePassword()
     {
-        global $g_mail;
-
         if ($this->email) {
             if (
                 $this->statusId == 1 &&
@@ -240,10 +233,11 @@ abstract class Core_Cms_User extends App_Model
                 $this->update();
 
                 $message = 'Доступ к сайту http://' . $_SERVER['HTTP_HOST'] .
-                           ".\r\n\nЛогин: {$this->email}\r\nПароль: $password";
+                           ".\n\nЛогин: {$this->email}\nПароль: $password";
 
-                return send_email($g_mail, $this->email, 'Доступ', $message, null, false) ? 0 : 3;
-
+                return App_Cms_Mail::forcePost($this->email, $message, 'Доступ')
+                     ? 0
+                     : 3;
             }
 
             return 2;

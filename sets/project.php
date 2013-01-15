@@ -129,19 +129,19 @@ if (!isset($gAdminEmails)) {
     $gAdminEmails = array('support@sitedev.ru');
 }
 
-$g_mail = $g_bo_mail = array(
-    'subject' => '',
-    'from' => 'support@sitedev.ru',
-    'from_name' => SITE_TITLE,
-    'signature' => "\r\n\n\n--\r\nСлужба поддержки\r\nsupport@sitedev.ru",
-//    'bcc' => 'support@sitedev.ru'
+$gMail = array(
+    'from' => array('email' => 'support@sitedev.ru', 'name' => SITE_TITLE),
+    'subject' => array('append' => SITE_TITLE),
+    'signature' => array('text' => "\n\n\n--\nСлужба поддержки\nsupport@sitedev.ru"),
+//     'bcc' => array('support@sitedev.ru')
 );
 
-// if (!empty($gAdminEmails)) {
-//     $g_mail['bcc'] = $g_bo_mail['bcc'] = implode(', ', $gAdminEmails);
-// }
+$gMail['signature']['html'] = nl2br($gMail['signature']['text']);
 
-$g_bo_mail['subject'] = 'Система управления / ';
+$gBackOfficeMail = $gMail;
+$gBackOfficeMail['subject']['append'] = $gBackOfficeMail['subject']['append']
+                                      ? 'СУ. ' . $gBackOfficeMail['subject']['append']
+                                      : 'СУ';
 
 
 // Загрузка файлов
