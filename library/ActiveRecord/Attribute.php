@@ -53,7 +53,7 @@ abstract class Core_ActiveRecord_Attribute
 
     public function getSqlValue()
     {
-        return (string) $this->_value == '' ? 'NULL' : App_Db::escape($this->_value);
+        return (string) $this->_value == '' ? 'NULL' : Ext_Db::escape($this->_value);
     }
 
     public function isValue()

@@ -83,11 +83,11 @@ $sqlTables = str_replace('~db prefix~', DB_PREFIX, $sqlTables);
 
 foreach (explode(';', $sqlTables) as $query) {
     if (trim($query)) {
-        App_Db::get()->execute($query);
+        Ext_Db::get()->execute($query);
     }
 }
 
-// App_Db::get()->multiExecute($sqlTables);
+// Ext_Db::get()->multiExecute($sqlTables);
 
 
 // Insert start entries

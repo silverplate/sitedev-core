@@ -65,7 +65,7 @@ if ($page->isAllowed()) {
                     }
 
                     if ($obj->isDocumentMain) {
-                        App_Db::get()->execute(
+                        Ext_Db::get()->execute(
                             'UPDATE ' . $obj->getTable() .
                             ' SET is_document_main = 0' .
                             ' WHERE is_document_main = 1 AND ' .

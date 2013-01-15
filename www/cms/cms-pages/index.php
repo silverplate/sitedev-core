@@ -33,7 +33,7 @@ if ($page->isAllowed()) {
         }
 
         // Контроллер
-        $used = App_Db::get()->getList(App_Db::get()->getSelect(
+        $used = Ext_Db::get()->getList(Ext_Db::get()->getSelect(
             $obj->getTable(),
             App_Cms_Front_Controller::getPri(),
             $obj->id ? array($obj->getPrimaryKeyWhereNot()) : null
@@ -51,7 +51,7 @@ if ($page->isAllowed()) {
         }
 
         // Шаблон
-        $used = App_Db::get()->getList(App_Db::get()->getSelect(
+        $used = Ext_Db::get()->getList(Ext_Db::get()->getSelect(
             $obj->getTable(),
             App_Cms_Front_Template::getPri(),
             $obj->id ? array($obj->getPrimaryKeyWhereNot()) : null

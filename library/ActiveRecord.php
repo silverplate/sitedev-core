@@ -393,7 +393,7 @@ abstract class Core_ActiveRecord
             foreach ($primary as $name => $attr) {
                 $value = is_null($_value)
                        ? $attr->getSqlValue()
-                       : App_Db::escape($_value[$name]);
+                       : Ext_Db::escape($_value[$name]);
 
                 $where[] = $attr->getName() . " $comp $value";
             }
@@ -401,7 +401,7 @@ abstract class Core_ActiveRecord
         } else {
             $value = is_null($_value)
                    ? $primary->getSqlValue()
-                   : App_Db::escape($_value);
+                   : Ext_Db::escape($_value);
 
             $where[] = $primary->getName() . " $comp $value";
         }
@@ -508,7 +508,7 @@ abstract class Core_ActiveRecord
             $tmp = array();
 
             foreach ($_attr as $i => $attr) {
-                $tmp[] = "$attr = " . App_Db::escape(
+                $tmp[] = "$attr = " . Ext_Db::escape(
                              isset($_value[$attr]) ? $_value[$attr] : $_value[$i]
                          );
             }
@@ -516,13 +516,13 @@ abstract class Core_ActiveRecord
             $where = implode(' AND ', $tmp);
 
         } else if ($_attr) {
-            $where = "$_attr = " . App_Db::escape($_value);
+            $where = "$_attr = " . Ext_Db::escape($_value);
 
         } else {
             $where = $this->getPrimaryKeyWhere($_value);
         }
 
-        return App_Db::get()->getEntry("
+        return Ext_Db::get()->getEntry("
             SELECT * FROM {$this->_table} WHERE $where LIMIT 1
         ");
     }
@@ -558,14 +558,14 @@ abstract class Core_ActiveRecord
             if (!$item->isValue()) {
                 if ($item->isPrimary()) {
                     if ($item->getType() == 'string') {
-                        $item->setValue(App_Db::get()->getUnique(
+                        $item->setValue(Ext_Db::get()->getUnique(
                             $this->getTable(),
                             $item->getName()
                         ));
                     }
 
                 } else if ($item->getName() == 'sort_order') {
-                    $item->setValue(App_Db::get()->getNextNumber(
+                    $item->setValue(Ext_Db::get()->getNextNumber(
                         $this->getTable(),
                         $item->getName()
                     ));
@@ -583,13 +583,13 @@ abstract class Core_ActiveRecord
             $values[$item->getName()] = $item->getSqlValue();
         }
 
-        $result = App_Db::get()->execute(
+        $result = Ext_Db::get()->execute(
             'INSERT INTO ' . $this->getTable() .
-            App_Db::get()->getQueryFields($values, 'insert', true)
+            Ext_Db::get()->getQueryFields($values, 'insert', true)
         );
 
         if ($result) {
-            $lastId = App_Db::get()->getLastInsertedId();
+            $lastId = Ext_Db::get()->getLastInsertedId();
             if ($lastId) $this->id = $lastId;
 
             return true;
@@ -611,9 +611,9 @@ abstract class Core_ActiveRecord
             }
         }
 
-        return (boolean) App_Db::get()->execute(
+        return (boolean) Ext_Db::get()->execute(
             'UPDATE ' . $this->getTable() .
-            App_Db::get()->getQueryFields($attrs, 'update', true) .
+            Ext_Db::get()->getQueryFields($attrs, 'update', true) .
             'WHERE ' . $this->getPrimaryKeyWhere() . ' LIMIT 1'
         );
     }
@@ -631,9 +631,9 @@ abstract class Core_ActiveRecord
 
         $attrs = array($_name => $this->getAttr($_name)->getSqlValue());
 
-        return (boolean) App_Db::get()->execute(
+        return (boolean) Ext_Db::get()->execute(
             'UPDATE ' . $this->getTable() .
-            App_Db::get()->getQueryFields($attrs, 'update', true) .
+            Ext_Db::get()->getQueryFields($attrs, 'update', true) .
             'WHERE ' . $this->getPrimaryKeyWhere() . ' LIMIT 1'
         );
     }
@@ -655,7 +655,7 @@ abstract class Core_ActiveRecord
             }
         }
 
-        return (boolean) App_Db::get()->execute(
+        return (boolean) Ext_Db::get()->execute(
             "DELETE FROM {$this->_table} WHERE " .
             $this->getPrimaryKeyWhere() . ' LIMIT 1'
         );
@@ -666,7 +666,7 @@ abstract class Core_ActiveRecord
      */
     public static function truncate()
     {
-        return (boolean) App_Db::get()->execute('TRUNCATE ' . self::getTbl());
+        return (boolean) Ext_Db::get()->execute('TRUNCATE ' . self::getTbl());
     }
 
     /**
@@ -675,9 +675,9 @@ abstract class Core_ActiveRecord
      */
     public static function deleteWhere($_where)
     {
-        return (boolean) App_Db::get()->execute(
+        return (boolean) Ext_Db::get()->execute(
             'DELETE FROM ' . self::getTbl() .
-            ' WHERE ' . implode(' AND ', App_Db::get()->getWhere($_where))
+            ' WHERE ' . implode(' AND ', Ext_Db::get()->getWhere($_where))
         );
     }
 
@@ -697,7 +697,7 @@ abstract class Core_ActiveRecord
 //             );
 //         }
 
-//         $attributes = App_Db::get()->getList("SHOW COLUMNS FROM $_table");
+//         $attributes = Ext_Db::get()->getList("SHOW COLUMNS FROM $_table");
 
 //         foreach ($attributes as $item) {
 //             if ($item['Type'] == 'tinyint(1)') {
@@ -760,7 +760,7 @@ abstract class Core_ActiveRecord
         $instance = self::createInstance();
         $list = array();
 
-        $items = App_Db::get()->getList(App_Db::get()->getSelect(
+        $items = Ext_Db::get()->getList(Ext_Db::get()->getSelect(
             $instance->getTable(),
             null,
             $_where,
@@ -785,7 +785,7 @@ abstract class Core_ActiveRecord
      */
     public static function getCount($_where = array())
     {
-        $result = App_Db::get()->getEntry(App_Db::get()->getSelect(
+        $result = Ext_Db::get()->getEntry(Ext_Db::get()->getSelect(
             self::getTbl(),
             'COUNT(1) AS `cnt`',
             $_where
@@ -807,7 +807,7 @@ abstract class Core_ActiveRecord
         if ($_excludeId) {
             $where = array_merge(
                 $where,
-                App_Db::get()->getWhereNot(array(self::getPri() => $_excludeId))
+                Ext_Db::get()->getWhereNot(array(self::getPri() => $_excludeId))
             );
         }
 

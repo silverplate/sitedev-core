@@ -197,7 +197,7 @@ abstract class Core_Cms_User extends App_Model
 
         if ($this->email) {
             $this->reminderDate = date('Y-m-d H:i:s');
-            $this->reminderKey = App_Db::get()->getUnique(
+            $this->reminderKey = Ext_Db::get()->getUnique(
                 $this->getTable(),
                 'reminder_key',
                 30

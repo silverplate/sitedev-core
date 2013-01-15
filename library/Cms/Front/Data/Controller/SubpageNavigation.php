@@ -43,7 +43,7 @@ extends App_Cms_Front_Data_Controller
                        'is_published' => 1);
 
         foreach ($except as $attr => $value) {
-            $rowConds[] = $attr . ' != ' . App_Db::escape($value);
+            $rowConds[] = $attr . ' != ' . Ext_Db::escape($value);
         }
 
         $children = App_Cms_Front_Document::getList($conds, null, $rowConds);

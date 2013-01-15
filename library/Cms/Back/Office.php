@@ -289,7 +289,7 @@ abstract class Core_Cms_Back_Office
         $where = array('parent_id' => empty($_parentId) ? null : $_parentId);
 
         if ($_excludeId) {
-            $where[] = $_className::getPri() . ' != ' . App_Db::escape($_excludeId);
+            $where[] = $_className::getPri() . ' != ' . Ext_Db::escape($_excludeId);
         }
 
         $list = $_className::getList($where);

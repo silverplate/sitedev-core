@@ -246,7 +246,7 @@ abstract class Core_Cms_Front_Document extends App_Model
         $result = array();
         $key = self::getPri();
 
-        $entry = App_Db::get()->getEntry(App_Db::get()->getSelect(
+        $entry = Ext_Db::get()->getEntry(Ext_Db::get()->getSelect(
             self::getTbl(),
             array($key, 'parent_id'),
             array($key => $_id)

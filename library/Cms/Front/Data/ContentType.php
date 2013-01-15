@@ -42,7 +42,7 @@ abstract class Core_Cms_Front_Data_ContentType extends App_Model
 
 //     public function delete()
 //     {
-//         App_Db::get()->execute(
+//         Ext_Db::get()->execute(
 //             'UPDATE ' . App_Cms_Front_Data::getTbl() .
 //             ' SET ' . $this->getPrimaryKeyName() . ' = NULL WHERE ' . $this->getPrimaryKeyWhere()
 //         );

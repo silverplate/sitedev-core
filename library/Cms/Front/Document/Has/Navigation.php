@@ -18,7 +18,7 @@ abstract class Core_Cms_Front_Document_Has_Navigation extends App_Model
         $where = $_where;
 
         if (isset($where['is_published'])) {
-            $ids = App_Db::get()->getList(App_Db::get()->getSelect(
+            $ids = Ext_Db::get()->getList(Ext_Db::get()->getSelect(
                 self::getFirstForeignTbl(),
                 self::getFirstForeignPri(),
                 array('is_published' => $where['is_published'] ? 1 : 0)
@@ -30,7 +30,7 @@ abstract class Core_Cms_Front_Document_Has_Navigation extends App_Model
                 $where[self::getFirstForeignPri()] = $ids;
             }
 
-            $ids = App_Db::get()->getList(App_Db::get()->getSelect(
+            $ids = Ext_Db::get()->getList(Ext_Db::get()->getSelect(
                 self::getSecondForeignTbl(),
                 self::getSecondForeignPri(),
                 array('is_published' => $where['is_published'] ? 1 : 0)

@@ -16,11 +16,11 @@
 require_once realpath(dirname(__FILE__) . '/../../../core/library') . '/libs.php';
 require_once SETS . 'project.php';
 
-$d = App_Db::get()->getDatabase();
-$u = ' -u' . App_Db::get()->getUser();
-$p = ' -p' . App_Db::get()->getPassword();
-$prt = App_Db::get()->getPort() ? ' -P' . App_Db::get()->getPort() : '';
-$h = ' -h' . App_Db::get()->getHost();
+$d = Ext_Db::get()->getDatabase();
+$u = ' -u' . Ext_Db::get()->getUser();
+$p = ' -p' . Ext_Db::get()->getPassword();
+$prt = Ext_Db::get()->getPort() ? ' -P' . Ext_Db::get()->getPort() : '';
+$h = ' -h' . Ext_Db::get()->getHost();
 
 $indent = PHP_EOL . PHP_EOL;
 $return = null;

@@ -23,7 +23,7 @@ abstract class Core_Cms_Front_Template extends App_Model
 
     public function delete()
     {
-//         App_Db::get()->execute(
+//         Ext_Db::get()->execute(
 //             'UPDATE ' . App_Cms_Front_Document::getTbl() .
 //             ' SET ' . $this->getPrimaryKeyName() . ' = NULL WHERE ' . $this->getPrimaryKeyWhere()
 //         );
@@ -84,7 +84,7 @@ abstract class Core_Cms_Front_Template extends App_Model
     public function saveContent($_content)
     {
         $content = str_replace(array("\r\n", "\r"), "\n", $_content);
-        $content = preg_replace('~[/n]{3,}~', "\n\n", $content);
+        $content = preg_replace('~[\n]{3,}~', "\n\n", $content);
 
         Ext_File::write($this->getFilePath(), $content);
     }

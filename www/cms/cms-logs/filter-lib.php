@@ -21,7 +21,7 @@ function boLogFilter($_filter)
 
         } else {
             $where[] = $instance->getPrimaryKeyName() .
-                       ' NOT IN (' . App_Db::escape(array_keys(App_Cms_Back_User::getList())) . ')';
+                       ' NOT IN (' . Ext_Db::escape(array_keys(App_Cms_Back_User::getList())) . ')';
         }
     }
 
@@ -33,7 +33,7 @@ function boLogFilter($_filter)
 
         } else {
             $where[] = $instance->getPrimaryKeyName() .
-                       ' NOT IN (' . App_Db::escape(array_keys(App_Cms_Back_Section::getList())) . ')';
+                       ' NOT IN (' . Ext_Db::escape(array_keys(App_Cms_Back_Section::getList())) . ')';
         }
     }
 
@@ -42,7 +42,7 @@ function boLogFilter($_filter)
             $where['action_id'] = $_filter['actions'];
 
         } else {
-            $where[] = 'action_id NOT IN (' . App_Db::escape(array_keys(App_Cms_Back_Log::getActions())) . ')';
+            $where[] = 'action_id NOT IN (' . Ext_Db::escape(array_keys(App_Cms_Back_Log::getActions())) . ')';
         }
     }
 

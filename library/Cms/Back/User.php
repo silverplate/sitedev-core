@@ -75,7 +75,7 @@ abstract class Core_Cms_Back_User extends App_Model
         global $g_bo_mail;
 
         if ($this->email) {
-            $this->reminderKey = App_Db::get()->getUnique(self::getTbl(), 'reminder_key');
+            $this->reminderKey = Ext_Db::get()->getUnique(self::getTbl(), 'reminder_key');
             $this->reminderDate = date('Y-m-d H:i:s');
             $this->update();
 

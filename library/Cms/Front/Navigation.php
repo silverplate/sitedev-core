@@ -33,7 +33,7 @@ abstract class Core_Cms_Front_Navigation extends App_Model
 
     public static function getRowDocuments($_name)
     {
-        $list = App_Db::get()->getList('
+        $list = Ext_Db::get()->getList('
             SELECT
                 d.' . App_Cms_Front_Document::getPri() . ' AS id,
                 d.*
@@ -43,7 +43,7 @@ abstract class Core_Cms_Front_Navigation extends App_Model
                 ' . App_Cms_Front_Document_Has_Navigation::getTbl() . ' AS l
             WHERE
                 n.is_published = 1 AND
-                n.name = ' . App_Db::escape($_name) . ' AND
+                n.name = ' . Ext_Db::escape($_name) . ' AND
                 n.' . App_Cms_Front_Navigation::getPri() . ' = l.' . App_Cms_Front_Navigation::getPri() . ' AND
                 l.' . App_Cms_Front_Document::getPri() . ' = d.' . App_Cms_Front_Document::getPri() . ' AND
                 d.is_published = 1' .
