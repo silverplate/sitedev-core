@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `~db prefix~back_section` (
     `~db prefix~back_section_id` CHAR(10) NOT NULL,
     `title` VARCHAR(255) NOT NULL,
     `uri` VARCHAR(255) NOT NULL,
-    `description` TEXT NOT NULL,
+    `description` TEXT NULL,
     `is_published` TINYINT(1) NOT NULL DEFAULT 0,
     `sort_order` INT UNSIGNED NULL,
     PRIMARY KEY (`~db prefix~back_section_id`)
