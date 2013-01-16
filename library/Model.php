@@ -32,10 +32,15 @@ class Core_Model extends App_ActiveRecord
         else if (is_array($_xml)) $xml = $_xml;
         else                      $xml = array($_xml);
 
+        if (!key_exists('title', $xml)) {
+            Ext_Xml::append($xml, Ext_Xml::cdata('title', $this->getTitle()));
+        }
+
         $attrs = empty($_attrs) ? array() : $_attrs;
 
-        $attrs['id'] = $this->id;
-        Ext_Xml::append($xml, Ext_Xml::cdata('title', $this->getTitle()));
+        if (!key_exists('id', $attrs)) {
+            $attrs['id'] = $this->id;
+        }
 
         return Ext_Xml::node($node, $xml, $attrs);
     }
