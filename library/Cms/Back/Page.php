@@ -58,9 +58,9 @@ abstract class Core_Cms_Back_Page extends App_Cms_Page
 
     public function getXml()
     {
-        if (defined('SITE_TITLE') && SITE_TITLE) {
-            $this->addSystem(Ext_Xml::cdata('title', SITE_TITLE));
-        }
+        global $gSiteTitle;
+
+        $this->addSystem(Ext_Xml::cdata('title', $gSiteTitle));
 
         if (App_Cms_Back_User::get()) {
             $this->addSystem(App_Cms_Back_User::get()->getXml());

@@ -36,22 +36,30 @@ abstract class Core_Cms_Front_Office
 
     public static function bootstrap()
     {
+        global $gHost,
+               $gSiteKey,
+               $gisUsers,
+               $gSiteLangType,
+               $gSiteLang,
+               $gIsKey,
+               $gIsAdminMode,
+               $gIsHidden;
+
         // Language
 
         $siteLangType = null;
         $siteLang = null;
 
         if (self::getLanguages()) {
-            $host = empty($_SERVER['HTTP_HOST']) ? false : $_SERVER['HTTP_HOST'];
             $url = empty($_SERVER['REQUEST_URI']) ? false : parse_url($_SERVER['REQUEST_URI']);
 
-            if ($host && $url) {
+            if ($gHost && $url) {
                 $langPath = array();
 
                 foreach (self::getLanguages() as $lang => $params) {
                     foreach (Ext_String::split($params[0]) as $item) {
                         if (
-                            $host == $item ||
+                            $gHost == $item ||
                             ('/' == $item && '/' == $url['path']) ||
                             ('/' != $item && strpos($url['path'], $item) === 0)
                         ) {
@@ -60,7 +68,7 @@ abstract class Core_Cms_Front_Office
                             if (count($langPath) < count($localLangPath)) {
                                 $siteLang = $lang;
                                 $langPath = $localLangPath;
-                                $siteLangType = $host == $item ? 'host' : 'path';
+                                $siteLangType = $gHost == $item ? 'host' : 'path';
                             }
                         }
                     }
@@ -68,16 +76,18 @@ abstract class Core_Cms_Front_Office
             }
         }
 
-        define('SITE_LANG_TYPE', $siteLangType);
-        define('SITE_LANG', $siteLang ? $siteLang : self::getLanguages() ? key(self::getLanguages()) : '');
+        $gSiteLangType = $siteLangType;
+        $gSiteLang = $siteLang
+                   ? $siteLang
+                   : self::getLanguages() ? key(self::getLanguages()) : '';
 
 
         // Administration
 
-        define('IS_KEY', isset($_GET['key']) && $_GET['key'] == SITE_KEY);
-        define('IS_ADMIN_MODE', self::getAdminParam('is_admin_mode'));
+        $gIsKey = !empty($_GET['key']) && $_GET['key'] == $gSiteKey;
+        $gIsAdminMode = self::getAdminParam('is_admin_mode');
 
-        if (IS_KEY) {
+        if ($gIsKey) {
             self::setAdminParam('is_admin_mode', true);
             self::setAdminParam('is_hidden', true);
 
@@ -97,16 +107,16 @@ abstract class Core_Cms_Front_Office
                 reload();
             }
 
-        } else if (IS_ADMIN_MODE) {
+        } else if ($gIsAdminMode) {
             self::setAdminParam('is_delete_cache', key_exists('delete_cache', $_GET));
         }
 
-        define('IS_HIDDEN', IS_ADMIN_MODE && self::getAdminParam('is_hidden'));
+        $gIsHidden = $gIsAdminMode && self::getAdminParam('is_hidden');
 
 
         // Authorization
 
-        if (defined('IS_USERS') && IS_USERS) {
+        if (!empty($gisUsers)) {
             App_Cms_User::startSession();
         }
     }

@@ -45,7 +45,7 @@ abstract class Core_ActiveRecord
     public static function computeTable()
     {
         $name = str_replace(array('Core_', 'App_', 'Cms_'), '', get_called_class());
-        return DB_PREFIX . Ext_String::underline($name);
+        return Ext_Db::get()->getPrefix() . Ext_String::underline($name);
     }
 
     /**
@@ -108,8 +108,8 @@ abstract class Core_ActiveRecord
                 return $name;
             }
 
-            if (defined(DB_PREFIX) && DB_PREFIX) {
-                $name = DB_PREFIX . $name;
+            if (Ext_Db::get()->getPrefix()) {
+                $name = Ext_Db::get()->getPrefix() . $name;
 
                 if (key_exists($name, $this->_attributes)) {
                     return $name;

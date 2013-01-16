@@ -2,6 +2,8 @@
 
 require_once '../prepend.php';
 
+global $gIsUsers;
+
 $page = new App_Cms_Back_Page();
 
 if ($page->isAllowed()) {
@@ -70,7 +72,7 @@ if ($page->isAllowed()) {
     }
 
     // Доступ для групп пользователей
-    if (defined('IS_USERS') && IS_USERS) {
+    if (!empty($gIsUsers)) {
         $form->createElement('auth_status_id', 'chooser', 'Данные доступны');
 
         foreach (App_Cms_User::getAuthGroups() as $id => $params) {

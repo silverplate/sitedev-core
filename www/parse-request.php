@@ -2,9 +2,11 @@
 
 require_once 'prepend.php';
 
-$gCache = '' == SITE_LANG
+global $gSiteLang, $gIsHidden;
+
+$gCache = empty($gSiteLang)
         ? new App_Cms_Cache_Project()
-        : new App_Cms_Cache_Project(null, SITE_LANG);
+        : new App_Cms_Cache_Project(null, $gSiteLang);
 
 if ($gCache->isAvailable() && $gCache->isCache()) {
     echo $gCache;
@@ -25,7 +27,7 @@ if ($gCache->isAvailable() && $gCache->isCache()) {
         if (
             $document &&
             $document->getController() &&
-            ($document->isPublished == 1 || IS_HIDDEN) &&
+            ($document->isPublished == 1 || !empty($gIsHidden)) &&
             (!$document->authStatusId || is_null(App_Cms_User::getAuthGroup()) || $document->authStatusId & App_Cms_User::getAuthGroup())
         ) {
             $controller = App_Cms_Front_Document::initController($document->getController(), $document);
@@ -41,11 +43,10 @@ if ($gCache->isAvailable() && $gCache->isCache()) {
 
 function getCustomUrl($_url)
 {
-    global $gCustomUrls;
+    global $gCustomUrls, $gSiteLang;
 
-
-    $url = '' != SITE_LANG && 0 === strpos($_url, '/' . SITE_LANG . '/')
-         ? substr($_url, strlen(SITE_LANG) + 1)
+    $url = !empty($gSiteLang) && 0 === strpos($_url, "/$gSiteLang/")
+         ? substr($_url, strlen($gSiteLang) + 1)
          : $_url;
 
     if (empty($gCustomUrls)) {
@@ -55,7 +56,8 @@ function getCustomUrl($_url)
         $urls = $gCustomUrls;
         array_walk($urls, 'escapeUrl');
         preg_match('/^\/(' . implode('|', $urls) . ')\//', $url, $matches);
-        return (SITE_LANG ? '/' . SITE_LANG : '') . ($matches ? $matches[0] : $url);
+
+        return (empty($gSiteLang) ? '' : "/$gSiteLang/") . ($matches ? $matches[0] : $url);
     }
 }
 

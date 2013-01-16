@@ -19,10 +19,10 @@ class Core_Cms_Cache_Apc
      */
     public static function isEnabled()
     {
+        global $gIsApc;
+
         if (!isset(self::$_isEnabled)) {
-            self::$_isEnabled = defined('IS_APC') &&
-                                IS_APC &&
-                                extension_loaded('apc');
+            self::$_isEnabled = !empty($gIsApc) && extension_loaded('apc');
         }
 
         return self::$_isEnabled;

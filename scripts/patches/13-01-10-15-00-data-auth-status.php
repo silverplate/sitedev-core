@@ -6,7 +6,7 @@ require_once SETS . 'project.php';
 $nl = PHP_EOL;
 
 $res = Ext_Db::get()->execute('
-    ALTER TABLE `' . DB_PREFIX . 'front_data`
+    ALTER TABLE `' . Ext_Db::get()->getPrefix() . 'front_data`
     MODIFY `auth_status_id` SMALLINT UNSIGNED NULL
 ');
 

@@ -2,6 +2,8 @@
 
 require_once '../prepend.php';
 
+global $gCache, $gIsUsers;
+
 $page = new App_Cms_Back_Page();
 
 if ($page->isAllowed()) {
@@ -77,7 +79,7 @@ if ($page->isAllowed()) {
         }
 
         // Доступ для групп пользователей
-        if (defined('IS_USERS') && IS_USERS) {
+        if (!empty($gIsUsers)) {
             $form->getGroup('system')->addElement($form->createElement(
                 'auth_status_id',
                 'chooser',
@@ -232,7 +234,7 @@ if ($page->isAllowed()) {
         $xml .= Ext_Xml::cdata(
             'title',
             '<a href="' . $obj->getUri() .
-            (defined('IS_CACHE') && IS_CACHE ? '?no-cache' : '') . '">' .
+            (empty($gCache) ? '' : '?no-cache') . '">' .
             $obj->getTitle() . '</a>'
         );
 

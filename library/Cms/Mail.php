@@ -103,9 +103,9 @@ abstract class Core_Cms_Mail extends PHPMailer
 
     public function send($_ignoreEnv = false)
     {
-        global $gAdminEmails;
+        global $gAdminEmails, $gEnv;
 
-        $env = defined('ENV') && ENV ? ENV : 'staging';
+        $env = empty($gEnv) ? 'staging' : $gEnv;
         if ($_ignoreEnv) $env = null;
 
         if (

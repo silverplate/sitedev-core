@@ -74,9 +74,12 @@ abstract class Core_Cms_Front_Data extends App_Model
 
     public function getXml($_node = null, $_xml = null, $_attrs = null)
     {
+        global $gIsUsers;
+
         // Name
 
         $node = $_node ? $_node : 'document-data';
+
 
         // @
 
@@ -92,6 +95,7 @@ abstract class Core_Cms_Front_Data extends App_Model
         if ($this->isMount) {
             $attrs['is-mount'] = 1;
         }
+
 
         // XML
 
@@ -119,8 +123,7 @@ abstract class Core_Cms_Front_Data extends App_Model
         );
 
         if (
-            defined('IS_USERS') &&
-            IS_USERS &&
+            !empty($gIsUsers) &&
             $this->authStatusId != App_Cms_User::AUTH_GROUP_ALL &&
             App_Cms_User::getAuthGroupTitle($this->authStatusId)
         ) {

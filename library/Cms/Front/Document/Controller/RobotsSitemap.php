@@ -67,9 +67,10 @@ abstract class Core_Cms_Front_Document_Controller_RobotsSitemap extends App_Cms_
                                               $_freq = 'always',
                                               $_date = null)
     {
+        global $gHost;
         $date = empty($_date) ? date('c') : date('c', $_date);
 
-        return array('loc' => SITE_URL . $_uri,
+        return array('loc' => "http://$gHost$_uri",
                      'lastmod' => $date,
                      'changefreq' => $_freq,
                      'priority' => $_priority);

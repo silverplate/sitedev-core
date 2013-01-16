@@ -48,9 +48,11 @@ abstract class Core_Cms_Page
 
     protected function _computeUrl()
     {
+        global $gHost;
+
         $this->_url = parse_url($_SERVER['REQUEST_URI']);
         $this->_url['request_uri'] = $_SERVER['REQUEST_URI'];
-        $this->_url['host'] = $_SERVER['HTTP_HOST'];
+        $this->_url['host'] = $gHost;
 
         if (!isset($this->_url['query'])) {
             $this->_url['query'] = '';

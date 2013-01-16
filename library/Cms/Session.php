@@ -2,7 +2,6 @@
 
 abstract class Core_Cms_Session
 {
-    const PREFIX = DB_PREFIX;
     const NAME = 'sess';
     const PATH = '/';
 
@@ -40,6 +39,16 @@ abstract class Core_Cms_Session
         return self::$_obj;
     }
 
+    public static function getTbl()
+    {
+        return Ext_Db::get()->getPrefix() . 'session';
+    }
+
+    public static function getPri()
+    {
+        return Ext_Db::get()->getPrefix() . 'session_id';
+    }
+
     protected function __construct()
     {
         $this->setCookiePath($this->getCookiePath());
@@ -54,9 +63,9 @@ abstract class Core_Cms_Session
                 is_logged_in,
                 user_id
             FROM
-                ' . self::PREFIX . 'session
+                ' . self::getTbl() . '
             WHERE
-                ' . self::PREFIX . 'session_id = ' . Ext_Db::escape(self::getId()) . ' AND
+                ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()) . ' AND
                 user_agent = ' . Ext_Db::escape(md5($http_user_agent)) . ' AND (
                     ISNULL(valid_date) OR NOW() < valid_date
                 ) AND (
@@ -69,7 +78,7 @@ abstract class Core_Cms_Session
         ');
 
         if ($session) {
-            foreach (Ext_Db::get()->getList('SELECT name, value FROM ' . self::PREFIX . 'session_param WHERE ' . self::PREFIX . 'session_id = ' . Ext_Db::escape(self::getId())) as $item) {
+            foreach (Ext_Db::get()->getList('SELECT name, value FROM ' . self::getTbl() . '_param WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId())) as $item) {
                 $this->_params[$item['name']] = unserialize($item['value']);
             }
 
@@ -79,8 +88,8 @@ abstract class Core_Cms_Session
             self::_destroy();
             self::clean();
 
-            Ext_Db::get()->execute('INSERT INTO ' . self::PREFIX . 'session' . Ext_Db::get()->getQueryFields(array(
-                self::PREFIX . 'session_id' => Ext_Db::escape(self::getId()),
+            Ext_Db::get()->execute('INSERT INTO ' . self::getTbl() . Ext_Db::get()->getQueryFields(array(
+                self::getPri() => Ext_Db::escape(self::getId()),
                 'is_ip_match' => 0,
                 'is_logged_in' => 0,
                 'user_id' => '\'\'',
@@ -133,7 +142,7 @@ abstract class Core_Cms_Session
     public static function getId()
     {
         if (!isset($_COOKIE[self::get()->getCookieName()]) || !$_COOKIE[self::get()->getCookieName()]) {
-            self::_setId(Ext_Db::get()->getUnique(self::PREFIX . 'session', self::PREFIX . 'session_id', 30));
+            self::_setId(Ext_Db::get()->getUnique(self::getTbl(), self::getPri(), 30));
         }
 
         return $_COOKIE[self::get()->getCookieName()];
@@ -165,14 +174,14 @@ abstract class Core_Cms_Session
         $this->_userId = $_userId;
         self::_setId(self::getId(), $_validDate ? $_validDate : null);
 
-        Ext_Db::get()->execute('UPDATE ' . self::PREFIX . 'session' . Ext_Db::get()->getQueryFields(array(
+        Ext_Db::get()->execute('UPDATE ' . self::getTbl() . Ext_Db::get()->getQueryFields(array(
             'is_ip_match' => ($_isIpMatch) ? 1 : 0,
             'is_logged_in' => 1,
             'user_id' => Ext_Db::escape($_userId),
             'life_span' => $_lifeSpan ? $_lifeSpan : 0,
             'timeout' => $_timeout ? $_timeout : 0,
             'valid_date' => $_validDate ? Ext_Db::escape(date('Y-m-d H:i:s', $_validDate)) : 'NULL'
-        ), 'update', true) . 'WHERE ' . self::PREFIX . 'session_id = ' . Ext_Db::escape(self::getId()));
+        ), 'update', true) . 'WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()));
     }
 
     public function logout()
@@ -180,16 +189,16 @@ abstract class Core_Cms_Session
         $this->_isLoggedIn = false;
         $this->_userId = '';
 
-        Ext_Db::get()->execute('UPDATE ' . self::PREFIX . 'session' . Ext_Db::get()->getQueryFields(array(
+        Ext_Db::get()->execute('UPDATE ' . self::getTbl() . Ext_Db::get()->getQueryFields(array(
             'is_logged_in' => 0,
             'user_id' => '\'\'',
             'valid_date' => 'NULL'
-        ), 'update', true) . 'WHERE ' . self::PREFIX . 'session_id = ' . Ext_Db::escape(self::getId()));
+        ), 'update', true) . 'WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()));
     }
 
     private function impress()
     {
-        Ext_Db::get()->execute('UPDATE ' . self::PREFIX . 'session' . Ext_Db::get()->getQueryFields(array('last_impression_date' => 'NOW()'), 'update', true) . 'WHERE ' . self::PREFIX . 'session_id = ' . Ext_Db::escape(self::getId()));
+        Ext_Db::get()->execute('UPDATE ' . self::getTbl() . Ext_Db::get()->getQueryFields(array('last_impression_date' => 'NOW()'), 'update', true) . 'WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()));
     }
 
     private function _initParam($_name, $_value)
@@ -199,7 +208,7 @@ abstract class Core_Cms_Session
 
     public function deleteParam($_name)
     {
-        Ext_Db::get()->execute('DELETE FROM ' . self::PREFIX . 'session_param WHERE ' . self::PREFIX . 'session_id = ' . Ext_Db::escape(self::getId()) . ' AND name = ' . Ext_Db::escape($_name));
+        Ext_Db::get()->execute('DELETE FROM ' . self::getTbl() . '_param WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()) . ' AND name = ' . Ext_Db::escape($_name));
         unset($this->_params[$_name]);
     }
 
@@ -207,8 +216,8 @@ abstract class Core_Cms_Session
     {
         self::deleteParam($_name);
 
-        Ext_Db::get()->execute('INSERT INTO ' . self::PREFIX . 'session_param' . Ext_Db::get()->getQueryFields(array(
-            self::PREFIX . 'session_id' => self::getId(),
+        Ext_Db::get()->execute('INSERT INTO ' . self::getTbl() . '_param' . Ext_Db::get()->getQueryFields(array(
+            self::getPri() => self::getId(),
             'name' => $_name,
             'value' => serialize($_value)
         ), 'insert'));
@@ -219,7 +228,7 @@ abstract class Core_Cms_Session
     public function getParam($_name)
     {
         if (!isset($this->_params[$_name])) {
-            $param = Ext_Db::get()->getEntry('SELECT value FROM ' . self::PREFIX . 'session_param WHERE ' . self::PREFIX . 'session_id = ' . Ext_Db::escape(self::getId()) . ' AND name = ' . Ext_Db::escape($_name));
+            $param = Ext_Db::get()->getEntry('SELECT value FROM ' . self::getTbl() . '_param WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()) . ' AND name = ' . Ext_Db::escape($_name));
             $this->_params[$_name] = $param ? unserialize($param['value']) : null;
         }
 
@@ -228,15 +237,15 @@ abstract class Core_Cms_Session
 
     private function _destroy()
     {
-        Ext_Db::get()->execute('DELETE FROM ' . self::PREFIX . 'session WHERE ' . self::PREFIX . 'session_id = ' . Ext_Db::escape(self::getId()));
-        Ext_Db::get()->execute('DELETE FROM ' . self::PREFIX . 'session_param WHERE ' . self::PREFIX . 'session_id = ' . Ext_Db::escape(self::getId()));
+        Ext_Db::get()->execute('DELETE FROM ' . self::getTbl() . ' WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()));
+        Ext_Db::get()->execute('DELETE FROM ' . self::getTbl() . '_param WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()));
     }
 
     public static function clean($_userId = null)
     {
         Ext_Db::get()->execute('
             DELETE FROM
-                ' . self::PREFIX . 'session
+                ' . self::getTbl() . '
             WHERE
                 ' . ($_userId ? 'user_id = ' . Ext_Db::escape($_userId) . ' OR ' : '') . '
                 (NOT(ISNULL(valid_date)) AND valid_date < NOW()) OR
@@ -245,7 +254,7 @@ abstract class Core_Cms_Session
                 (timeout > 0 AND (ISNULL(last_impression_date) OR DATE_ADD(last_impression_date, INTERVAL timeout MINUTE) < NOW()))
         ');
 
-        Ext_Db::get()->execute('DELETE FROM ' . self::PREFIX . 'session_param WHERE ' . self::PREFIX . 'session_id NOT IN (SELECT ' . self::PREFIX . 'session_id FROM ' . self::PREFIX . 'session)');
+        Ext_Db::get()->execute('DELETE FROM ' . self::getTbl() . '_param WHERE ' . self::getPri() . ' NOT IN (SELECT ' . self::getPri() . ' FROM ' . self::getTbl() . ')');
     }
 
     public function getXml($_node = null, $_xml = null)
@@ -281,13 +290,13 @@ abstract class Core_Cms_Session
                     u.title,
                     u.login
                 FROM
-                    ' . self::PREFIX . 'session AS s,
-                    ' . self::PREFIX . 'back_user AS u
+                    ' . self::getTbl() . ' AS s,
+                    ' . Ext_Db::get()->getPrefix() . 'back_user AS u
                 WHERE
                     DATE_ADD(s.last_impression_date, INTERVAL 15 MINUTE) > NOW() AND
                     s.user_id != \'\' AND
-                    s.' . self::PREFIX . 'session_id != ' . Ext_Db::escape($this->getId()) . ' AND
-                    s.user_id = u.' . self::PREFIX . 'back_user_id
+                    s.' . self::getPri() . ' != ' . Ext_Db::escape($this->getId()) . ' AND
+                    s.user_id = u.' . Ext_Db::get()->getPrefix() . 'back_user_id
             ');
         }
 

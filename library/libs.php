@@ -66,69 +66,21 @@ function __autoload($_class)
     }
 }
 
-function get_lang_inner_uri() {
-    return defined('SITE_LANG') && SITE_LANG ? '/' . SITE_LANG . '/' : '/';
-}
-
-function getAdvParams()
+function initSettings()
 {
-    return array('utm_source', 'adv');
-}
+    require_once CORE_SETS . 'project.php';
 
-function getAdvMailParams()
-{
-    $result = array();
-    $params = getAdvParams();
-    $params[] = 'HTTP_REFERER';
-
-    foreach ($params as $item) {
-        $value = advGetCookie($item);
-
-        if (!empty($value)) {
-            $result[$item] = $value;
-        }
+    if (is_file(SETS . 'local.php')) {
+        require_once SETS . 'local.php';
     }
 
-    return $result;
+    require_once SETS . 'project.php';
 }
 
-function advMonitor()
+function getLangInnerUri()
 {
-    foreach (getAdvParams() as $item) {
-        if (!empty($_GET[$item])) {
-            advSetCookie($item, $_GET[$item]);
-        }
-    }
-
-    $envName = 'HTTP_REFERER';
-    if (!empty($_SERVER[$envName])) {
-        $referer = strtolower($_SERVER[$envName]);
-        $url = parse_url($referer);
-
-        if (
-            !empty($url['host']) &&
-            !empty($_SERVER['HTTP_HOST']) &&
-            $url['host'] != strtolower($_SERVER['HTTP_HOST'])
-        ) {
-            $prev = advGetCookie($envName);
-            if (!$prev || $prev != $referer) {
-                advSetCookie($envName, $referer);
-            }
-        }
-    }
-}
-
-function advSetCookie($_name, $_value)
-{
-    $name = 'adv_' . strtolower($_name);
-    $_COOKIE[$name] = $_value;
-    setcookie($name, $_value, 0, '/', '.' . $_SERVER['HTTP_HOST']);
-}
-
-function advGetCookie($_name)
-{
-    $name = 'adv_' . strtolower($_name);
-    return isset($_COOKIE[$name]) ? $_COOKIE[$name] : false;
+    global $gSiteLang;
+    return empty($gSiteLang) ? '/' : "/$gSiteLang/";
 }
 
 function d()
@@ -187,11 +139,13 @@ function reload($_append = null)
 
 function documentNotFound()
 {
+    global $gIsHidden;
+
     header('HTTP/1.0 404 Not Found');
 
     if (class_exists('App_Cms_Front_Document')) {
         $realUrl = parse_url($_SERVER['REQUEST_URI']);
-        $document = App_Cms_Front_Document::load(get_lang_inner_uri() . 'not-found/', 'uri');
+        $document = App_Cms_Front_Document::load(getLangInnerUri() . 'not-found/', 'uri');
 
         if ($document) {
             if ($document->link && $document->link != $realUrl['path']) {
@@ -199,8 +153,7 @@ function documentNotFound()
 
             } else if (
                 $document->getController() && (
-                    $document->is_published == 1 ||
-                    (defined('IS_HIDDEN') && IS_HIDDEN)
+                    $document->isPublished == 1 || !empty($gIsHidden)
                 )
             ) {
                 $controller = App_Cms_Front_Document::initController(
@@ -329,3 +282,68 @@ function traceTimeGetReport($_format = 'html')
 
     return $result;
 }
+
+// Функции для отслеживания рекламных переходов с других сайтов.
+
+// function getAdvParams()
+// {
+//     return array('utm_source', 'adv');
+// }
+
+// function getAdvMailParams()
+// {
+//     $result = array();
+//     $params = getAdvParams();
+//     $params[] = 'HTTP_REFERER';
+
+//     foreach ($params as $item) {
+//         $value = advGetCookie($item);
+
+//         if (!empty($value)) {
+//             $result[$item] = $value;
+//         }
+//     }
+
+//     return $result;
+// }
+
+// function advMonitor()
+// {
+//     global $gHost;
+
+//     foreach (getAdvParams() as $item) {
+//         if (!empty($_GET[$item])) {
+//             advSetCookie($item, $_GET[$item]);
+//         }
+//     }
+
+//     $envName = 'HTTP_REFERER';
+
+//     if (!empty($_SERVER[$envName])) {
+//         $referer = strtolower($_SERVER[$envName]);
+//         $url = parse_url($referer);
+
+//         if (!empty($url['host']) && $url['host'] != strtolower($gHost)) {
+//             $prev = advGetCookie($envName);
+
+//             if (!$prev || $prev != $referer) {
+//                 advSetCookie($envName, $referer);
+//             }
+//         }
+//     }
+// }
+
+// function advSetCookie($_name, $_value)
+// {
+//     global $gHost;
+
+//     $name = 'adv_' . strtolower($_name);
+//     $_COOKIE[$name] = $_value;
+//     setcookie($name, $_value, 0, '/', '.' . $gHost);
+// }
+
+// function advGetCookie($_name)
+// {
+//     $name = 'adv_' . strtolower($_name);
+//     return isset($_COOKIE[$name]) ? $_COOKIE[$name] : false;
+// }

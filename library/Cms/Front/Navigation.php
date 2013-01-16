@@ -33,6 +33,8 @@ abstract class Core_Cms_Front_Navigation extends App_Model
 
     public static function getRowDocuments($_name)
     {
+        global $gSiteLangType;
+
         $list = Ext_Db::get()->getList('
             SELECT
                 d.' . App_Cms_Front_Document::getPri() . ' AS id,
@@ -61,7 +63,7 @@ abstract class Core_Cms_Front_Navigation extends App_Model
                         $list[$i]['lang'] = $j;
 
                         if (
-                            'host' == SITE_LANG_TYPE ||
+                            $gSiteLangType == 'host' ||
                             0 != strpos($list[$i]['uri'], "/$j/")
                         ) {
                             $list[$i]['uri'] = substr($list[$i]['uri'], strlen($j) + 2 - 1);

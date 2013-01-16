@@ -46,11 +46,12 @@ abstract class Core_Cms_Front_Document extends App_Model
 
     public function getBackOfficeXml($_xml = array(), $_attrs = array())
     {
+        global $gIsUsers;
+
         $attrs = $_attrs;
 
         if (
-            defined('IS_USERS') &&
-            IS_USERS &&
+            !empty($gIsUsers) &&
             $this->authStatusId != App_Cms_User::AUTH_GROUP_ALL &&
             App_Cms_User::getAuthGroupTitle($this->authStatusId)
         ) {

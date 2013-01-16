@@ -72,15 +72,17 @@ abstract class Core_Cms_Back_User extends App_Model
 
     public function remindPassword()
     {
+        global $gHost;
+
         if ($this->email) {
             $this->reminderKey = Ext_Db::get()->getUnique(self::getTbl(), 'reminder_key');
             $this->reminderTime = time();
             $this->update();
 
-            $message = 'Для смены пароля к системе управления сайта http://' .
-                       $_SERVER['HTTP_HOST'] . App_Cms_Back_Office::$uriStartsWith .
-                       ' загрузите страницу http://' .
-                       $_SERVER['HTTP_HOST'] . App_Cms_Back_Office::$uriStartsWith .
+            $message = "Для смены пароля к системе управления сайта http://$gHost" .
+                       App_Cms_Back_Office::$uriStartsWith .
+                       " загрузите страницу http://$gHost" .
+                       App_Cms_Back_Office::$uriStartsWith .
                        "?r={$this->reminderKey}\n\n" .
                        'Если вы не просили поменять пароль, проигнорируйте это сообщение.';
 
@@ -94,6 +96,8 @@ abstract class Core_Cms_Back_User extends App_Model
 
     public function changePassword()
     {
+        global $gHost;
+
         if ($this->email) {
             if (
                 $this->statusId == 1 &&
@@ -107,8 +111,7 @@ abstract class Core_Cms_Back_User extends App_Model
                 $this->reminderTime = '';
                 $this->update();
 
-                $message = 'Доступ к системе управления сайта http://' .
-                           $_SERVER['HTTP_HOST'] .
+                $message = "Доступ к системе управления сайта http://$gHost" .
                            App_Cms_Back_Office::$uriStartsWith .
                            ".\n\n" .
                            'Логин: ' . $this->login .

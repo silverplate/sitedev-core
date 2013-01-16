@@ -1,8 +1,11 @@
 <?php
 
 require_once realpath(dirname(__FILE__) . '/../../../core/library') . '/libs.php';
-require_once SETS . 'project.php';
+
+initSettings();
 $result = array();
+
+global $gSiteTitle, $gIsUsers;
 
 // Init for DB
 
@@ -34,7 +37,7 @@ $templates = array(
 );
 
 $frontDocuments = array(
-    array('/' => array('title' => SITE_TITLE,
+    array('/' => array('title' => $gSiteTitle,
                        'folder' => '/',
                        'сontroller' => 'common',
                        'template' => 'common',
@@ -79,7 +82,7 @@ $frontData = array(
 // Create tables
 
 $sqlTables = file_get_contents('tables.sql');
-$sqlTables = str_replace('~db prefix~', DB_PREFIX, $sqlTables);
+$sqlTables = str_replace('~db prefix~', Ext_Db::get()->getPrefix(), $sqlTables);
 
 foreach (explode(';', $sqlTables) as $query) {
     if (trim($query)) {
@@ -189,7 +192,7 @@ foreach ($frontDocuments as $level) {
         $obj->fillWithData($i);
         $obj->isPublished = true;
 
-        if (defined('IS_USERS') && IS_USERS) {
+        if (!empty($gIsUsers)) {
             $obj->authStatusId = App_Cms_User::AUTH_GROUP_ALL;
         }
 
@@ -255,7 +258,7 @@ foreach ($frontData as $uri => $blocks) {
             $obj->isPublished = true;
             $obj->isMount = true;
 
-            if (defined('IS_USERS') && IS_USERS) {
+            if (!empty($gIsUsers)) {
                 $obj->authStatusId = App_Cms_User::AUTH_GROUP_ALL;
             }
 

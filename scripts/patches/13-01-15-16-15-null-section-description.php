@@ -6,7 +6,7 @@ require_once SETS . 'project.php';
 $nl = PHP_EOL;
 
 $res = Ext_Db::get()->execute('
-    ALTER TABLE `' . DB_PREFIX . 'back_section`
+    ALTER TABLE `' . Ext_Db::get()->getPrefix() . 'back_section`
     MODIFY `description` TEXT NULL
 ');
 

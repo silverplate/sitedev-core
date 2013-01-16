@@ -52,9 +52,11 @@ abstract class Core_Cms_User extends App_Model
 
     public static function getAuthGroup()
     {
-        if (!defined('IS_USERS') || !IS_USERS) return null;
-        else if (self::get())                  return self::AUTH_GROUP_USERS;
-        else                                   return self::AUTH_GROUP_GUESTS;
+        global $gIsUsers;
+
+        if (empty($gIsUsers)) return null;
+        else if (self::get()) return self::AUTH_GROUP_USERS;
+        else                  return self::AUTH_GROUP_GUESTS;
     }
 
     public static function get()
@@ -193,6 +195,8 @@ abstract class Core_Cms_User extends App_Model
 
     public function remindPassword()
     {
+        global $gHost;
+
         if ($this->email) {
             $this->reminderTime = time();
             $this->reminderKey = Ext_Db::get()->getUnique(
@@ -204,9 +208,9 @@ abstract class Core_Cms_User extends App_Model
             $this->update();
 
             $message =
-                'Для смены пароля к сайту http://' .
-                $_SERVER['HTTP_HOST'] . ' загрузите страницу http://' .
-                $_SERVER['HTTP_HOST'] . '?r=' . $this->reminderKey . "\n\n" .
+                "Для смены пароля к сайту http://$gHost" .
+                " загрузите страницу http://$gHost" .
+                '/?r=' . $this->reminderKey . "\n\n" .
                 'Если вы не просили поменять пароль, проигнорируйте это сообщение.';
 
             return App_Cms_Mail::forcePost(
@@ -219,6 +223,8 @@ abstract class Core_Cms_User extends App_Model
 
     public function changePassword()
     {
+        global $gHost;
+
         if ($this->email) {
             if (
                 $this->statusId == 1 &&
@@ -232,8 +238,8 @@ abstract class Core_Cms_User extends App_Model
                 $this->reminderTime = '';
                 $this->update();
 
-                $message = 'Доступ к сайту http://' . $_SERVER['HTTP_HOST'] .
-                           ".\n\nЛогин: {$this->email}\nПароль: $password";
+                $message = "Доступ к сайту http://$gHost.\n\n" .
+                           "Логин: {$this->email}\nПароль: $password";
 
                 return App_Cms_Mail::forcePost($this->email, $message, 'Доступ')
                      ? 0
