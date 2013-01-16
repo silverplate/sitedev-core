@@ -28,7 +28,7 @@ function boLogFilter($_filter)
     if ($_filter['is_sections']) {
         $instance = new App_Cms_Back_Section();
 
-        if ($_filter['users']) {
+        if ($_filter['sections']) {
             $where[$instance->getPrimaryKeyName()] = $_filter['sections'];
 
         } else {
