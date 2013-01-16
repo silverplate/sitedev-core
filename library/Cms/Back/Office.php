@@ -236,7 +236,7 @@ abstract class Core_Cms_Back_Office
                        ? $_className::getMultiAncestors($selectedIds)
                        : array();
 
-        $cookieBranchName = 'bo-tree';
+        $cookieBranchName = 'back-tree';
 
         if (isset($data['module_name'])) {
             $cookieBranchName .= '-' . $data['module_name'];
