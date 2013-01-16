@@ -484,10 +484,10 @@ abstract class Core_ActiveRecord
      * @param string $_attr
      * @return App_ActiveRecord|App_Model|false
      */
-    public static function load($_value, $_attr = null)
+    public static function fetch($_value, $_attr = null)
     {
         $obj = self::createInstance();
-        $data = $obj->fetch($_value, $_attr);
+        $data = $obj->fetchArray($_value, $_attr);
 
         if ($data !== false) {
             $obj->fillWithData($data);
@@ -502,7 +502,7 @@ abstract class Core_ActiveRecord
      * @param string|array $_attr
      * @return array|false
      */
-    public function fetch($_value, $_attr = null)
+    public function fetchArray($_value, $_attr = null)
     {
         if (is_array($_attr)) {
             $tmp = array();
@@ -756,7 +756,7 @@ abstract class Core_ActiveRecord
      * @param array $_params
      * @return array[App_ActiveRecord|App_Model]
      */
-    public static function getList($_where = null, $_params = array())
+    public static function fetchList($_where = null, $_params = array())
     {
         $instance = self::createInstance();
         $list = array();
@@ -917,5 +917,125 @@ abstract class Core_ActiveRecord
                 $this->_links[$_name][] = $obj;
             }
         }
+    }
+
+
+    /**
+     *
+     * Оптимизация обращений к БД с помощью APC.
+     *
+     */
+
+    public static function getList($_where = null, $_params = array())
+    {
+        if (
+            empty($_where) &&
+            empty($_params) &&
+            App_Cms_Cache_Apc::isEnabled() &&
+            self::isOptimFetchStrategy()
+        ) {
+            $key = Ext_Db::get()->getDatabase() .
+                   '-' .
+                   self::getTbl() .
+                   '-list';
+
+            $list = App_Cms_Cache_Apc::instance()->get($key);
+
+            if ($list === null) {
+                $list = self::fetchList();
+                App_Cms_Cache_Apc::instance()->set($key, $list);
+            }
+
+            return $list;
+
+        } else {
+            return self::fetchList($_where, $_params);
+        }
+    }
+
+    public static function load($_value, $_attr = null)
+    {
+        if (
+            App_Cms_Cache_Apc::isEnabled() &&
+            (is_null($_attr) || self::isOptimFetchStrategy())
+        ) {
+            if (self::isOptimFetchStrategy()) {
+                if (is_null($_attr)) {
+                    $list = self::getList();
+                    return key_exists($_value, $list) ? $list[$_value] : false;
+
+                } else {
+                    foreach (self::getList() as $item) {
+                        if ($item->$_attr == $_value) {
+                            return $item;
+                        }
+                    }
+
+                    return false;
+                }
+
+            } else {
+                $db = Ext_Db::get()->getDatabase();
+                $table = self::getTbl();
+                $key = "$db-$table-$_value";
+                $item = App_Cms_Cache_Apc::instance()->get($key);
+
+                if ($item === null) {
+                    $item = self::fetch($_value, $_attr);
+                    App_Cms_Cache_Apc::instance()->set($key, $item);
+                }
+
+                return $item;
+            }
+
+        } else {
+            return self::fetch($_value, $_attr);
+        }
+    }
+
+    public static function getInfo()
+    {
+        $info = null;
+        $db = Ext_Db::get()->getDatabase();
+
+        if (App_Cms_Cache_Apc::isEnabled()) {
+            $key = "$db-tables-info";
+            $info = App_Cms_Cache_Apc::instance()->get($key);
+        }
+
+        if (!$info) {
+            $list = Ext_Db::get()->getList("
+                SELECT TABLE_NAME, TABLE_ROWS
+                FROM INFORMATION_SCHEMA.TABLES
+                WHERE TABLE_SCHEMA = '$db'
+            ");
+
+            $info = array();
+
+            foreach ($list as $item) {
+                $info[$item['TABLE_NAME']] = $item;
+            }
+
+            if (App_Cms_Cache_Apc::isEnabled()) {
+                App_Cms_Cache_Apc::instance()->set($key, $info);
+            }
+        }
+
+        return $info;
+    }
+
+    public static function getRoughlyAmount()
+    {
+        $info = self::getInfo();
+        $table = self::getTbl();
+
+        return empty($info) || empty($info[$table])
+             ? false
+             : $info[$table]['TABLE_ROWS'];
+    }
+
+    public static function isOptimFetchStrategy()
+    {
+        return self::getRoughlyAmount() < 100;
     }
 }
