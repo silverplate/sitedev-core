@@ -178,6 +178,8 @@ abstract class Core_Cms_Back_Office
                 }
             }
 
+            $_class::clearApcList();
+
             App_Cms_Back_Log::logModule(
                 App_Cms_Back_Log::ACT_MODIFY,
                 null,

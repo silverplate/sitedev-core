@@ -20,7 +20,9 @@ class Core_Cms_Cache_Apc
     public static function isEnabled()
     {
         if (!isset(self::$_isEnabled)) {
-            self::$_isEnabled = extension_loaded('apc');
+            self::$_isEnabled = defined('IS_APC') &&
+                                IS_APC &&
+                                extension_loaded('apc');
         }
 
         return self::$_isEnabled;
@@ -58,7 +60,11 @@ class Core_Cms_Cache_Apc
 
     public function delete($_key)
     {
-//         return apc_exists($_key) ? apc_delete($_key) : false;
         return apc_delete($_key);
+    }
+
+    public function hasKey($_key)
+    {
+        return self::get($_key) !== null;
     }
 }

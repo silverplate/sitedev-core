@@ -1,6 +1,6 @@
 <?php
 
-require 'prepend.php';
+require_once 'prepend.php';
 
 $page = new App_Cms_Back_Page();
 $page->setTitle('Система управления');

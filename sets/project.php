@@ -29,6 +29,10 @@ if (!defined('IS_CACHE')) {
     define('IS_CACHE', false);
 }
 
+if (!defined('IS_APC')) {
+    define('IS_APC', true);
+}
+
 define('IS_USERS', false);
 define('DB_PREFIX', '');
 

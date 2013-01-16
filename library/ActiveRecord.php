@@ -593,6 +593,19 @@ abstract class Core_ActiveRecord
             $lastId = Ext_Db::get()->getLastInsertedId();
             if ($lastId) $this->id = $lastId;
 
+
+            // Обновление кэша APC
+
+            if (App_Cms_Cache_Apc::isEnabled()) {
+                $key = self::getApcListKey();
+                $list = App_Cms_Cache_Apc::instance()->get($key);
+
+                if ($list !== null) {
+                    $list[$this->getApcId()] = $this;
+                    App_Cms_Cache_Apc::instance()->set($key, $list);
+                }
+            }
+
             return true;
         }
 
@@ -612,11 +625,28 @@ abstract class Core_ActiveRecord
             }
         }
 
-        return (boolean) Ext_Db::get()->execute(
+        $result = (boolean) Ext_Db::get()->execute(
             'UPDATE ' . $this->getTable() .
             Ext_Db::get()->getQueryFields($attrs, 'update', true) .
             'WHERE ' . $this->getPrimaryKeyWhere() . ' LIMIT 1'
         );
+
+
+        // Обновление кэша APC
+
+        if ($result && App_Cms_Cache_Apc::isEnabled()) {
+            $id = $this->getApcId();
+            App_Cms_Cache_Apc::instance()->delete(self::getApcItemKey($id));
+            $key = self::getApcListKey();
+            $list = App_Cms_Cache_Apc::instance()->get($key);
+
+            if ($list !== null && !empty($list[$id])) {
+                $list[$id] = $this->fetch($id);
+                App_Cms_Cache_Apc::instance()->set($key, $list);
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -632,11 +662,28 @@ abstract class Core_ActiveRecord
 
         $attrs = array($_name => $this->getAttr($_name)->getSqlValue());
 
-        return (boolean) Ext_Db::get()->execute(
+        $result = (boolean) Ext_Db::get()->execute(
             'UPDATE ' . $this->getTable() .
             Ext_Db::get()->getQueryFields($attrs, 'update', true) .
             'WHERE ' . $this->getPrimaryKeyWhere() . ' LIMIT 1'
         );
+
+
+        // Обновление кэша APC
+
+        if ($result && App_Cms_Cache_Apc::isEnabled()) {
+            $id = $this->getApcId();
+            App_Cms_Cache_Apc::instance()->delete(self::getApcItemKey($id));
+            $key = self::getApcListKey();
+            $list = App_Cms_Cache_Apc::instance()->get($key);
+
+            if ($list !== null && !empty($list[$id])) {
+                $list[$id] = $this->fetch($id);
+                App_Cms_Cache_Apc::instance()->set($key, $list);
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -656,10 +703,27 @@ abstract class Core_ActiveRecord
             }
         }
 
-        return (boolean) Ext_Db::get()->execute(
+        $result = (boolean) Ext_Db::get()->execute(
             "DELETE FROM {$this->_table} WHERE " .
             $this->getPrimaryKeyWhere() . ' LIMIT 1'
         );
+
+
+        // Удаление из кэша APC
+
+        if ($result && App_Cms_Cache_Apc::isEnabled()) {
+            $id = $this->getApcId();
+            App_Cms_Cache_Apc::instance()->delete(self::getApcItemKey($id));
+            $key = self::getApcListKey();
+            $list = App_Cms_Cache_Apc::instance()->get($key);
+
+            if ($list !== null && !empty($list[$id])) {
+                unset($list[$id]);
+                App_Cms_Cache_Apc::instance()->set($key, $list);
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -667,6 +731,8 @@ abstract class Core_ActiveRecord
      */
     public static function truncate()
     {
+        self::clearApcList();
+
         return (boolean) Ext_Db::get()->execute('TRUNCATE ' . self::getTbl());
     }
 
@@ -676,6 +742,8 @@ abstract class Core_ActiveRecord
      */
     public static function deleteWhere($_where)
     {
+        self::clearApcList();
+
         return (boolean) Ext_Db::get()->execute(
             'DELETE FROM ' . self::getTbl() .
             ' WHERE ' . implode(' AND ', Ext_Db::get()->getWhere($_where))
@@ -926,6 +994,33 @@ abstract class Core_ActiveRecord
      *
      */
 
+    public function getApcId()
+    {
+        $id = $this->getId();
+        return is_array($id) ? implode('-', $id) : $id;
+    }
+
+    public static function getApcListKey()
+    {
+        return Ext_Db::get()->getDatabase() . '-' .
+               self::getTbl() . '-' .
+               'list';
+    }
+
+    public static function getApcItemKey($_id)
+    {
+        return Ext_Db::get()->getDatabase() . '-' .
+               self::getTbl() . '-' .
+               $_id;
+    }
+
+    public static function clearApcList()
+    {
+        if (App_Cms_Cache_Apc::isEnabled()) {
+            App_Cms_Cache_Apc::instance()->delete(self::getApcListKey());
+        }
+    }
+
     public static function getList($_where = null, $_params = array())
     {
         if (
@@ -934,11 +1029,7 @@ abstract class Core_ActiveRecord
             App_Cms_Cache_Apc::isEnabled() &&
             self::isOptimFetchStrategy()
         ) {
-            $key = Ext_Db::get()->getDatabase() .
-                   '-' .
-                   self::getTbl() .
-                   '-list';
-
+            $key = self::getApcListKey();
             $list = App_Cms_Cache_Apc::instance()->get($key);
 
             if ($list === null) {
@@ -957,6 +1048,7 @@ abstract class Core_ActiveRecord
     {
         if (
             App_Cms_Cache_Apc::isEnabled() &&
+            !($_attr && is_array($_attr)) &&
             (is_null($_attr) || self::isOptimFetchStrategy())
         ) {
             if (self::isOptimFetchStrategy()) {
@@ -975,9 +1067,7 @@ abstract class Core_ActiveRecord
                 }
 
             } else {
-                $db = Ext_Db::get()->getDatabase();
-                $table = self::getTbl();
-                $key = "$db-$table-$_value";
+                $key = self::getApcItemKey($_value);
                 $item = App_Cms_Cache_Apc::instance()->get($key);
 
                 if ($item === null) {
