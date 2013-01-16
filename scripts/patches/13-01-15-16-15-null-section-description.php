@@ -1,7 +1,7 @@
 <?php
 
 require_once realpath(dirname(__FILE__) . '/../../library') . '/libs.php';
-require_once SETS . 'project.php';
+initSettings();
 
 $nl = PHP_EOL;
 
