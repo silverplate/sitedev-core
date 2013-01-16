@@ -37,7 +37,7 @@ if ($page->isAllowed()) {
 
     // Форма редактирования или добавления объекта
 
-    $form = App_Cms_Ext_Form::load('data-form.xml');
+    $form = App_Cms_Ext_Form::load(dirname(__FILE__) . '/data-form.xml');
     $form->fillWithObject($obj);
 
     // Тип данных

@@ -24,7 +24,7 @@ if ($page->isAllowed()) {
     // Форма редактирования или добавления объекта
 
     if ($obj) {
-        $form = App_Cms_Ext_Form::load('document-form.xml');
+        $form = App_Cms_Ext_Form::load(dirname(__FILE__) . '/document-form.xml');
 
         // Добавление документа в навигацию
         foreach (
