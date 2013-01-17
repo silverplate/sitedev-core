@@ -4,7 +4,6 @@ date_default_timezone_set('Etc/GMT-4');
 
 ini_set('default_charset', 'utf-8');
 ini_set('mbstring.internal_encoding', 'UTF-8');
-ini_set('error_reporting', E_ALL);
 ini_set('magic_quotes_gpc', 0);
 
 
