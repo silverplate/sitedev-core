@@ -336,7 +336,16 @@ class Core_Error
                     } else if (is_resource($arg)) {
                         $message .= 'resource type "' . get_resource_type($arg) . '"';
 
-                    } else if (is_array($arg) || Ext_Number::isNumber($arg)) {
+                    } else if (is_array($arg)) {
+                        $tmp = array();
+
+                        foreach ($arg as $key => $value) {
+                            $tmp[] = $key . ' => ' . $value;
+                        }
+
+                        $message .= implode(', ', $tmp);
+
+                    } else if (Ext_Number::isNumber($arg)) {
                         $message .= $arg;
 
                     } else {
