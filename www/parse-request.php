@@ -13,8 +13,14 @@ if ($gCache->isAvailable() && $gCache->isCache()) {
 
 } else {
     $realUrl = parse_url($_SERVER['REQUEST_URI']);
-    $url = parse_url(getCustomUrl($_SERVER['REQUEST_URI']));
-    $document = App_Cms_Front_Document::load($url['path'], 'uri');
+    $uri = rtrim($realUrl['path'], '/') . '/';
+
+    if (!empty($realUrl['query'])) {
+        $uri .= '?' . $realUrl['query'];
+    }
+
+    $uri = parse_url(getCustomUrl($uri));
+    $document = App_Cms_Front_Document::load($uri['path'], 'uri');
 
     if (
         $document &&
