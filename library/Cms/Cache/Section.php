@@ -2,31 +2,36 @@
 
 abstract class Core_Cms_Cache_Section
 {
-    private $Uri;
-    private $Time;
-    private $IsWhole;
-    private $IsQueryImportant;
+    protected $_uri;
+    protected $_time;
+    protected $_isWhole;
+    protected $_isQueryImportant;
 
-    public function __construct($_uri, $_time, $_is_whole = false, $_is_query = false) {
-        $this->Uri = $_uri;
-        $this->Time = (int) $_time;
-        $this->IsWhole = ($_is_whole);
-        $this->IsQueryImportant = ($_is_query);
+    public function __construct($_uri, $_time, $_isWhole = false, $_isQuery = false)
+    {
+        $this->_uri = $_uri;
+        $this->_time = (integer) $_time;
+        $this->_isWhole = (boolean) $_isWhole;
+        $this->_isQueryImportant = (boolean) $_isQuery;
     }
 
-    public function GetUri() {
-        return $this->Uri;
+    public function getUri()
+    {
+        return $this->_uri;
     }
 
-    public function GetTime() {
-        return (int) $this->Time;
+    public function getTime()
+    {
+        return (int) $this->_time;
     }
 
-    public function IsWhole() {
-        return $this->IsWhole;
+    public function isWhole()
+    {
+        return $this->_isWhole;
     }
 
-    public function IsQueryImportant() {
-        return $this->IsQueryImportant;
+    public function isQueryImportant()
+    {
+        return $this->_isQueryImportant;
     }
 }

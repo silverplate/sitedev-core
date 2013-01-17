@@ -2,149 +2,201 @@
 
 abstract class Core_Cms_Cache
 {
-    protected $IsAble;
-    protected $IsQueryImportant;
-    protected $Sections = array();
-    protected $Time;
-    protected $Path;
-    protected $Category;
-    protected $QueryIgnore;
-    private $Uri;
-    private $File;
-    private $Section;
-    private $SectionTime;
-    private $IsSectionQueryImportant;
+    /**
+     * @var array[Core_Cms_Cache_Section]
+     */
+    protected $_sections = array();
 
-    public function __construct($_path, $_category = null, $_uri = null) {
-        $this->IsAble = true;
-        $this->IsQueryImportant = false;
-        $this->Time = 30;
-        $this->Path = rtrim($_path, '/') . '/';
-        $this->Category = $_category;
-        $this->QueryIgnore = array('delete_cache', 'no_cache');
-        $this->GetUri($_uri);
+    /**
+     * @var Core_Cms_Cache_Section
+     */
+    protected $_section;
 
-        if (isset($_GET['delete_cache'])) {
-            $this->DeletePage();
+    protected $_isAble;
+    protected $_isQueryImportant;
+    protected $_time;
+    protected $_path;
+    protected $_category;
+    protected $_queryIgnore;
+    protected $_uri;
+    protected $_file;
+    protected $_sectionTime;
+    protected $_isSectionQueryImportant;
+
+    public function __construct($_path, $_category = null, $_uri = null)
+    {
+        $this->_isAble = true;
+        $this->_isQueryImportant = false;
+        $this->_time = 30;
+        $this->_path = rtrim($_path, '/') . '/';
+        $this->_category = $_category;
+        $this->_queryIgnore = array('delete-cache', 'no-cache');
+        $this->getUri($_uri);
+
+        if (key_exists('delete-cache', $_GET)) {
+            $this->deletePage();
         }
     }
 
-    public function GetUri($_uri = null) {
-        if (is_null($this->Uri)) {
-            $this->Uri = parse_url(is_null($_uri) ? $_SERVER['REQUEST_URI'] : $_uri);
-            $this->Uri['path_info'] = pathinfo($this->Uri['path']);
+    public function getUri($_uri = null)
+    {
+        if (is_null($this->_uri)) {
+            $this->_uri = parse_url(is_null($_uri) ? $_SERVER['REQUEST_URI'] : $_uri);
+            $this->_uri['path_info'] = pathinfo($this->_uri['path']);
 
-            // $this->Uri['query'] = isset($this->Uri['query']) && $this->Uri['query'] && $this->QueryIgnore
-            //     ? preg_replace('/(\?|&)(' . implode('|', $this->QueryIgnore) . ')(=[^&]?)?/', '', $this->Uri['query'])
-            //     : '';
-
-            if (!empty($this->Uri['query']) && $this->QueryIgnore) {
+            if (!empty($this->_uri['query']) && $this->_queryIgnore) {
                 $query = '';
-                foreach (explode('&', $this->Uri['query']) as $item) {
+
+                foreach (explode('&', $this->_uri['query']) as $item) {
                     $pair = explode('=', $item);
-                    if (!in_array($pair[0], $this->QueryIgnore)) {
+
+                    if (!in_array($pair[0], $this->_queryIgnore)) {
                         $query .= ('' == $query ? '' : '&') . $item;
                     }
                 }
-                $this->Uri['query'] = $query;
+
+                $this->_uri['query'] = $query;
             }
         }
 
-        return $this->Uri;
+        return $this->_uri;
     }
 
-    public function GetRequestPath() {
-        $request = $this->GetUri();
+    public function getRequestPath()
+    {
+        $request = $this->getUri();
         return $request['path'];
     }
 
-    public function GetRequestQuery() {
-        $request = $this->GetUri();
+    public function getRequestQuery()
+    {
+        $request = $this->getUri();
         return $request['query'];
     }
 
-    public function SetSection(Core_Cms_Cache_Section &$_obj) {
-        $this->Sections[$_obj->GetUri()] = $_obj;
+    public function setSection(Core_Cms_Cache_Section &$_obj)
+    {
+        $this->_sections[$_obj->getUri()] = $_obj;
     }
 
-    public function GetSection() {
-        if (is_null($this->Section)) {
-            if ($this->Sections) {
-                if (isset($this->Sections[$this->GetRequestPath()])) {
-                    $this->Section = $this->Sections[$this->GetRequestPath()];
+    /**
+     * @return Core_Cms_Cache_Section
+     */
+    public function getSection()
+    {
+        if (is_null($this->_section)) {
+            if ($this->_sections) {
+                if (isset($this->_sections[$this->getRequestPath()])) {
+                    $this->_section = $this->_sections[$this->getRequestPath()];
 
                 } else {
-                    foreach ($this->Sections as $item) {
-                        if ($item->IsWhole() && strpos($this->GetRequestPath(), $item->GetUri()) === 0) {
-                            $this->Section = $item;
+                    foreach ($this->_sections as $item) {
+                        if (
+                            $item->IsWhole() &&
+                            strpos($this->getRequestPath(), $item->getUri()) === 0
+                        ) {
+                            $this->_section = $item;
                         }
                     }
                 }
             }
 
-            if (is_null($this->Section)) {
-                $this->Section = false;
+            if (is_null($this->_section)) {
+                $this->_section = false;
             }
         }
 
-        return $this->Section;
+        return $this->_section;
     }
 
-    public function GetSectionTime() {
-        if (is_null($this->SectionTime)) {
-            $this->SectionTime = $this->GetSection() ? $this->GetSection()->GetTime() : $this->Time;
+    public function getSectionTime()
+    {
+        if (is_null($this->_sectionTime)) {
+            $this->_sectionTime = $this->getSection()
+                                ? $this->getSection()->getTime()
+                                : $this->_time;
         }
 
-        return $this->SectionTime;
+        return $this->_sectionTime;
     }
 
-    public function GetSectionQueryImportant() {
-        if (is_null($this->IsSectionQueryImportant)) {
-            $this->IsSectionQueryImportant = $this->GetSection() ? $this->GetSection()->IsQueryImportant() : $this->IsQueryImportant;
+    public function getSectionQueryImportant()
+    {
+        if (is_null($this->_isSectionQueryImportant)) {
+            $this->_isSectionQueryImportant = $this->getSection()
+                                            ? $this->getSection()->isQueryImportant()
+                                            : $this->_isQueryImportant;
         }
 
-        return $this->IsSectionQueryImportant;
+        return $this->_isSectionQueryImportant;
     }
 
-    public function IsAvailable() {
-        return ($this->IsAble && !$_POST && !array_intersect(array_keys($_GET), $this->QueryIgnore) && $this->GetSectionTime());
+    public function isAvailable()
+    {
+        return $this->_isAble &&
+               !$_POST &&
+               !array_intersect(array_keys($_GET), $this->_queryIgnore) &&
+               $this->getSectionTime();
     }
 
-    public function GetFile() {
-        if (is_null($this->File)) {
-            $this->File = $this->Path;
-            if ($this->Category) $this->File .= 'g_' . $this->Category . '/';
-            $path = pathinfo($this->GetRequestPath());
+    public function getFile()
+    {
+        if (is_null($this->_file)) {
+            $this->_file = $this->_path;
+            if ($this->_category) {
+                $this->_file .= 'g_' . $this->_category . '/';
+            }
 
-            if (isset($path['basename']) && $path['basename'] == 'index.html') {
-                $this->File .= $path['dirname'] . '/';
+            $path = pathinfo($this->getRequestPath());
 
-            } else if (isset($path['basename']) && isset($path['extension'])) {
-                $this->File .= $path['dirname'] . '/' . Ext_File::computeName($path['basename']) . '/';
+            if (
+                isset($path['basename']) &&
+                $path['basename'] == 'index.html'
+            ) {
+                $this->_file .= $path['dirname'] . '/';
+
+            } else if (
+                isset($path['basename']) &&
+                isset($path['extension'])
+            ) {
+                $this->_file .= $path['dirname'] . '/' .
+                                Ext_File::computeName($path['basename']) . '/';
+            } else {
+                $this->_file .= $this->getRequestPath();
+            }
+
+            if (
+                $this->getSectionQueryImportant() &&
+                $this->getRequestQuery()
+            ) {
+                $query = str_replace(
+                    array('&', '=', '[', ']', '"', '\''),
+                    '-',
+                    Ext_String::translit(urldecode($this->getRequestQuery()))
+                );
 
             } else {
-                $this->File .= $this->GetRequestPath();
+                $query = false;
             }
 
-            $query = $this->GetSectionQueryImportant() && $this->GetRequestQuery()
-                ? str_replace(array('&', '=', '[', ']', '"', '\''), '_', Ext_String::translit(urldecode($this->GetRequestQuery())))
-                : false;
-
-            $this->File = str_replace('//', '/', $this->File) . ($query && $this->GetSectionQueryImportant()
-                ? '_q_' . $query . '.html'
-                : 'index.html'
-            );
+            $this->_file  = str_replace('//', '/', $this->_file);
+            $this->_file .=  $query && $this->getSectionQueryImportant()
+                          ? "-q-$query.html"
+                          : 'index.html';
         }
 
-        return $this->File;
+        return $this->_file;
     }
 
-    public function IsCache() {
-        return (is_file($this->GetFile()) && mktime() - filemtime($this->GetFile()) < $this->GetSectionTime() * 60);
+    public function isCache()
+    {
+        return is_file($this->getFile()) &&
+               time() - filemtime($this->getFile()) < $this->getSectionTime() * 60;
     }
 
-    public function __toString() {
-        return self::IsCache() ? file_get_contents($this->GetFile()) : false;
+    public function __toString()
+    {
+        return self::isCache() ? file_get_contents($this->getFile()) : false;
     }
 
     public function set($_content)
@@ -153,10 +205,11 @@ abstract class Core_Cms_Cache
         Ext_File::write($this->getFile(), $_content);
     }
 
-    function DeletePage() {
-        if (is_file($this->GetFile())) {
-            unlink($this->GetFile());
-            $path = dirname($this->GetFile());
+    public function deletePage()
+    {
+        if (is_file($this->getFile())) {
+            unlink($this->getFile());
+            $path = dirname($this->getFile());
 
             if (Ext_File::isDirEmpty($path)) {
                 Ext_File::deleteDir($path);
@@ -171,6 +224,6 @@ abstract class Core_Cms_Cache
 
     public function emptyCache()
     {
-        return Ext_File::deleteDir($this->Path, false);
+        return Ext_File::deleteDir($this->_path, false);
     }
 }

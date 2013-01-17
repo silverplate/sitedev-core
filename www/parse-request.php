@@ -2,7 +2,7 @@
 
 require_once 'prepend.php';
 
-global $gSiteLang, $gIsHidden;
+global $gSiteLang, $gIsHidden, $gCache;
 
 $gCache = empty($gSiteLang)
         ? new App_Cms_Cache_Project()

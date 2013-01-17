@@ -9,11 +9,10 @@ abstract class Core_Cms_Cache_Project extends Core_Cms_Cache
         $path = is_null($_path) ? WD . 'cache/' : $_path;
         parent::__construct($path, $_category, $_uri);
 
-        $this->QueryIgnore[] = 'OK';
-        $this->QueryIgnore[] = 'xml';
-        $this->QueryIgnore[] = 'key';
+        $this->_queryIgnore[] = 'xml';
+        $this->_queryIgnore[] = 'key';
 
-        $this->IsAble = !empty($gIsCache);
+        $this->_isAble = !empty($gIsCache);
     }
 
     public function isAvailable()
