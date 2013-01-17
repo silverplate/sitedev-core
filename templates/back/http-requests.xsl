@@ -46,11 +46,18 @@
                         <xsl:value-of select="$field-name" />
                         <xsl:if test="/node()/@type = 'tree_multiple'">[]</xsl:if>
                     </xsl:attribute>
+
                     <xsl:attribute name="type"><xsl:choose>
                         <xsl:when test="/node()/@type = 'tree_multiple'">checkbox</xsl:when>
                         <xsl:otherwise>radio</xsl:otherwise>
                     </xsl:choose></xsl:attribute>
-                    <xsl:if test="/node()/content/selected/text() = @id"><xsl:attribute name="checked">1</xsl:attribute></xsl:if>
+
+                    <xsl:if test="
+                        (@id = '' and /node()/content/selected[not(text())]) or
+                        /node()/content/selected/text() = @id
+                    ">
+                        <xsl:attribute name="checked">1</xsl:attribute>
+                    </xsl:if>
                 </input></td>
 
                 <td class="tree-title">
@@ -100,7 +107,12 @@
                         <xsl:for-each select="@*[name() = 'xml:lang' or name() = 'prefix']"><xsl:value-of select="concat(., '&nbsp;')" /></xsl:for-each>
                         <a href="?id={@id}">
                             <xsl:choose>
-                                <xsl:when test="/node()/content/selected/text() = @id"><xsl:attribute name="class">selected</xsl:attribute></xsl:when>
+                                <xsl:when test="
+                                    (@id = '' and /node()/content/selected[not(text())]) or
+                                    /node()/content/selected/text() = @id
+                                ">
+                                    <xsl:attribute name="class">selected</xsl:attribute>
+                                </xsl:when>
                                 <xsl:when test="not(@is-published)"><xsl:attribute name="class">hidden</xsl:attribute></xsl:when>
                             </xsl:choose>
                             
