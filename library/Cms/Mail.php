@@ -38,42 +38,36 @@ abstract class Core_Cms_Mail extends PHPMailer
 
     public function addRecipient($_type, $_recipient)
     {
+        $email = null;
+        $name = null;
+
         if (is_array($_recipient)) {
-            $recipient = new App_Cms_Mail_Recipient($_recipient['email']);
+            $email = $_recipient['email'];
 
             if (!empty($_recipient['name'])) {
-                $recipient->setName($_recipient['name']);
+                $name = $_recipient['name'];
             }
 
-        } else if ($_recipient instanceof Core_Cms_Mail_Recipient) {
-            $recipient = $_recipient;
-
         } else {
-            $recipient = new App_Cms_Mail_Recipient($_recipient);
+            $email = $_recipient;
         }
 
-        if ($recipient->isValid()) {
-            $this->addAnAddress(
-                $_type,
-                $recipient->getEmail(),
-                $recipient->getName()
-            );
-        }
+        return $this->addAnAddress($_type, $email, $name);
     }
 
     public function addTo($_recipient)
     {
-        $this->addRecipient('to', $_recipient);
+        return $this->addRecipient('to', $_recipient);
     }
 
     public function addToCc($_recipient)
     {
-        $this->addRecipient('cc', $_recipient);
+        return $this->addRecipient('cc', $_recipient);
     }
 
     public function addToBcc($_recipient)
     {
-        $this->addRecipient('bcc', $_recipient);
+        return $this->addRecipient('bcc', $_recipient);
     }
 
     public function setPriority($_priority)
@@ -101,7 +95,7 @@ abstract class Core_Cms_Mail extends PHPMailer
         return preg_match('/<[^>]+\/?>/', $this->Body);
     }
 
-    public function send($_ignoreEnv = false)
+    public function send($_ignoreEnv = false, $_appendPreff = true)
     {
         global $gAdminEmails, $gEnv;
 
@@ -166,42 +160,51 @@ abstract class Core_Cms_Mail extends PHPMailer
                 );
             }
 
+            if ($_appendPreff) {
 
-            // Заголовок
+                // Заголовок
 
-            if (
-                !empty($this->_config['subject']) &&
-                !empty($this->_config['subject']['append'])
-            ) {
-                if ($this->Subject) {
-                    $this->Subject .= '. ';
+                if (
+                    !empty($this->_config['subject']) &&
+                    !empty($this->_config['subject']['append'])
+                ) {
+                    if ($this->Subject) {
+                        $this->Subject .= '. ';
+                    }
+
+                    $this->Subject .= $this->_config['subject']['append'];
                 }
 
-                $this->Subject .= $this->_config['subject']['append'];
-            }
 
+                // Добавление подписи
 
-            // Добавление подписи
+                if ($this->isHtmlBody()) {
+                    if (!empty($this->_htmlSignature)) {
+                        $this->Body .= $this->_htmlSignature;
+                    }
 
-            if ($this->isHtmlBody()) {
-                if (!empty($this->_htmlSignature)) {
-                    $this->Body .= $this->_htmlSignature;
+                } else if (!empty($this->_signature)) {
+                    $this->Body .= $this->_signature;
                 }
-
-            } else if (!empty($this->_signature)) {
-                $this->Body .= $this->_signature;
             }
 
             return parent::send();
         }
     }
 
-    public static function forcePost($_recipient, $_body, $_subject = null)
+    public static function forcePost($_recipient,
+                                     $_body,
+                                     $_subject = null,
+                                     $_appendPreff = false)
     {
-        return self::post($_recipient, $_body, $_subject, true);
+        return self::post($_recipient, $_body, $_subject, true, $_appendPreff);
     }
 
-    public static function post($_recipient, $_body, $_subject = null, $_ignoreEnv = false)
+    public static function post($_recipient,
+                                $_body,
+                                $_subject = null,
+                                $_ignoreEnv = false,
+                                $_appendPreff = true)
     {
         $class = get_called_class();
         $postman = new $class;
@@ -237,6 +240,6 @@ abstract class Core_Cms_Mail extends PHPMailer
             $postman->addTo($_recipient);
         }
 
-        return $postman->send($_ignoreEnv);
+        return $postman->send($_ignoreEnv, $_appendPreff);
     }
 }
