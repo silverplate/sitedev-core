@@ -9,6 +9,11 @@ abstract class Core_Cms_Back_Office
 
     public static function bootstrap()
     {
+        header('Expires: Fri, 9 Feb 1980 00:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . 'GMT');
+        header('Cache-Control: no-cache, must-revalidate');
+        header('Pragma: no-cache');
+
         self::auth();
     }
 
