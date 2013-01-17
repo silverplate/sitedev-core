@@ -49,6 +49,11 @@ if ($page->isAllowed()) {
                 )
             ) {
                 $form->frontControllerId->addOption($item->id, $item->getTitle());
+
+                // По умолчанию
+                if ($item->isDocumentMain && !$form->frontControllerId->getValue()) {
+                    $form->frontControllerId = $item->id;
+                }
             }
         }
 
@@ -71,7 +76,7 @@ if ($page->isAllowed()) {
             ) {
                 $form->frontTemplateId->addOption($item->id, $item->getTitle());
 
-                // Шаблон по умолчанию
+                // По умолчанию
                 if ($item->isDocumentMain && !$form->frontTemplateId->getValue()) {
                     $form->frontTemplateId = $item->id;
                 }
