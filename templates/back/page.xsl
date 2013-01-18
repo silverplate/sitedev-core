@@ -30,8 +30,8 @@
                 <link href="/cms/f/css/forms.css" type="text/css" rel="stylesheet" />
                 <link href="/cms/f/calendar/calendar.css" type="text/css" rel="stylesheet" />
 
-                <script src="/cms/f/js/jquery.js" type="text/javascript" />
-                <script src="/cms/f/js/jquery-ui.js" type="text/javascript" />
+                <script src="/cms/f/js/jquery-1.6.4.min.js" type="text/javascript" />
+                <script src="/cms/f/js/jquery-ui-1.8.16.custom.min.js" type="text/javascript" />
                 <script src="/cms/f/js/cookies.js" type="text/javascript" />
                 <script src="/cms/f/js/scripts.js" type="text/javascript" />
                 <script src="/cms/f/js/common.js" type="text/javascript" />
