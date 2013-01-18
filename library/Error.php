@@ -22,6 +22,7 @@ class Core_Error
     protected $_mode;
     protected $_logFile;
     protected $_reportEmails;
+    protected $_trace;
 
     /**
      * @var Core_Error
@@ -37,7 +38,7 @@ class Core_Error
         self::$_instance->setMode($_mode);
 
         if (!empty($_logFile)) {
-            self::$_instance->setLogFile($_logFile);
+            self::$_instance->_logFile = $_logFile;
         }
 
         if (!empty($_reportEmails)) {
@@ -69,14 +70,153 @@ class Core_Error
                      : self::MODE_PRODUCTION;
     }
 
-    public function getMode()
+    /**
+     * @return array|false
+     */
+    protected function _getError()
     {
-        return $this->_mode;
+        $error = error_get_last();
+        return $error && ($error['type'] & E_ALL) ? $error : false;
     }
 
-    public function setLogFile($_file)
+    /**
+     * @param Exception $_e
+     * @return array
+     */
+    protected function _getTrace(Exception $_e)
     {
-        $this->_logFile = $_file;
+        return isset($this->_trace) ? $this->_trace : $_e->getTrace();
+    }
+
+    public function handleError($_number, $_string, $_file, $_line)
+    {
+        $this->handleException(new Core_Error_Exeption(
+            $_number,
+            $_string,
+            $_file,
+            $_line
+        ));
+    }
+
+    public function handleShutdown()
+    {
+        $error = $this->_getError();
+
+        if ($error) {
+            $this->_trace = debug_backtrace();
+
+            $this->handleException(new Core_Error_Exeption(
+                $error['type'],
+                $error['message'],
+                $error['file'],
+                $error['line']
+            ));
+        }
+    }
+
+    public function handleException(Exception $_e)
+    {
+        if ($this->_mode == self::MODE_DEVELOPMENT) {
+            if (empty($_SERVER) || empty($_SERVER['SERVER_NAME'])) {
+                $this->_toConsole($_e);
+
+            } else {
+                $this->_toBrowser('Exception', $this->getHtml(
+                    $_e->getMessage(),
+                    $_e->getFile(),
+                    $_e->getLine(),
+                    $this->getMoreTraceInfo($this->_getTrace($_e)),
+                    empty($_SERVER['REQUEST_URI']) ? null : $_SERVER['REQUEST_URI'],
+                    get_class($_e)
+                ));
+            }
+
+        } else {
+            self::logExeption($_e);
+            $this->showUserfriendlyMessage();
+        }
+
+        exit(1);
+    }
+
+    protected function _toConsole($_e)
+    {
+        $nl = PHP_EOL;
+        $result = array('Exception');
+
+        if (!empty($_SERVER) && !empty($_SERVER['REQUEST_URI'])) {
+            $result[] = 'Request URI:' . $nl . $_SERVER['REQUEST_URI'];
+        }
+
+        $result[] = 'Name:' .    $nl . get_class($_e);
+        $result[] = 'Message:' . $nl . $_e->getMessage();
+        $result[] = 'File:' .    $nl . $_e->getFile();
+        $result[] = 'Line:' .    $nl . $_e->getLine();
+        $result[] = 'Trace:' .   $nl . $this->getMoreTraceInfo($this->_getTrace($_e));
+
+        echo $nl . implode($nl . $nl, $result) . $nl . $nl;
+    }
+
+    public function getHtml($_msg, $_file, $_line, $_trace, $_uri = null, $_exception = null)
+    {
+        $html  = '<h1>Exception</h1>';
+        $html .= '<dl><dt>Name</dt><dd>' .
+                 (empty($_exception) ? 'Exception' : $_exception) .
+                 '</dd></dl>';
+
+        if (!empty($_uri)) {
+            $html .= "<dl><dt>Request URI</dt><dd>$_uri</dd></dl>";
+        }
+
+        $html .= "<dl><dt>Message</dt><dd>$_msg</dd></dl>";
+        $html .= "<dl><dt>File</dt><dd>$_file</dd></dl>";
+        $html .= "<dl><dt>Line</dt><dd>$_line</dd></dl>";
+        $html .= "<dl><dt>Trace</dt><dd><pre>$_trace</pre></dd></dl>";
+
+        return $html;
+    }
+
+    public function showUserfriendlyMessage()
+    {
+        $html  = '<h1>Произошла ошибка</h1>';
+        $html .= '<p>К&nbsp;сожалению, произошла ошибка. Разработчики обязательно будут о&nbsp;ней оповещены. ';
+        $html .= 'Если вы&nbsp;хотите дополнительно прокомментировать ошибку, пожалуйста, ';
+        $html .= '<a href="mailto:support@sitedev.ru">напишите нам&nbsp;письмо</a>. Любая информация ';
+        $html .= 'важна для&nbsp;нас и&nbsp;поможет решить проблему. Спасибо.</p>';
+        $html .= '<p>Приносим извинения за&nbsp;доставленные неудобства.</p>';
+
+        $this->_toBrowser('Ошибка', $html);
+    }
+
+    protected function _toBrowser($_title, $_content)
+    {
+        echo '<!DOCTYPE html>';
+        echo '<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8">';
+        echo '<style type="text/css">body { font-family: Arial, sans-serif; font-size: 84%; padding: 1em 2em; max-width: 600px; }</style>';
+        echo "<title>$_title</title></head><body>$_content</body></html>";
+    }
+
+    public function logExeption(Exception $_e)
+    {
+        $error = $_e->getFile() . ':' . $_e->getLine();
+        $items = array(date('Y-m-d H:i:s'), $error);
+
+        if (!empty($_SERVER) && !empty($_SERVER['REQUEST_URI'])) {
+            $items[] = $_SERVER['REQUEST_URI'];
+        }
+
+        if ($_e->getMessage()) {
+            $items[] = $_e->getMessage();
+        }
+
+        $items[] = $this->getMoreTraceInfo($this->_getTrace($_e));
+        $message = implode(PHP_EOL, $items);
+
+        if ($this->wasEmailed($error) === false) {
+            $this->send($message);
+        }
+
+        return self::log($message);
     }
 
     public function log($_message)
@@ -122,189 +262,37 @@ class Core_Error
         return null;
     }
 
-    public function logExeption(Exception $_e)
-    {
-        $error = $_e->getFile() . ':' . $_e->getLine();
-        $items = array(date('Y-m-d H:i:s'), $error);
-
-        if (!empty($_SERVER) && !empty($_SERVER['REQUEST_URI'])) {
-            $items[] = $_SERVER['REQUEST_URI'];
-        }
-
-        if ($_e->getMessage()) {
-            $items[] = $_e->getMessage();
-        }
-
-        $items[] = $this->getMoreInfoTrace($_e->getTrace());
-        $message = implode(PHP_EOL, $items);
-
-        if ($this->wasEmailed($error) === false) {
-            $this->send($message);
-        }
-
-        return self::log($message);
-    }
-
-    public function logFatalError($_error, $_trace)
-    {
-        $error = $_error['file'] . ':' . $_error['line'];
-        $items = array(date('Y-m-d H:i:s'), $error);
-
-        if (!empty($_SERVER) && !empty($_SERVER['REQUEST_URI'])) {
-            $items[] = $_SERVER['REQUEST_URI'];
-        }
-
-        if (!empty($_error['message'])) {
-            $items[] = $_error['message'];
-        }
-
-        $items[] = $_trace;
-        $message = implode(PHP_EOL, $items);
-
-        if ($this->wasEmailed($error) === false) {
-            $this->send($message);
-        }
-
-        return self::log($message);
-    }
-
-    public function getHtml($_msg, $_file, $_line, $_trace, $_uri = null, $_exception = null)
-    {
-        $html  = '<h1>Exception</h1>';
-        $html .= '<dl><dt>Name</dt><dd>' .
-                 (empty($_exception) ? 'Exception' : $_exception) .
-                 '</dd></dl>';
-
-        if (!empty($_uri)) {
-            $html .= "<dl><dt>Request URI</dt><dd>$_uri</dd></dl>";
-        }
-
-        $html .= "<dl><dt>Message</dt><dd>$_msg</dd></dl>";
-        $html .= "<dl><dt>File</dt><dd>$_file</dd></dl>";
-        $html .= "<dl><dt>Line</dt><dd>$_line</dd></dl>";
-        $html .= "<dl><dt>Trace</dt><dd><pre>$_trace</pre></dd></dl>";
-
-        return $html;
-    }
-
-    public function handleShutdown()
-    {
-        $error = error_get_last();
-
-        if ($error && ($error['type'] & E_ALL)) {
-            if ($this->getMode() == self::MODE_DEVELOPMENT) {
-                if (empty($_SERVER) || empty($_SERVER['SERVER_NAME'])) {
-                    $this->toConsole($error);
-
-                } else {
-                    $this->toBrowser('Exception', $this->getHtml(
-                        $error['message'],
-                        $error['file'],
-                        $error['line'],
-                        $this->getMoreInfoTrace(debug_backtrace()),
-                        empty($_SERVER['REQUEST_URI']) ? null : $_SERVER['REQUEST_URI']
-                    ));
-                }
-
-            } else {
-                self::logFatalError(
-                    $error,
-                    $this->getMoreInfoTrace(debug_backtrace())
-                );
-
-                $this->showUserfriendlyMessage();
-            }
-        }
-    }
-
-    public function handleException(Exception $_e)
-    {
-        if ($this->getMode() == self::MODE_DEVELOPMENT) {
-            if (empty($_SERVER) || empty($_SERVER['SERVER_NAME'])) {
-                $this->toConsole($_e);
-
-            } else {
-                $this->toBrowser('Exception', $this->getHtml(
-                    $_e->getMessage(),
-                    $_e->getFile(),
-                    $_e->getLine(),
-                    $this->getMoreInfoTrace($_e->getTrace()),
-                    empty($_SERVER['REQUEST_URI']) ? null : $_SERVER['REQUEST_URI'],
-                    get_class($_e)
-                ));
-            }
-
-        } else {
-            self::logExeption($_e);
-            $this->showUserfriendlyMessage();
-        }
-    }
-
-    public function handleError($_number, $_string, $_file, $_line)
-    {
-        $this->handleException(
-            new Core_Error_Exeption($_number, $_string, $_file, $_line)
-        );
-
-        exit();
-    }
-
-    public function showUserfriendlyMessage()
-    {
-        $html  = '<h1>Произошла ошибка</h1>';
-        $html .= '<p>К&nbsp;сожалению, произошла ошибка. Разработчики обязательно будут о&nbsp;ней оповещены. ';
-        $html .= 'Если вы&nbsp;хотите дополнительно прокомментировать ошибку, пожалуйста, ';
-        $html .= '<a href="mailto:support@sitedev.ru">напишите нам&nbsp;письмо</a>. Любая информация ';
-        $html .= 'важна для&nbsp;нас и&nbsp;поможет решить проблему. Спасибо.</p>';
-        $html .= '<p>Приносим извинения за&nbsp;доставленные неудобства.</p>';
-
-        $this->toBrowser('Ошибка', $html);
-    }
-
-    private function toBrowser($_title, $_content)
-    {
-        echo '<!DOCTYPE html>';
-        echo '<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8">';
-        echo '<style type="text/css">body { font-family: Arial, sans-serif; font-size: 84%; padding: 2em 4em; max-width: 600px; }</style>';
-        echo "<title>$_title</title></head><body>$_content</body></html>";
-    }
-
-    private function toConsole($_e)
-    {
-        $nl = PHP_EOL;
-        $result = array('Exception');
-
-        if (!empty($_SERVER) && !empty($_SERVER['REQUEST_URI'])) {
-            $result[] = 'Request URI:' . $nl . $_SERVER['REQUEST_URI'];
-        }
-
-        if ($_e instanceof Exception) {
-            $result[] = 'Name:' .    $nl . get_class($_e);
-            $result[] = 'Message:' . $nl . $_e->getMessage();
-            $result[] = 'File:' .    $nl . $_e->getFile();
-            $result[] = 'Line:' .    $nl . $_e->getLine();
-            $result[] = 'Trace:' .   $nl . $_e->getTraceAsString();
-
-        } else if (is_array($_e)) {
-            $result[] = 'Type:' .    $nl . $_e['type'];
-            $result[] = 'Message:' . $nl . $_e['message'];
-            $result[] = 'File:' .    $nl . $_e['file'];
-            $result[] = 'Line:' .    $nl . $_e['line'];
-        }
-
-        echo $nl . implode($nl . $nl, $result) . $nl . $nl;
-    }
-
     public function send($_message)
     {
         global $gHost;
 
-        return $this->_reportEmails && $this->getMode() == self::MODE_PRODUCTION
-             ? App_Cms_Mail::forcePost($this->_reportEmails, $_message, "Ошибка $gHost")
-             : null;
+        if ($this->_reportEmails && $this->_mode == self::MODE_PRODUCTION) {
+            $sended = false;
+            $subject = "Ошибка $gHost";
+
+            if (class_exists('App_Cms_Mail')) {
+                $sended = App_Cms_Mail::forcePost(
+                    $this->_reportEmails,
+                    $_message,
+                    $subject
+                );
+            }
+
+            if (!$sended) {
+                $sended = mail(
+                    implode(', ', $this->_reportEmails),
+                    $subject,
+                    $_message
+                );
+            }
+
+            return $sended;
+        }
+
+        return null;
     }
 
-    public function getMoreInfoTrace($_trace)
+    public function getMoreTraceInfo($_trace)
     {
         $i = 0;
         $message = '';
@@ -312,24 +300,24 @@ class Core_Error
         foreach ($_trace as $t) {
             $message .= "#$i ";
 
-            if ($i == 0) {
-                $message .= '[internal function]: ';
-            }
-
             if (!empty($t['file'])) {
                 $message .= $t['file'] . ' (' . $t['line'] . '): ';
             }
 
             if (!empty($t['type'])) {
-                $message .= $t['class'] . ' ' . $t['type'] . ' ';
+                $message .= $t['class'] . $t['type'];
             }
 
-            $message .= $t['function'] . ' (';
+            $message .= $t['function'] . '(';
 
             if (!empty($t['args'])) {
                 $j = 0;
+                $isMulti = count($t['args']) > 1;
+                if ($isMulti) $message .= PHP_EOL;
 
                 foreach ($t['args'] as $arg) {
+                    if ($isMulti) $message .= '  ';
+
                     if (is_object($arg)) {
                         $message .= 'object of class "' . get_class($arg) . '"';
 
@@ -337,13 +325,7 @@ class Core_Error
                         $message .= 'resource type "' . get_resource_type($arg) . '"';
 
                     } else if (is_array($arg)) {
-                        $tmp = array();
-
-                        foreach ($arg as $key => $value) {
-                            $tmp[] = $key . ' => ' . $value;
-                        }
-
-                        $message .= implode(', ', $tmp);
+                        $message .= 'Array(' . count($arg) . ')';
 
                     } else if (Ext_Number::isNumber($arg)) {
                         $message .= $arg;
@@ -352,8 +334,11 @@ class Core_Error
                         $message .= '"' . $arg . '"';
                     }
 
-                    if (count($t['args']) != ++$j) {
-                        $message .= ',';
+                    $j++;
+
+                    if ($isMulti) {
+                        if ($j != count($t['args'])) $message .= ',';
+                        $message .= PHP_EOL;
                     }
                 }
             }
@@ -362,7 +347,7 @@ class Core_Error
             $i++;
         }
 
-        return $message . "#$i {main}" . PHP_EOL;
+        return $message;
     }
 
     public static function blank() {}
