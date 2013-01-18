@@ -6,7 +6,7 @@ initSettings();
 $nl = PHP_EOL;
 
 $res = Ext_Db::get()->execute('
-    ALTER TABLE `' . Ext_Db::get()->getPrefix() . 'front_data`
+    ALTER TABLE `' . App_Cms_Front_Data::getTbl() . '`
     MODIFY `auth_status_id` SMALLINT UNSIGNED NULL
 ');
 

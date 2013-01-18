@@ -46,7 +46,7 @@ abstract class Core_Cms_Back_User extends App_Model
         } else if (func_num_args() == 2) {
             $user = self::getBy(
                 array('login', 'passwd'),
-                array(func_get_arg(0), md5(func_get_arg(1)))
+                array(func_get_arg(0), self::cryptPassword(func_get_arg(1)))
             );
         }
 
@@ -146,14 +146,20 @@ abstract class Core_Cms_Back_User extends App_Model
         return Ext_String::getRandomReadableAlt(8);
     }
 
+    public static function cryptPassword($_password)
+    {
+        $class = get_called_class();
+        return crypt($_password, $class::SECRET);
+    }
+
     public function setPassword($_password)
     {
-        $this->passwd = md5($_password);
+        $this->passwd = self::cryptPassword($_password);
     }
 
     public function updatePassword($_password)
     {
-        $this->updateAttr('passwd', md5($_password));
+        $this->updateAttr('passwd', self::cryptPassword($_password));
     }
 
     public static function get()

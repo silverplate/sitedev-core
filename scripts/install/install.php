@@ -90,8 +90,6 @@ foreach (explode(';', $sqlTables) as $query) {
     }
 }
 
-// Ext_Db::get()->multiExecute($sqlTables);
-
 
 // Insert start entries
 // Sections
@@ -281,45 +279,94 @@ $result['Data'] = count($frontDataObjs);
 
 // Сообщение о результате
 
-echo '<p>Таблицы в базу данных добавлены:</p><pre>';
-print_r($result);
-echo '</pre>';
+$nl = PHP_EOL;
+$para = $nl . $nl;
 
-echo '<p>Для доступа <a href="/cms/">в систему управления</a> используйте логин ';
-echo '<b><code>' . $backUsers[0]['login'] . '</code></b> ';
-echo 'и пароль <b><code>' . $backUsers[0]['passwd'] . '</code></b>.</p>';
+// echo 'Таблицы в базу данных добавлены:';
+// echo $nl;
+
+// print_r($result);
+// echo $para;
+
+echo 'Таблицы в базу данных добавлены.';
+echo $para;
+
+
+echo 'Для доступа в систему управления (/cms/) используйте логин ';
+echo $backUsers[0]['login'] . ' и ' . $backUsers[0]['passwd'] . '.';
+echo $para;
+
 
 $isError = false;
-$permissions = array(array(DATA_CONTROLLERS, true),
-                     array(DOCUMENT_CONTROLLERS, true),
-                     array(DOCUMENT_ROOT . 'f/', true));
+$errorLogFile = SETS . 'error.log';
+
+$permissions = array(
+    array(DATA_CONTROLLERS, true),
+    array(DOCUMENT_CONTROLLERS, true),
+    array(DOCUMENT_ROOT . 'f/', true),
+    array(WD . 'cache/', false),
+    array(SETS, false)
+);
+
+if (is_file($errorLogFile)) {
+    $permissions[] = array($errorLogFile, false);
+
+} else {
+    if (Ext_File::write($errorLogFile, '', true) === false) {
+        echo 'Нужно создать лог-файл ошибок:';
+        echo $nl;
+        echo $errorLogFile;
+        echo $para;
+
+        $permissions[] = array($errorLogFile, false);
+    }
+}
 
 foreach ($permissions as $path) {
-    if (!system('chmod ' . ($path[1] ? '-R ' : '') . '0777 ' . $path[0])) {
+    if (system('chmod ' . ($path[1] ? '-R ' : '') . '0777 ' . $path[0]) === false) {
         $isError = true;
     }
 }
 
-if ($isError) {
-    echo '<p style="color: #c00;">Не забудьте установить права:</p>';
+// if ($isError) {
+    echo 'Проверьте наличие прав на запись:';
+    echo $nl;
+
     foreach ($permissions as $path) {
-        echo '<code>chmod ';
-
-        if ($path[1]) {
-            echo '-R ';
-        }
-
-        echo '0777 ' . $path[0] . '</code><br>';
+        echo 'chmod' . (empty($path[1]) ? '' : ' -R') . ' 0777 ' . $path[0];
+        echo $nl;
     }
 
-} else if ($permissions) {
-    echo '<p>Нужные права на файлы установлены.</p>';
+    echo $nl;
+
+// } else if ($permissions) {
+//     echo 'Нужные права на файлы установлены.';
+//     echo $para;
+// }
+
+
+$solt = '$2y$09$d42R0c216184E3f0tjm60c';
+$passwordConsts = array();
+
+if (
+    !defined('App_Cms_User::SECRET') ||
+    App_Cms_User::cryptPassword('test') == '' ||
+    App_Cms_User::SECRET == $solt
+) {
+    $passwordConsts[] = 'App_Cms_User::SECRET';
 }
 
-if (system('rm -rf ' . dirname(__FILE__))) {
-    echo '<p>Установочные файлы удалены.</p>';
+if (
+    !defined('App_Cms_Back_User::SECRET') ||
+    App_Cms_Back_User::cryptPassword('test') == '' ||
+    App_Cms_Back_User::SECRET == $solt
+) {
+    $passwordConsts[] = 'App_Cms_Back_User::SECRET';
+}
 
-} else {
-    echo '<p style="color: #c00;">Не забудьте удалить файлы установки:</p>';
-    echo '<code>rm -rf ' . dirname(__FILE__) . '/</code>';
+if (count($passwordConsts) > 0) {
+    echo 'Не забудьте поменять соль паролей ';
+    echo implode(', ', $passwordConsts);
+    echo '.';
+    echo $para;
 }

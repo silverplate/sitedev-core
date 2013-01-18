@@ -6,7 +6,7 @@ initSettings();
 $nl = PHP_EOL;
 
 $res = Ext_Db::get()->execute('
-    ALTER TABLE `' . Ext_Db::get()->getPrefix() . 'back_section`
+    ALTER TABLE `' . App_Cms_Back_Section::getTbl(). '`
     MODIFY `description` TEXT NULL
 ');
 
