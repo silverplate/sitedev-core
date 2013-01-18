@@ -129,7 +129,7 @@ class Core_Model extends App_ActiveRecord
             $this->_images = array();
 
             foreach ($this->getFiles() as $key => $file) {
-                if ($file->isImage()) {
+                if (Ext_File::isImageExt($file->getExt())) {
                     $this->_images[$key] = $file;
                 }
             }
