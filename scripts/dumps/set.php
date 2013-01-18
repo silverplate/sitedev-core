@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Скрипт предназначен для автоматической загрузки дампа БД из TGZ-архива
+ * Скрипт предназначен для автоматической загрузки дампа БД
  * на основании настроек проекта на текущем сервере.
  *
  * Запускать следует так: $ php set.php
- * Или так: $ php set.php ~/backup.sql.tgz
+ * Или так: $ php set.php ~/backup.sql[.tgz]
  *
  * Если запустить скрипт без параметров, то будет осуществленна попытка
- * применить дамп по адресу ~/scripts/dumps/YYYY-MM-DD.sql.tgz,
+ * применить дамп по адресу ~/scripts/dumps/YYYY-MM-DD.sql[.tgz],
  * где YYYY-MM-DD - текущая дата. Файл в таком формате получается автоматически
  * путем запуска скрипта get.php.
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../core/library') . '/libs.php';
-require_once SETS . 'project.php';
+require_once realpath(dirname(__FILE__) . '/../../library') . '/libs.php';
+initSettings();
 
 $d = Ext_Db::get()->getDatabase();
 $u = ' -u' . Ext_Db::get()->getUser();
