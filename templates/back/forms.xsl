@@ -826,24 +826,24 @@
             <xsl:when test="@type = 'image'">
                 <div class="form-float-ele">
                     <xsl:choose>
-                        <xsl:when test="value/url/text() and value/width/text()">
+                        <xsl:when test="value[uri and width]">
                             <div class="field-image-params">
                                 <table class="chooser-item">
                                     <tr>
                                         <td>
                                             <input type="checkbox" name="{@name}_delete" id="{generate-id()}" value="1" />
-                                            <input type="hidden" name="{@name}_present" value="{value/path/text()}" />
+                                            <input type="hidden" name="{@name}_present" value="{value/path}" />
                                         </td>
                                         <td class="chooser-label">
                                             <label for="{generate-id()}">
                                                 <xsl:text>Удалить</xsl:text><br />
 
-                                                <a href="{value/url/text()}" target="_blank">Загруженное изображение</a>
+                                                <a href="{value/uri}" target="_blank">Загруженное изображение</a>
                                                 <br /><br />
 
                                                 <xsl:variable name="max-length">300</xsl:variable>
 
-                                                <img src="{value/url/text()}" align="left">
+                                                <img src="{value/uri}" align="left">
                                                     <xsl:choose>
                                                         <xsl:when test="value[width &lt;= $max-length and height &lt;= $max-length]">
                                                             <xsl:attribute name="class">preview</xsl:attribute>
@@ -869,7 +869,11 @@
                                                     </xsl:choose>
                                                 </img>
 
-                                                <xsl:value-of select="concat(value/width/text(), '&times;', value/height/text(), ' ', value/size/text(), '&nbsp;КБ')" />
+                                                <xsl:value-of select="value/width" />
+                                                <xsl:text>&times;</xsl:text>
+                                                <xsl:value-of select="value/height" />
+                                                <xsl:text> </xsl:text>
+                                                <xsl:value-of select="value/size" />
                                             </label>
                                         </td>
                                     </tr>
