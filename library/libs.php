@@ -1,7 +1,7 @@
 <?php
 
-define('WD', realpath(dirname(__FILE__) . '/../..') . '/');
-define('CORE_PATH', WD . 'core/');
+define('WD', realpath(dirname(__FILE__) . '\\..\\..') . '\\');
+define('CORE_PATH', WD . 'core\\');
 
 define('DOCUMENT_ROOT', WD . 'www/');
 define('CORE_DOCUMENT_ROOT', CORE_PATH . 'www/');
@@ -9,8 +9,8 @@ define('CORE_DOCUMENT_ROOT', CORE_PATH . 'www/');
 define('SETS', WD . 'sets/');
 define('CORE_SETS', CORE_PATH . 'sets/');
 
-define('TEMPLATES', WD . 'templates/');
-define('CORE_TEMPLATES', CORE_PATH . 'templates/');
+define('TEMPLATES', WD . 'templates\\');
+define('CORE_TEMPLATES', CORE_PATH . 'templates\\');
 
 define('LIBRARIES', WD . 'library/');
 define('CORE_LIBRARIES', CORE_PATH . 'library/');
@@ -281,6 +281,11 @@ function traceTimeGetReport($_format = 'html')
     }
 
     return $result;
+}
+
+function isWindows()
+{
+    return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
 }
 
 // Функции для отслеживания рекламных переходов с других сайтов.

@@ -4,7 +4,8 @@ class Core_Cms_Ext_Xml extends Ext_Xml
 {
     public static function getEntitiesPath()
     {
-        return CORE_TEMPLATES . 'entities.dtd';
+        $path = CORE_TEMPLATES . 'entities.dtd';
+        return isWindows() ? 'file:///' . str_replace('\\', '/', $path) : $path;
     }
 
     public static function getHead($_dtd = null, $_root = null)

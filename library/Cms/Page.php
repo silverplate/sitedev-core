@@ -109,7 +109,7 @@ abstract class Core_Cms_Page
         ) {
             header('Content-type: text/xml; charset=utf-8');
 
-            echo Core_Cms_Ext_Xml::getDocumentForXml(
+            echo App_Cms_Ext_Xml::getDocumentForXml(
                 $this->getXml(),
                 $this->getRootName()
             );
@@ -150,7 +150,7 @@ abstract class Core_Cms_Page
         $proc = new XSLTProcessor();
         $proc->importStylesheet(Ext_Dom::load($this->_template));
 
-        return $proc->transformToXml(Ext_Dom::get(Ext_Xml::getDocumentForXml(
+        return $proc->transformToXml(Ext_Dom::get(App_Cms_Ext_Xml::getDocumentForXml(
             $this->getXml(),
             $this->getRootName()
         )));
