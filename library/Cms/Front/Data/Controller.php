@@ -46,6 +46,10 @@ abstract class Core_Cms_Front_Data_Controller
           ? $proceedResult['content']
           : $this->_data->content
         );
+
+        if (method_exists($this, 'execute')) {
+            $this->execute();
+        }
     }
 
     public function getContent()
@@ -70,7 +74,7 @@ abstract class Core_Cms_Front_Data_Controller
 
     public function getXml()
     {
-        $method = $this->_data->getTypeId() == 'xml' ? 'node' : 'cdata';
+        $method = $this->getType() == 'xml' ? 'node' : 'cdata';
         return Ext_Xml::$method($this->_data->tag, $this->getContent());
     }
 }

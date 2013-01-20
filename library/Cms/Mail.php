@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_Mail extends PHPMailer
+abstract class Core_Cms_Mail extends PhpMailer
 {
     const LOW    = 1;
     const NORMAL = 3;
