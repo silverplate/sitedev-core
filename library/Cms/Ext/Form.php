@@ -1,6 +1,6 @@
 <?php
 
-class Core_Cms_Ext_Form extends Ext_Form
+abstract class Core_Cms_Ext_Form extends Ext_Form
 {
     public function fillWithObject($_object)
     {

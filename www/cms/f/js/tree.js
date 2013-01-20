@@ -140,7 +140,7 @@ function treeCollapse(_obj, _moduleName, _fieldName, _parentId, _type)
 
     var cookieName = "back-tree-" + _moduleName + "-" + _fieldName;
     if (ele.style.display == "block") saveIntoCookieList(cookieName, _parentId, null);
-    else removeFromCookieList(cookieName, parentId, null);
+    else removeFromCookieList(cookieName, _parentId, null);
 }
 
 function treeImageRoll(_img, _ele)

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE xsl:stylesheet SYSTEM "../entities.dtd">
+<!DOCTYPE xsl:stylesheet SYSTEM "../../library/Ext/entities.dtd">
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:template match="form">
@@ -543,7 +543,7 @@
                 </div>
             </xsl:when>
 
-            <xsl:when test="@type = 'text' or @type = 'short_text' or @type = 'large_text'">
+            <xsl:when test="@type = 'text' or @type = 'short-text' or @type = 'large-text'">
                 <div class="form-float-ele">
                     <textarea name="{@name}" id="form-ele-{@name}">
                         <xsl:attribute name="class">

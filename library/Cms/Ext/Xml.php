@@ -1,37 +1,7 @@
 <?php
 
-class Core_Cms_Ext_Xml extends Ext_Xml
+abstract class Core_Cms_Ext_Xml extends Ext_Xml
 {
-    public static function getEntitiesPath()
-    {
-        $path = CORE_TEMPLATES . 'entities.dtd';
-        return isWindows() ? 'file:///' . str_replace('\\', '/', $path) : $path;
-    }
-
-    public static function getHead($_dtd = null, $_root = null)
-    {
-        return parent::getHead($_dtd ? $_dtd : self::getEntitiesPath(), $_root);
-    }
-
-    public static function getDocument($_xml, $_attrs = null, $_root = null, $_dtd = null)
-    {
-        return parent::getDocument(
-            $_xml,
-            $_attrs,
-            $_root,
-            $_dtd ? $_dtd : self::getEntitiesPath()
-        );
-    }
-
-    public static function getDocumentForXml($_xml, $_root = null, $_dtd = null)
-    {
-        return parent::getDocumentForXml(
-            $_xml,
-            $_root,
-            $_dtd ? $_dtd : self::getEntitiesPath()
-        );
-    }
-
     /**
      * @param string $_xml
      * @param array[Ext_File] $_files

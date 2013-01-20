@@ -188,6 +188,12 @@ abstract class Core_Cms_Mail extends PHPMailer
                 }
             }
 
+            $this->isHTML($this->isHtmlBody());
+
+            if (!$this->isHtmlBody()) {
+                $this->Body = Ext_String::replaceEntities($this->Body);
+            }
+
             return parent::send();
         }
     }
@@ -195,16 +201,42 @@ abstract class Core_Cms_Mail extends PHPMailer
     public static function forcePost($_recipient,
                                      $_body,
                                      $_subject = null,
-                                     $_appendPreff = false)
+                                     $_appendPreff = false,
+                                     $_attachments = null)
     {
-        return self::post($_recipient, $_body, $_subject, true, $_appendPreff);
+        return self::post(
+            $_recipient,
+            $_body,
+            $_subject,
+            true,
+            is_null($_appendPreff) ? false : $_appendPreff,
+            $_attachments
+        );
+    }
+
+    public static function postAttachments(array $_attachments,
+                                           $_recipient,
+                                           $_body,
+                                           $_subject = null,
+                                           $_ignoreEnv = null,
+                                           $_appendPreff = null)
+    {
+        return self::post(
+            $_recipient,
+            $_body,
+            $_subject,
+            $_ignoreEnv,
+            $_appendPreff,
+            $_attachments
+        );
     }
 
     public static function post($_recipient,
                                 $_body,
                                 $_subject = null,
                                 $_ignoreEnv = false,
-                                $_appendPreff = true)
+                                $_appendPreff = true,
+                                $_attachments = null)
     {
         $class = get_called_class();
         $postman = new $class;
@@ -240,6 +272,15 @@ abstract class Core_Cms_Mail extends PHPMailer
             $postman->addTo($_recipient);
         }
 
-        return $postman->send($_ignoreEnv, $_appendPreff);
+        if (!empty($_attachments)) {
+            foreach ($_attachments as $file) {
+                $postman->addAttachment($file['path'], $file['name']);
+            }
+        }
+
+        return $postman->send(
+            is_null($_ignoreEnv) ? false : $_ignoreEnv,
+            is_null($_appendPreff) ? true : $_appendPreff
+        );
     }
 }

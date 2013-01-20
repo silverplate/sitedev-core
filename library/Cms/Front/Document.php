@@ -21,6 +21,11 @@ abstract class Core_Cms_Front_Document extends App_Model
         'navigations' => 'App_Cms_Front_Document_Has_Navigation'
     );
 
+    /**
+     * @var array[App_Cms_Front_Data]
+     */
+    protected $_data;
+
     public function __construct()
     {
         parent::__construct();
@@ -37,6 +42,20 @@ abstract class Core_Cms_Front_Document extends App_Model
         $this->addAttr('uri', 'string');
         $this->addAttr('is_published', 'boolean');
         $this->addAttr('sort_order', 'integer');
+    }
+
+    /**
+     * @return array[App_Cms_Front_Data]
+     */
+    public function getData()
+    {
+        if (!isset($this->_data)) {
+            $this->_data = App_Cms_Front_Data::getList(array(
+                $this->getPrimaryKeyName() => $this->id
+            ));
+        }
+
+        return $this->_data;
     }
 
     public function getFilePath()

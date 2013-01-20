@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE form SYSTEM "../../../core/templates/entities.dtd">
+<!DOCTYPE form SYSTEM "../../../core/library/Ext/entities.dtd">
 
 <form>
     <group name="main">
@@ -30,6 +30,6 @@
     <group name="content">
         <title>Код</title>
 
-        <element name="content" type="large_text" />
+        <element name="content" type="large-text" />
     </group>
 </form>

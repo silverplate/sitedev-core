@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE form SYSTEM "../../../core/templates/entities.dtd">
+<!DOCTYPE form SYSTEM "../../../core/library/Ext/entities.dtd">
 
 <form>
     <element name="login" type="login" is-required="true">
