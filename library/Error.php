@@ -34,7 +34,8 @@ class Core_Error
 
     public static function init($_mode, $_logFile = null, $_reportEmails = null)
     {
-        self::$_instance = new self;
+        $class = get_called_class();
+        self::$_instance = new $class;
         self::$_instance->setMode($_mode);
 
         if (!empty($_logFile)) {
@@ -178,11 +179,9 @@ class Core_Error
 
     public function showUserfriendlyMessage()
     {
-        $html  = '<h1>Произошла ошибка</h1>';
-        $html .= '<p>К&nbsp;сожалению, произошла ошибка. Разработчики обязательно будут о&nbsp;ней оповещены. ';
-        $html .= 'Если вы&nbsp;хотите дополнительно прокомментировать ошибку, пожалуйста, ';
-        $html .= '<a href="mailto:support@sitedev.ru">напишите нам&nbsp;письмо</a>. Любая информация ';
-        $html .= 'важна для&nbsp;нас и&nbsp;поможет решить проблему. Спасибо.</p>';
+        $html  = '<h1>К сожалению, произошла ошибка.</h1>';
+        $html .= '<p>Разработчики будут о&nbsp;ней оповещены.</p>';
+        $html .= '<p>Если вы хотите дополнительно прокомментировать случившееся, пожалуйста, <a href="mailto:support@sitedev.ru">напишите нам письмо</a>. Любая информация важна для&nbsp;нас и&nbsp;поможет решить проблему. Спасибо.</p>';
         $html .= '<p>Приносим извинения за&nbsp;доставленные неудобства.</p>';
 
         $this->_toBrowser('Ошибка', $html);
