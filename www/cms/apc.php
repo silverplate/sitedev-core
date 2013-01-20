@@ -8,6 +8,7 @@ if (!$page->isAuthorized()) {
     documentNotFound();
 }
 
+global $MY_SELF, $MYREQUEST, $MY_SELF_WO_SORT, $AUTHENTICATED;
 
 /*
   +----------------------------------------------------------------------+
