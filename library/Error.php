@@ -238,7 +238,7 @@ class Core_Error
             $matches = array();
 
             preg_match_all(
-                '/^([0-9 :-]+)\n(.+)$/m',
+                '/^([0-9 :-]{19})\n(.+)$/m',
                 file_get_contents($this->_logFile),
                 $matches
             );
