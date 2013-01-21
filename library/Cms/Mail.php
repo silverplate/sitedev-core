@@ -194,6 +194,14 @@ abstract class Core_Cms_Mail extends PhpMailer
                 $this->Body = Ext_String::replaceEntities($this->Body);
             }
 
+
+            // Дополнительный отступ, если есть вложения, чтобы в письме они
+            // аккуратно показывались и не прилипали к тексту.
+
+            if ($this->attachmentExists() && $this->Body) {
+                $this->Body .= $this->isHtmlBody() ? '<br><br>' : "\n\n";
+            }
+
             return parent::send();
         }
     }
