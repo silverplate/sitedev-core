@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS `~db prefix~user`;
 DROP TABLE IF EXISTS `~db prefix~file_cache`;
 
 CREATE TABLE IF NOT EXISTS `~db prefix~back_user` (
-    `~db prefix~back_user_id` CHAR(10) NOT NULL,
+    `~db prefix~back_user_id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `status_id` TINYINT UNSIGNED NOT NULL DEFAULT 1,
     `login` VARCHAR(255) NOT NULL,
     `passwd` CHAR(60) NOT NULL,
@@ -30,19 +30,19 @@ CREATE TABLE IF NOT EXISTS `~db prefix~back_user` (
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `~db prefix~back_section` (
-    `~db prefix~back_section_id` CHAR(10) NOT NULL,
+    `~db prefix~back_section_id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(255) NOT NULL,
     `uri` VARCHAR(255) NOT NULL,
     `description` TEXT NULL,
     `is_published` TINYINT(1) NOT NULL DEFAULT 0,
-    `sort_order` INT UNSIGNED NULL,
+    `sort_order` SMALLINT UNSIGNED NULL,
     PRIMARY KEY (`~db prefix~back_section_id`)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `~db prefix~back_log` (
     `~db prefix~back_log_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `~db prefix~back_user_id` CHAR(10) NULL,
-    `~db prefix~back_section_id` CHAR(10) NULL,
+    `~db prefix~back_user_id` SMALLINT UNSIGNED NULL,
+    `~db prefix~back_section_id` SMALLINT UNSIGNED NULL,
     `creation_date` DATETIME NOT NULL,
     `action_id` SMALLINT UNSIGNED NOT NULL,
     `entry_id` CHAR(30) NULL,
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `~db prefix~front_template` (
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `~db prefix~front_controller` (
-    `~db prefix~front_controller_id` CHAR(10) NOT NULL,
+    `~db prefix~front_controller_id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `type_id` SMALLINT UNSIGNED NOT NULL,
     `title` VARCHAR(255) NOT NULL,
     `filename` VARCHAR(255) NOT NULL,
@@ -94,9 +94,9 @@ CREATE TABLE IF NOT EXISTS `~db prefix~front_controller` (
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `~db prefix~front_document` (
-    `~db prefix~front_document_id` CHAR(30) NOT NULL,
-    `parent_id` CHAR(30) NULL,
-    `~db prefix~front_controller_id` CHAR(10) NULL,
+    `~db prefix~front_document_id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `parent_id` SMALLINT UNSIGNED NULL,
+    `~db prefix~front_controller_id` SMALLINT UNSIGNED NULL,
     `~db prefix~front_template_id` SMALLINT UNSIGNED NULL,
     `auth_status_id` SMALLINT UNSIGNED NULL,
     `title` VARCHAR(255) NOT NULL,
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `~db prefix~front_document` (
     `link` VARCHAR(255) NULL,
     `uri` VARCHAR(255) NULL,
     `is_published` TINYINT(1) NOT NULL,
-    `sort_order` INT UNSIGNED NOT NULL,
+    `sort_order` SMALLINT UNSIGNED NULL,
     PRIMARY KEY (`~db prefix~front_document_id`),
     INDEX `fk_~db prefix~front_document_~db prefix~front_template_id_idx` (`~db prefix~front_template_id` ASC),
     INDEX `fk_~db prefix~front_document_~db prefix~front_controller_id_idx` (`~db prefix~front_controller_id` ASC),
@@ -132,14 +132,14 @@ CREATE TABLE IF NOT EXISTS `~db prefix~front_data_content_type` (
     `~db prefix~front_data_content_type_id` CHAR(10) NOT NULL,
     `title` VARCHAR(255) NOT NULL,
     `is_published` TINYINT(1) NOT NULL DEFAULT 0,
-    `sort_order` INT UNSIGNED NOT NULL,
+    `sort_order` SMALLINT UNSIGNED NOT NULL,
     PRIMARY KEY (`~db prefix~front_data_content_type_id`)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `~db prefix~front_data` (
-    `~db prefix~front_data_id` CHAR(30) NOT NULL,
-    `~db prefix~front_document_id` CHAR(30) NOT NULL,
-    `~db prefix~front_controller_id` CHAR(10) NULL,
+    `~db prefix~front_data_id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `~db prefix~front_document_id` SMALLINT UNSIGNED NOT NULL,
+    `~db prefix~front_controller_id` SMALLINT UNSIGNED NULL,
     `~db prefix~front_data_content_type_id` CHAR(10) NULL,
     `auth_status_id` SMALLINT UNSIGNED NULL,
     `tag` VARCHAR(255) NOT NULL,
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `~db prefix~front_data` (
     `apply_type_id` SMALLINT UNSIGNED NOT NULL DEFAULT 1,
     `is_mount` TINYINT(1) NOT NULL DEFAULT 0,
     `is_published` TINYINT(1) NOT NULL DEFAULT 0,
-    `sort_order` INT UNSIGNED NOT NULL,
+    `sort_order` SMALLINT UNSIGNED NULL,
     PRIMARY KEY (`~db prefix~front_data_id`),
     INDEX `fk_~db prefix~front_data_~db prefix~front_document_id_idx` (`~db prefix~front_document_id` ASC),
     INDEX `fk_~db prefix~front_data_~db prefix~front_data_content_type_id_idx` (`~db prefix~front_data_content_type_id` ASC),
@@ -171,12 +171,12 @@ CREATE TABLE IF NOT EXISTS `~db prefix~front_data` (
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `~db prefix~front_navigation` (
-    `~db prefix~front_navigation_id` CHAR(30) NOT NULL,
+    `~db prefix~front_navigation_id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
     `title` VARCHAR(255) NOT NULL,
     `type` ENUM('list','tree') NOT NULL,
     `is_published` TINYINT(1) NOT NULL DEFAULT 0,
-    `sort_order` INT UNSIGNED NOT NULL,
+    `sort_order` SMALLINT UNSIGNED NULL,
     PRIMARY KEY (`~db prefix~front_navigation_id`)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 
@@ -227,8 +227,8 @@ CREATE TABLE IF NOT EXISTS `~db prefix~user` (
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `~db prefix~front_document_has_navigation` (
-    `~db prefix~front_document_id` CHAR(30) NOT NULL,
-    `~db prefix~front_navigation_id` CHAR(30) NOT NULL,
+    `~db prefix~front_document_id` SMALLINT UNSIGNED NOT NULL,
+    `~db prefix~front_navigation_id` SMALLINT UNSIGNED NOT NULL,
     PRIMARY KEY (`~db prefix~front_document_id`, `~db prefix~front_navigation_id`),
     INDEX `fk_~db prefix~front_document_has_navigation_~db prefix~front_navigation_id_idx` (`~db prefix~front_navigation_id` ASC),
     INDEX `fk_~db prefix~front_document_has_navigation_~db prefix~front_document_id_idx` (`~db prefix~front_document_id` ASC),
@@ -245,8 +245,8 @@ CREATE TABLE IF NOT EXISTS `~db prefix~front_document_has_navigation` (
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `~db prefix~back_user_has_section` (
-    `~db prefix~back_user_id` CHAR(10) NOT NULL,
-    `~db prefix~back_section_id` CHAR(10) NOT NULL,
+    `~db prefix~back_user_id` SMALLINT UNSIGNED NOT NULL,
+    `~db prefix~back_section_id` SMALLINT UNSIGNED NOT NULL,
     PRIMARY KEY (`~db prefix~back_user_id`, `~db prefix~back_section_id`),
     INDEX `fk_~db prefix~back_user_has_section_~db prefix~back_section_id_idx` (`~db prefix~back_section_id` ASC),
     INDEX `fk_~db prefix~back_user_has_section_~db prefix~back_user_id_idx` (`~db prefix~back_user_id` ASC),

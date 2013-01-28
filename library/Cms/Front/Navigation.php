@@ -15,7 +15,7 @@ abstract class Core_Cms_Front_Navigation extends App_Model
     {
         parent::__construct();
 
-        $this->addPrimaryKey('string');
+        $this->addPrimaryKey('integer');
         $this->addAttr('name', 'string');
         $this->addAttr('type', 'string');
         $this->addAttr('title', 'string');

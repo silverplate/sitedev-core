@@ -11,7 +11,7 @@ abstract class Core_Cms_Front_Data extends App_Model
     {
         parent::__construct();
 
-        $this->addPrimaryKey('string');
+        $this->addPrimaryKey('integer');
         $this->addForeign(App_Cms_Front_Document::createInstance());
         $this->addForeign(App_Cms_Front_Controller::createInstance());
         $this->addForeign(App_Cms_Front_Data_ContentType::createInstance());

@@ -57,7 +57,7 @@ abstract class Core_Cms_Session
 
     protected function _init()
     {
-        $http_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+        $userAgent = md5(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '');
         $session = Ext_Db::get()->getEntry('
             SELECT
                 is_logged_in,
@@ -66,7 +66,7 @@ abstract class Core_Cms_Session
                 ' . self::getTbl() . '
             WHERE
                 ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()) . ' AND
-                user_agent = ' . Ext_Db::escape(md5($http_user_agent)) . ' AND (
+                user_agent = ' . Ext_Db::escape($userAgent) . ' AND (
                     ISNULL(valid_date) OR NOW() < valid_date
                 ) AND (
                     life_span <= 0 OR DATE_ADD(creation_date, INTERVAL life_span MINUTE) < NOW()
@@ -93,7 +93,7 @@ abstract class Core_Cms_Session
                 'is_ip_match' => 0,
                 'is_logged_in' => 0,
                 'user_id' => '\'\'',
-                'user_agent' => Ext_Db::escape(md5($http_user_agent)),
+                'user_agent' => Ext_Db::escape($userAgent),
                 'user_ip' => Ext_Db::escape($_SERVER['REMOTE_ADDR']),
                 'life_span' => 0,
                 'timeout' => 0,
@@ -141,7 +141,7 @@ abstract class Core_Cms_Session
 
     public static function getId()
     {
-        if (!isset($_COOKIE[self::get()->getCookieName()]) || !$_COOKIE[self::get()->getCookieName()]) {
+        if (empty($_COOKIE[self::get()->getCookieName()])) {
             self::_setId(Ext_Db::get()->getUnique(self::getTbl(), self::getPri(), 30));
         }
 

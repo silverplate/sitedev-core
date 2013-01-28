@@ -565,7 +565,10 @@ abstract class Core_ActiveRecord
                         ));
                     }
 
-                } else if ($item->getName() == 'sort_order') {
+                } else if (
+                    $item->getName() == 'sort_order' &&
+                    $this->getPrimaryKey()->getType() != 'integer'
+                ) {
                     $item->setValue(Ext_Db::get()->getNextNumber(
                         $this->getTable(),
                         $item->getName()
@@ -591,7 +594,18 @@ abstract class Core_ActiveRecord
 
         if ($result) {
             $lastId = Ext_Db::get()->getLastInsertedId();
-            if ($lastId) $this->id = $lastId;
+
+            if ($lastId) {
+                $this->id = $lastId;
+
+                if (
+                    $this->hasAttr('sort_order') &&
+                    !$this->sortOrder &&
+                    $this->getPrimaryKey()->getType() == 'integer'
+                ) {
+                    $this->updateAttr('sort_order', $lastId);
+                }
+            }
 
 
             // Обновление кэша APC

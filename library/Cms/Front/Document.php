@@ -30,7 +30,7 @@ abstract class Core_Cms_Front_Document extends App_Model
     {
         parent::__construct();
 
-        $this->addPrimaryKey('string');
+        $this->addPrimaryKey('integer');
         $this->addForeign(App_Cms_Front_Controller::createInstance());
         $this->addForeign(App_Cms_Front_Template::createInstance());
         $this->addAttr('parent_id', 'string');
