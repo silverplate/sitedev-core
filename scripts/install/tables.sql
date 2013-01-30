@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `~db prefix~front_navigation` (
 
 CREATE TABLE IF NOT EXISTS `~db prefix~session` (
     `~db prefix~session_id` CHAR(30) NOT NULL,
-    `~db prefix~user_id` CHAR(30) NOT NULL,
+    `user_id` INT UNSIGNED NOT NULL,
     `user_agent` CHAR(32) NULL,
     `user_ip` CHAR(15) NULL,
     `is_ip_match` TINYINT(1) NOT NULL DEFAULT 0,
@@ -210,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `~db prefix~session_param` (
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `~db prefix~user` (
-    `~db prefix~user_id` CHAR(30) NOT NULL,
+    `~db prefix~user_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `status_id` TINYINT UNSIGNED NOT NULL DEFAULT 0,
     `first_name` VARCHAR(255) NULL,
     `last_name` VARCHAR(255) NULL,

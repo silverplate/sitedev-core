@@ -343,4 +343,33 @@ $db->execute("
 ");
 
 
+/**
+ * Таблица user
+ */
+
+$key = App_Cms_User::getPri();
+$tbl = App_Cms_User::getTbl();
+$link1Tbl = App_Cms_Session::getTbl();
+
+
+// Установка числовых ключей
+
+$i = 0;
+
+foreach ($db->getList("SELECT `$key` FROM `$tbl`") as $id) {
+    $i++;
+    $db->execute("UPDATE `$tbl` SET `$key` = $i WHERE `$key` = '$id'");
+}
+
+
+// Изменение типа поля
+
+$db->execute("
+    ALTER TABLE `$tbl`
+    MODIFY `$key` INT UNSIGNED NOT NULL AUTO_INCREMENT
+");
+
+$db->execute("ALTER TABLE `$link1Tbl` MODIFY `user_id` INT UNSIGNED NOT NULL");
+
+
 echo $nl . $nl;

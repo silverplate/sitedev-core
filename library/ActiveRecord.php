@@ -848,7 +848,6 @@ abstract class Core_ActiveRecord
             null,
             $_where,
             empty($_params['order']) ? $instance->getSortAttrName() : $_params['order'],
-            null,
             empty($_params['limit']) ? null : (int) $_params['limit'],
             empty($_params['offset']) ? null : (int) $_params['offset']
         ));

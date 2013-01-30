@@ -12,7 +12,7 @@ abstract class Core_Cms_User extends App_Model
     {
         parent::__construct();
 
-        $this->addPrimaryKey('string');
+        $this->addPrimaryKey('integer');
         $this->addAttr('status_id', 'integer');
         $this->addAttr('first_name', 'string');
         $this->addAttr('last_name', 'string');
