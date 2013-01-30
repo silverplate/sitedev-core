@@ -42,7 +42,10 @@ abstract class Core_Cms_Front_Document_Controller extends Core_Cms_Front_Page
             $ancestors = App_Cms_Front_Document::getAncestors($this->_document->getId());
 
             if ($ancestors) {
-                unset($ancestors[$this->_document->getId()]);
+                $ancestors = array_values(array_diff(
+                    $ancestors,
+                    array($this->_document->getId())
+                ));
             }
 
             if ($ancestors) {
