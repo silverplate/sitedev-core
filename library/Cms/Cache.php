@@ -71,7 +71,7 @@ abstract class Core_Cms_Cache
     public function getRequestQuery()
     {
         $request = $this->getUri();
-        return $request['query'];
+        return empty($request['query']) ? false : $request['query'];
     }
 
     public function setSection(Core_Cms_Cache_Section &$_obj)
