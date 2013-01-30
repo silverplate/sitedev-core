@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS `~db prefix~session_param`;
 DROP TABLE IF EXISTS `~db prefix~session`;
 DROP TABLE IF EXISTS `~db prefix~user`;
 DROP TABLE IF EXISTS `~db prefix~file_cache`;
+DROP TABLE IF EXISTS `~db prefix~patch`;
 
 CREATE TABLE IF NOT EXISTS `~db prefix~back_user` (
     `~db prefix~back_user_id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -272,4 +273,12 @@ CREATE TABLE IF NOT EXISTS `~db prefix~file_cache` (
     `mime` VARCHAR(255) NULL,
     PRIMARY KEY (`~db prefix~file_cache_id`),
     UNIQUE INDEX `~db prefix~file_cache_file_path_unq` (`file_path` ASC)
+) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `~db prefix~patch` (
+    `~db prefix~patch_id` MEDIUMINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `filename` VARCHAR(255) NOT NULL,
+    `creation_time` INT UNSIGNED NOT NULL,
+    PRIMARY KEY (`~db prefix~patch_id`),
+    UNIQUE INDEX `~db prefix~path_filename_unq` (`filename` ASC)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
