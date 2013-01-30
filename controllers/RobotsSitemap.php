@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_Front_Document_Controller_RobotsSitemap extends App_Cms_Front_Document_Controller_Common
+abstract class Core_RobotsSitemapController extends CommonController
 {
     public function output($_createCache = true)
     {

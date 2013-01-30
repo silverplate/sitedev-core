@@ -67,7 +67,7 @@ $content1 .= "<p>&laquo;Поездка займет несколько дней,
 $content1 .= "<p>&laquo;Жестоко, что&nbsp;они&nbsp;не&nbsp;имеют родителей,&nbsp;&mdash; добавила Шарапова.&nbsp;&mdash; Мои мама и&nbsp;папа очень сильно помогли мне в&nbsp;жизни, постоянно окружая меня заботой&raquo;.</p>\r\n";
 $content1 .= "<p>В&nbsp;2004&nbsp;году после победы в&nbsp;чемпионской гонке WTA&nbsp;Мария получила автомобиль стоимостью $56 тыс. Эти деньги теннисистка пожертвовала в&nbsp;фонд помощи погибшим заложникам в&nbsp;бесланской школе. Кроме того, когда Шарапова стала послом доброй воли ООН, она пожертвовала $100 тыс., которые пошли на&nbsp;строительство различных учреждений для&nbsp;детей, пострадавших от&nbsp;чернобыльской катастрофы.</p>";
 
-$content2  = '<p>Такой страницы не&nbsp;существует. Если вы заметили на&nbsp;сайте неработающую ссылку, пожалуйста, <a href="mailto:support@sitedev.ru">сообщите нам</a> об&nbsp;этом.</p><p>Можно <a href="/">вернуться на&nbsp;главную</a> или&nbsp;<a href="/search/">воспользоваться поиском</a>.</p>';
+$content2  = '<p>Такой страницы не&nbsp;существует. Если вы заметили на&nbsp;сайте неработающую ссылку, пожалуйста, <a href="mailto:support@sitedev.ru">сообщите нам</a> об&nbsp;этом.</p>';
 
 $frontData = array(
     '/' => array(
@@ -301,11 +301,13 @@ $isError = false;
 $errorLogFile = SETS . 'error.log';
 
 $permissions = array(
-    array(DATA_CONTROLLERS, true),
-    array(DOCUMENT_CONTROLLERS, true),
-    array(DOCUMENT_ROOT . 'f/', true),
-    array(WD . 'cache/', false),
-    array(SETS, false)
+    array(CONTROLLERS,           false),
+    array(HELPERS,               false),
+    array(TEMPLATES,             false),
+    array(DOCUMENT_ROOT . 'f/',  false),
+    array(DOCUMENT_ROOT . 'f/*', true),
+    array(WD . 'cache/',         false),
+    array(SETS,                  false)
 );
 
 if (is_file($errorLogFile)) {

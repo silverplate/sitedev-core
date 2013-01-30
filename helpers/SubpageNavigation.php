@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_Front_Data_Controller_SubpageNavigation
+abstract class Core_SubpageNavigationHelper
 extends App_Cms_Front_Data_Controller
 {
     /**

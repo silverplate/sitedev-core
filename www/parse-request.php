@@ -36,7 +36,11 @@ if ($gCache->isAvailable() && $gCache->isCache()) {
             ($document->isPublished == 1 || !empty($gIsHidden)) &&
             (!$document->authStatusId || is_null(App_Cms_User::getAuthGroup()) || $document->authStatusId & App_Cms_User::getAuthGroup())
         ) {
-            $controller = App_Cms_Front_Document::initController($document->getController(), $document);
+            $controller = App_Cms_Front_Document::initController(
+                $document->getController(),
+                $document
+            );
+
             $controller->execute();
             $controller->output();
 

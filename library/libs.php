@@ -17,8 +17,11 @@ define('CORE_LIBRARIES', CORE_PATH . 'library/');
 
 define('MODELS', WD . 'models/');
 
-define('DATA_CONTROLLERS', LIBRARIES . 'App/Cms/Front/Data/Controller/');
-define('DOCUMENT_CONTROLLERS', LIBRARIES . 'App/Cms/Front/Document/Controller/');
+define('HELPERS', WD . 'helpers/');
+define('CORE_HELPERS', CORE_PATH . 'helpers/');
+
+define('CONTROLLERS', WD . 'controllers/');
+define('CORE_CONTROLLERS', CORE_PATH . 'controllers/');
 
 
 /**
@@ -43,8 +46,8 @@ define('DOCUMENT_CONTROLLERS', LIBRARIES . 'App/Cms/Front/Document/Controller/')
 function __autoload($_class)
 {
     $path = explode('_', $_class);
-    $include = array(MODELS, LIBRARIES);
-    $core = array(CORE_LIBRARIES);
+    $include = array(LIBRARIES, MODELS, CONTROLLERS, HELPERS);
+    $core = array(CORE_LIBRARIES, CORE_CONTROLLERS, CORE_HELPERS);
 
     if ($path[0] == 'Core') {
         $include = $core;
@@ -55,7 +58,9 @@ function __autoload($_class)
         $include = array_merge($include, $core);
     }
 
-    $path[count($path) - 1] = $path[count($path) - 1] . '.php';
+    $l = count($path) - 1;
+    $filename = preg_replace('/([^_])(Controller|Helper)$/', '$1', $path[$l]);
+    $path[$l] = $filename . '.php';
     $localPath = implode('/', $path);
 
     foreach ($include as $dir) {

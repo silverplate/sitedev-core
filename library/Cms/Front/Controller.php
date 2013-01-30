@@ -19,24 +19,18 @@ abstract class Core_Cms_Front_Controller extends App_Model
 
     public function getClassName()
     {
-        if ($this->type_id == 1) {
-            $class = 'App_Cms_Front_Document_Controller_';
+        $class = Ext_File::computeName($this->filename);
 
-        } else if ($this->type_id == 2) {
-            $class = 'App_Cms_Front_Data_Controller_';
-
-        } else {
-            throw new Exception('Unkown controller type');
-        }
-
-        return $class . Ext_File::computeName($this->filename);
+        if ($this->typeId == 1)      return $class . 'Controller';
+        else if ($this->typeId == 2) return $class . 'Helper';
+        else                         throw new Exception('Unkown controller type');
     }
 
     public static function getPathByType($_id)
     {
         switch ($_id) {
-            case 1: return DOCUMENT_CONTROLLERS;
-            case 2: return DATA_CONTROLLERS;
+            case 1: return CONTROLLERS;
+            case 2: return HELPERS;
         }
 
         return false;
