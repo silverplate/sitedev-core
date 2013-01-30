@@ -117,23 +117,24 @@ class Core_Error
 
     public function handleException(Exception $_e)
     {
-        if ($this->_mode == self::MODE_DEVELOPMENT) {
-            if (empty($_SERVER) || empty($_SERVER['SERVER_NAME'])) {
-                $this->_toConsole($_e);
+        if ($this->_mode != self::MODE_DEVELOPMENT) {
+            self::logExeption($_e);
+        }
 
-            } else {
-                $this->_toBrowser('Exception', $this->getHtml(
-                    $_e->getMessage(),
-                    $_e->getFile(),
-                    $_e->getLine(),
-                    $this->getMoreTraceInfo($this->_getTrace($_e)),
-                    empty($_SERVER['REQUEST_URI']) ? null : $_SERVER['REQUEST_URI'],
-                    get_class($_e)
-                ));
-            }
+        if (empty($_SERVER) || empty($_SERVER['REQUEST_URI'])) {
+            $this->_toConsole($_e);
+
+        } else if ($this->_mode == self::MODE_DEVELOPMENT) {
+            $this->_toBrowser('Exception', $this->getHtml(
+                $_e->getMessage(),
+                $_e->getFile(),
+                $_e->getLine(),
+                $this->getMoreTraceInfo($this->_getTrace($_e)),
+                empty($_SERVER['REQUEST_URI']) ? null : $_SERVER['REQUEST_URI'],
+                get_class($_e)
+            ));
 
         } else {
-            self::logExeption($_e);
             $this->showUserfriendlyMessage();
         }
 
