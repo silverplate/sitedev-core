@@ -302,11 +302,13 @@ $errorLogFile = SETS . 'error.log';
 
 $permissions = array(
     array(CONTROLLERS,           false),
+    array(CONTROLLERS . '*',     false),
     array(HELPERS,               false),
+    array(HELPERS . '*',         false),
     array(TEMPLATES,             false),
-    array(DOCUMENT_ROOT . 'f/',  false),
-    array(DOCUMENT_ROOT . 'f/*', true),
-    array(WD . 'cache/',         false),
+    array(TEMPLATES . '*',       false),
+    array(DOCUMENT_ROOT . 'f',   false),
+    array(WD . 'cache',          false),
     array(SETS,                  false)
 );
 
