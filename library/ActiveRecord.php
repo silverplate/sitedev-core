@@ -258,14 +258,16 @@ abstract class Core_ActiveRecord
 
     /**
      * @param App_ActiveRecord $_instance
+     * @param $_name string
      * @return App_ActiveRecord_Attribute
      */
-    public function addForeign(App_ActiveRecord $_instance)
+    public function addForeign(App_ActiveRecord $_instance, $_name = null)
     {
         $key = $_instance->getPrimaryKey();
-        $this->_foreignInstances[$key->getName()] = $_instance;
+        $name = $_name ? $_name : $key->getName();
+        $this->_foreignInstances[$name] = $_instance;
 
-        return $this->addAttr($key->getName(), $key->getType());
+        return $this->addAttr($name, $key->getType());
     }
 
     /**
