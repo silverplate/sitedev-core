@@ -205,20 +205,9 @@ if ($page->isAllowed()) {
     }
 
 
-    // Внутренняя навигация
-
-    $listXml = '';
-
-    foreach (App_Cms_Front_Document::getList() as $item) {
-        $listXml .= $item->getBackOfficeXml();
-    }
-
-    $listXml = Ext_Xml::node('local-navigation', $listXml);
-
-
     // XML модуля
 
-    $xml = $listXml . $formStatusXml;
+    $xml = $formStatusXml;
     $attrs = array(
         'type' => 'tree',
         'is-able-to-add' => 'true',
