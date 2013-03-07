@@ -86,7 +86,10 @@ function getDataImages($_dir, $_excludePath)
                         getDataImages($dir . $item, $excludePath)
                     );
 
-                } else if ($dir != $excludePath && Ext_Image::IsImage($item)) {
+                } else if (
+                    $dir != $excludePath &&
+                    Ext_File::isImageExt(Ext_File::computeExt($item))
+                ) {
                     $result[] = App_Image::factory($dir . $item);
                 }
             }
