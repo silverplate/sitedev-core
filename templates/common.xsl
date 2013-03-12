@@ -37,11 +37,11 @@
         </xsl:for-each>
     </xsl:template>
 
-    <xsl:template name="get-date-period">
-        <xsl:param name="start-year" />
+    <xsl:template name="get-year-period">
+        <xsl:param name="start" />
 
-        <xsl:if test="$start-year != /node()/date/@year">
-            <xsl:value-of select="$start-year" />
+        <xsl:if test="$start != /node()/date/@year">
+            <xsl:value-of select="$start" />
             <xsl:text>&mdash;</xsl:text>
         </xsl:if>
 
