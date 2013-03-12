@@ -419,20 +419,22 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template name="get-number-label">
-        <xsl:param name="number" />
-        <xsl:param name="case1" />
-        <xsl:param name="case2" />
-        <xsl:param name="case3" />
+    <!--
+    Правильная форма cуществительного
+    рядом с числом (счетная форма).
+    -->
+    <xsl:template name="get-case">
+        <xsl:param name="number"/> <!-- Число -->
+        <xsl:param name="case1" /> <!-- Единственное число именительный падеж -->
+        <xsl:param name="case2" /> <!-- Единственное число родительный падеж -->
+        <xsl:param name="case3" /> <!-- Множественное число родительный падеж -->
 
         <xsl:variable name="base"
                       select="$number - floor($number div 100) * 100" />
 
-        <xsl:value-of select="concat($number, '&nbsp;')" />
-
         <xsl:choose>
             <xsl:when test="$base > 9 and $base &lt; 20">
-                <xsl:value-of select="$case1" />
+                <xsl:value-of select="$case3" />
             </xsl:when>
             <xsl:otherwise>
                 <xsl:variable name="remainder"
@@ -442,10 +444,10 @@
                         <xsl:value-of select="$case2" />
                     </xsl:when>
                     <xsl:when test="$remainder > 0 and $remainder &lt; 5">
-                        <xsl:value-of select="$case3" />
+                        <xsl:value-of select="$case2" />
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="$case1" />
+                        <xsl:value-of select="$case3" />
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:otherwise>
