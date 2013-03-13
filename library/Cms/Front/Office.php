@@ -38,7 +38,7 @@ abstract class Core_Cms_Front_Office
     {
         global $gHost,
                $gSiteKey,
-               $gisUsers,
+               $gIsUsers,
                $gSiteLangType,
                $gSiteLang,
                $gIsKey,
@@ -116,7 +116,7 @@ abstract class Core_Cms_Front_Office
 
         // Authorization
 
-        if (!empty($gisUsers)) {
+        if (!empty($gIsUsers)) {
             App_Cms_User::startSession();
         }
     }
