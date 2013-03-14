@@ -74,9 +74,9 @@ abstract class Core_Cms_Front_Document extends App_Model
             $this->authStatusId != App_Cms_User::AUTH_GROUP_ALL &&
             App_Cms_User::getAuthGroupTitle($this->authStatusId)
         ) {
-            $attrs['prefix'] = Ext_String::toLower(
-                substr(App_Cms_User::getAuthGroupTitle($this->authStatusId), 0, 1)
-            );
+            $attrs['prefix'] = Ext_String::toLower(Ext_String::getPart(
+                App_Cms_User::getAuthGroupTitle($this->authStatusId), 0, 1
+            ));
         }
 
         if (empty($_xml))         $xml = array();
