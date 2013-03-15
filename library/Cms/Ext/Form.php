@@ -2,9 +2,9 @@
 
 abstract class Core_Cms_Ext_Form extends Ext_Form
 {
-    public function fillWithObject($_object)
+    public function fillWithObject($_object = null)
     {
-        if ($_object->id) {
+        if ($_object && $_object->id) {
             $this->fill($_object->toArray());
 
             $this->createButton('Сохранить', 'update');
