@@ -41,7 +41,7 @@ abstract class Core_Cms_Cache
     public function getUri($_uri = null)
     {
         if (is_null($this->_uri)) {
-            $this->_uri = parse_url(is_null($_uri) ? $_SERVER['REQUEST_URI'] : $_uri);
+            $this->_uri = Ext_File::parseUrl();
             $this->_uri['path_info'] = pathinfo($this->_uri['path']);
 
             if (!empty($this->_uri['query']) && $this->_queryIgnore) {

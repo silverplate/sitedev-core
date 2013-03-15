@@ -133,7 +133,7 @@ abstract class Core_Cms_Session
         if ($this->_cookiePath) {
             return $this->_cookiePath;
         } else {
-            $url = parse_url($_SERVER['REQUEST_URI']);
+            $url = Ext_File::parseUrl();
             preg_match('/^(\/(admin|cms)\/)/', $url['path'], $match);
             return $match ? $match[1] : self::PATH;
         }

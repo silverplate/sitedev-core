@@ -54,7 +54,8 @@ abstract class Core_Cms_Back_Section extends App_Model
      */
     public static function compute()
     {
-        $url = parse_url($_SERVER['REQUEST_URI']);
+        $url = Ext_File::parseUrl();
+
         $path = explode('/', trim(str_replace(
             App_Cms_Back_Office::$uriStartsWith,
             '',

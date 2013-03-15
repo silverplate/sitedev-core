@@ -51,7 +51,7 @@ abstract class Core_Cms_Front_Office
         $siteLang = null;
 
         if (self::getLanguages()) {
-            $url = empty($_SERVER['REQUEST_URI']) ? false : parse_url($_SERVER['REQUEST_URI']);
+            $url = empty($_SERVER['REQUEST_URI']) ? false : Ext_File::parseUrl();
 
             if ($gHost && $url) {
                 $langPath = array();

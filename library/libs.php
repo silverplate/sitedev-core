@@ -139,7 +139,8 @@ function redirect($_url)
 
 function reload($_append = null)
 {
-    goToUrl(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) . $_append);
+    $url = Ext_File::parseUrl();
+    goToUrl(rtrim($url['path'], '/') . $_append);
 }
 
 function documentNotFound()
@@ -149,7 +150,7 @@ function documentNotFound()
     header('HTTP/1.0 404 Not Found');
 
     if (class_exists('App_Cms_Front_Document')) {
-        $realUrl = parse_url($_SERVER['REQUEST_URI']);
+        $realUrl = Ext_File::parseUrl();
         $document = App_Cms_Front_Document::load(getLangInnerUri() . 'not-found/', 'uri');
 
         if ($document) {
@@ -331,7 +332,7 @@ function isWindows()
 
 //     if (!empty($_SERVER[$envName])) {
 //         $referer = strtolower($_SERVER[$envName]);
-//         $url = parse_url($referer);
+//         $url = Ext_File::parseUrl($referer);
 
 //         if (!empty($url['host']) && $url['host'] != strtolower($gHost)) {
 //             $prev = advGetCookie($envName);

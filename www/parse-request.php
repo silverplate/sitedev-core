@@ -12,14 +12,14 @@ if ($gCache->isAvailable() && $gCache->isCache()) {
     echo $gCache;
 
 } else {
-    $realUrl = parse_url($_SERVER['REQUEST_URI']);
+    $realUrl = Ext_File::parseUrl();
     $uri = rtrim($realUrl['path'], '/') . '/';
 
     if (!empty($realUrl['query'])) {
         $uri .= '?' . $realUrl['query'];
     }
 
-    $uri = parse_url(getCustomUrl($uri));
+    $uri = Ext_File::parseUrl(getCustomUrl($uri));
     $document = App_Cms_Front_Document::load($uri['path'], 'uri');
 
     if (
