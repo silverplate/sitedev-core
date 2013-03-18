@@ -23,7 +23,7 @@
             <label>Ссылка</label>
         </element>
 
-        <element name="parent_id" type="single_tree">
+        <element name="parent_id" type="single-tree">
             <label>Раздел</label>
         </element>
 
