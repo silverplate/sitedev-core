@@ -263,10 +263,6 @@ abstract class Core_Cms_Back_Office
             $obj = new $_className;
             $obj->isPublished = 1;
 
-            if ('integer' == $obj->getPrimaryKey()->getType()) {
-                $obj->id = 0;
-            }
-
             if ($obj->hasAttr('title')) {
                 $obj->title = 'Нет';
 
