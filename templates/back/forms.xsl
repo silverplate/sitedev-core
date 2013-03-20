@@ -674,18 +674,18 @@
             </xsl:when>
 
             <xsl:when test="@type = 'calendar-datetime'">
+                <xsl:variable name="name" select="concat(@name, '_date')" />
+
                 <div class="form-calendar form-float-ele">
-                    <input type="hidden" name="{@name}" id="{@name}">
-                        <xsl:attribute name="value">
-                            <xsl:choose>
-                                <xsl:when test="error/value/date/text()"><xsl:value-of select="error/value/text()" /></xsl:when>
-                                <xsl:otherwise><xsl:value-of select="value/date/text()" /></xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:attribute>
+                    <input type="hidden" name="{$name}" id="{$name}">
+                        <xsl:attribute name="value"><xsl:choose>
+                            <xsl:when test="error/value/date"><xsl:value-of select="error/value" /></xsl:when>
+                            <xsl:otherwise><xsl:value-of select="value/date" /></xsl:otherwise>
+                        </xsl:choose></xsl:attribute>
                     </input>
-                    <input type="text" id="{@name}-input" onblur="calendarParseInput('{@name}');" />
-                    <button onclick="calendarSwitcher('{@name}', event); return false;" style="margin-right: 5px;"><img src="/cms/f/calendar/btn.gif" width="25" height="13" alt="" /></button>
-                    <script type="text/javascript"><xsl:value-of select="concat('calendarInit(&quot;', @name , '&quot;);')" /></script>
+                    <input type="text" id="{$name}-input" onblur="calendarParseInput('{$name}');" />
+                    <button onclick="calendarSwitcher('{$name}', event); return false;" style="margin-right: 5px;"><img src="/cms/f/calendar/btn.gif" width="25" height="13" alt="" /></button>
+                    <script type="text/javascript">calendarInit("<xsl:value-of select="$name" />");</script>
 
                     <xsl:variable name="hour-value"><xsl:choose>
                         <xsl:when test="error/value/hour"><xsl:value-of select="error/value/hour" /></xsl:when>
