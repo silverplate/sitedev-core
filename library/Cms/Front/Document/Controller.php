@@ -58,7 +58,7 @@ abstract class Core_Cms_Front_Document_Controller extends Core_Cms_Front_Page
             }
 
             if (!is_null(App_Cms_User::getAuthGroup())) {
-                $where[] = '(auth_status_id = 0 OR auth_status_id & ' . App_Cms_User::getAuthGroup() . ')';
+                $where[] = '(ISNULL(auth_status_id) OR auth_status_id = 0 OR auth_status_id & ' . App_Cms_User::getAuthGroup() . ')';
             }
 
             $xml = array();

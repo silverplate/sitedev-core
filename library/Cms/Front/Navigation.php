@@ -49,7 +49,7 @@ abstract class Core_Cms_Front_Navigation extends App_Model
                 n.' . App_Cms_Front_Navigation::getPri() . ' = l.' . App_Cms_Front_Navigation::getPri() . ' AND
                 l.' . App_Cms_Front_Document::getPri() . ' = d.' . App_Cms_Front_Document::getPri() . ' AND
                 d.is_published = 1' .
-                (is_null(App_Cms_User::getAuthGroup()) ? '' : ' AND (d.auth_status_id = 0 OR d.auth_status_id & ' . App_Cms_User::getAuthGroup() . ')') . '
+                (is_null(App_Cms_User::getAuthGroup()) ? '' : ' AND (ISNULL(d.auth_status_id) OR d.auth_status_id = 0 OR d.auth_status_id & ' . App_Cms_User::getAuthGroup() . ')') . '
             ORDER BY
                 d.sort_order
         ');

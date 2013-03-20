@@ -50,21 +50,16 @@ abstract class Core_Cms_Page
     {
         global $gHost;
 
-        $this->_url = parse_url($_SERVER['REQUEST_URI']);
-        $this->_url['request_uri'] = $_SERVER['REQUEST_URI'];
+        $this->_url = Ext_File::parseUrl();
         $this->_url['host'] = $gHost;
-
-        if (!isset($this->_url['query'])) {
-            $this->_url['query'] = '';
-        }
     }
 
     public function getUrlXml()
     {
-        $url = $this->_url;
+        $url = $this->getUrl();
         unset($url['request_uri']);
 
-        return Ext_Xml::cdata('url', $this->_url['request_uri'], $url);
+        return Ext_Xml::cdata('url', $this->getUrl('request_uri'), $url);
     }
 
     public function getUrl($_name = null)
