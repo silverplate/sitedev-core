@@ -1,10 +1,9 @@
 <?php
 
-abstract class Core_Cms_Front_Document extends App_Model
+abstract class Core_Cms_Front_Document extends App_Model_Tree
 {
     const FOLDER = 'f';
 
-    protected $_isChildren;
     protected $_language;
 
     /**
@@ -220,70 +219,6 @@ abstract class Core_Cms_Front_Document extends App_Model
         Ext_File::deleteDir($this->getFilePath());
 
         return parent::delete();
-    }
-
-    public function isChildren($_exceptId = null)
-    {
-        if (is_null($this->_isChildren)) {
-            $list = self::getList(array('parent_id' => $this->getId()));
-
-            if (is_null($_exceptId)) {
-                $this->_isChildren = ($list);
-
-            } else if ($list) {
-                $this->_isChildren = false;
-
-                foreach ($list as $item) {
-                    if ($item->getId() != $_exceptId) {
-                        $this->_isChildren = true;
-                        break;
-                    }
-                }
-
-            } else {
-                $this->_isChildren = false;
-            }
-        }
-
-        return $this->_isChildren;
-    }
-
-    public static function getMultiAncestors($_ids)
-    {
-        $result = array();
-
-        foreach ($_ids as $id) {
-            if (!in_array($id, $result)) {
-                $result = array_merge($result, self::getAncestors($id));
-            }
-        }
-
-        return $result;
-    }
-
-    public static function getAncestors($_id)
-    {
-        $result = array();
-        $key = self::getPri();
-
-        $entry = Ext_Db::get()->getEntry(Ext_Db::get()->getSelect(
-            self::getTbl(),
-            array($key, 'parent_id'),
-            array($key => $_id)
-        ));
-
-        if ($entry) {
-            $result[] = $entry[$key];
-
-            if ($entry['parent_id']) {
-                $result = array_merge(
-                    $result,
-                    self::getAncestors($entry['parent_id'])
-                );
-            }
-        }
-
-        return $result;
     }
 
     /**

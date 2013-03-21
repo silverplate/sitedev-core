@@ -316,4 +316,73 @@ abstract class Core_Cms_Back_Office
 
         return $result;
     }
+
+    /**
+     * Сортировка и перемещение элементов в дереве. В отличие от реализации
+     * в разделе управления страницами (~/core/cms/cms-pages/ajax-tree-sort.php)
+     * метод не проверяет уникальность служебного имени (name) при перемещении.
+     *
+     * @param string $_class
+     * @return boolean
+     */
+    public static function ajaxTreeSort($_class)
+    {
+        $data = $_POST;
+
+        if (!empty($data['branches'])) {
+            $changed = array();
+            $parent = array();
+            $objects = $_class::getList();
+
+            foreach ($data['branches'] as $i) {
+                $order = array();
+                $newOrder = array();
+
+                for ($j = 0; $j < count($data['branch_' . $i]); $j++) {
+                    $id = $data['branch_' . $i][$j];
+                    if (!isset($objects[$id])) return false;
+
+                    $parent[$id] = $i;
+                    $newOrder[$id] = $j + 1;
+                }
+
+                $k = 0;
+
+                foreach ($objects as $j) {
+                    if (in_array($j->getId(), $data['branch_' . $i])) {
+                        $order[++$k] = $j->sortOrder;
+                    }
+                }
+
+                for ($j = 0; $j < count($data['branch_' . $i]); $j++) {
+                    $id = $data['branch_' . $i][$j];
+                    $objects[$id]->sortOrder = $order[$newOrder[$id]];
+                    $changed[] = $id;
+                }
+            }
+
+            foreach ($objects as $i) {
+                $id = $i->id;
+
+                if (isset($parent[$id])) {
+                    $objects[$id]->parentId = empty($parent[$id]) ? null : $parent[$id];
+                    $changed[] = $id;
+                }
+            }
+
+            foreach (array_unique($changed) as $i) {
+                $objects[$i]->update();
+            }
+
+            App_Cms_Back_Log::LogModule(
+                App_Cms_Back_Log::ACT_MODIFY,
+                null,
+                'Сортировка'
+            );
+
+            return !empty($changed);
+        }
+
+        return false;
+    }
 }
