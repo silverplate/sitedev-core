@@ -14,9 +14,15 @@ class Core_Model extends App_ActiveRecord
 
     public function getTitle()
     {
-        if (isset($this->title) && $this->title)    return $this->title;
-        else if (isset($this->name) && $this->name) return $this->name;
-        else                                        return 'ID ' . $this->id;
+        if (isset($this->title) && $this->title != '') {
+            return $this->title;
+
+        } else if (isset($this->name) && $this->name != '') {
+            return $this->name;
+
+        } else {
+            return 'ID ' . $this->id;
+        }
     }
 
     public function getDate($_name)
