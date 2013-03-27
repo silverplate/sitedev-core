@@ -55,11 +55,16 @@ abstract class Core_Cms_Front_Adv
 
     public static function setCookie($_name, $_value)
     {
+        global $gEnv;
+
         $name = 'adv_' . strtolower($_name);
         $_COOKIE[$name] = $_value;
-//         global $gHost;
-//         setcookie($name, $_value, 0, '/', '.' . $gHost);
-        setcookie($name, $_value, 0, '/');
+
+        $host = $gEnv == 'production' && !empty($_SERVER['HTTP_HOST'])
+              ? '.' . $_SERVER['HTTP_HOST']
+              : null;
+
+        setcookie($name, $_value, 0, '/', $host);
     }
 
     public static function getCookie($_name)
