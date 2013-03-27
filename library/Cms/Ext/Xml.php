@@ -40,7 +40,7 @@ abstract class Core_Cms_Ext_Xml extends Ext_Xml
                     );
 
                     if ($filePath) {
-                        $file = App_Image::factory($filePath);
+                        $file = App_Cms_Ext_Image::factory($filePath);
                     }
 
                 } else {
@@ -62,7 +62,7 @@ abstract class Core_Cms_Ext_Xml extends Ext_Xml
                 $filePath = rtrim(DOCUMENT_ROOT, '/') . $node->getAttribute('uri');
 
                 if (is_file($filePath)) {
-                    $file = App_Image::factory($filePath);
+                    $file = App_Cms_Ext_Image::factory($filePath);
                 }
             }
 

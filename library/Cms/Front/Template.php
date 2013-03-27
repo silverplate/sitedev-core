@@ -3,7 +3,7 @@
 abstract class Core_Cms_Front_Template extends App_Model
 {
     /**
-     * @var App_File
+     * @var App_Cms_Ext_File
      */
     protected $_file;
 
@@ -38,7 +38,7 @@ abstract class Core_Cms_Front_Template extends App_Model
     public function update()
     {
         if ($this->getFilePath() != $this->_originalFilePath) {
-            App_File::moveFile($this->_originalFilePath, $this->getFilePath());
+            App_Cms_Ext_File::moveFile($this->_originalFilePath, $this->getFilePath());
         }
 
         return parent::update();
@@ -67,7 +67,7 @@ abstract class Core_Cms_Front_Template extends App_Model
     {
         if (!isset($this->_file)) {
             $this->_file = is_file($this->getFilePath())
-                         ? new App_File($this->getFilePath())
+                         ? new App_Cms_Ext_File($this->getFilePath())
                          : false;
         }
 
