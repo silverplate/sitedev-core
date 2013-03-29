@@ -233,6 +233,22 @@ abstract class Core_ActiveRecord
 
     /**
      * @param string $_name
+     */
+    public function removeAttr($_name)
+    {
+        $name = $this->getAttrName($_name);
+
+        if ($name) {
+            unset($this->_attributes[$name]);
+
+            if (isset($this->_foreignInstances[$name])) {
+                unset($this->_foreignInstances[$name]);
+            }
+        }
+    }
+
+    /**
+     * @param string $_name
      * @param string $_type
      * @throws Exception
      * @return App_ActiveRecord_Attribute
