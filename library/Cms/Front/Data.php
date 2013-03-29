@@ -189,7 +189,7 @@ abstract class Core_Cms_Front_Data extends App_Model
             $path = DOCUMENT_ROOT . ltrim($this->content, '/');
 
             if (is_file($path)) {
-                $file = App_Image::factory($path);
+                $file = App_Cms_Ext_Image::factory($path);
 
                 if ($file) {
                     return array('type' => 'xml', 'content' => $file->getXml());

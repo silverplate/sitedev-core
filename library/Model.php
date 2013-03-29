@@ -3,12 +3,12 @@
 class Core_Model extends App_ActiveRecord
 {
     /**
-     * @var array[App_File]
+     * @var array[App_Cms_Ext_File]
      */
     protected $_files;
 
     /**
-     * @var array[App_Image]
+     * @var array[App_Cms_Ext_Image]
      */
     protected $_images;
 
@@ -83,7 +83,7 @@ class Core_Model extends App_ActiveRecord
                     $filePath = rtrim($this->getFilePath(), '/') . '/' . $item;
 
                     if ($item{0} != '.' && is_file($filePath)) {
-                        $file = App_File::factory($filePath);
+                        $file = App_Cms_Ext_File::factory($filePath);
 
                         $this->_files[
                             Ext_String::toLower($file->getFilename())
