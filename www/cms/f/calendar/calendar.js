@@ -42,6 +42,11 @@ function calendarSet(name, y, m, d)
     getCalendar(name).set(y, m, d);
 }
 
+function calendarClear(name)
+{
+    getCalendar(name).clearDate();
+}
+
 function Calendar(name, lang)
 {
     this.name = name;

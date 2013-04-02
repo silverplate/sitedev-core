@@ -1,7 +1,6 @@
 <?php
 
 require_once '../prepend.php';
-require_once 'filter-lib.php';
 
 $page = new App_Cms_Back_Page();
 
@@ -97,28 +96,9 @@ if ($page->isAllowed()) {
     }
 
 
-    // Внутренняя навигация
-
-    $filter = objGetFilter();
-    $filterAttrs = array('type' => 'filter');
-    $listXml = '';
-
-    foreach (array('open', 'name', 'email') as $name) {
-        if (!empty($filter['is_' . $name])) {
-            $filterAttrs["is-$name"] = 1;
-
-            if (!empty($filter[$name])) {
-                $listXml .= Ext_Xml::cdata("filter-$name", $filter[$name]);
-            }
-        }
-    }
-
-    $listXml = Ext_Xml::node('local-navigation', $listXml, $filterAttrs);
-
-
     // XML модуля
 
-    $xml = $listXml . $formStatusXml;
+    $xml = App_Cms_User::getCmsNavFilter()->getXml() . $formStatusXml;
     $attrs = array('type' => 'simple', 'is-able-to-add' => 'true');
 
     if (empty($obj)) {

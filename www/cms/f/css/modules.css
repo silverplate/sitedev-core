@@ -247,12 +247,13 @@ form#filter
     float: left;
     padding: 10px;
     margin-bottom: 20px;
+    min-width: 205px;
 }
 
 div.filter-close
 {
-    text-align: right;
-    margin: -5px -5px 5px 5px;
+    float: right;
+    margin-top: 2px; 
     line-height: 0.5em;
 }
 
@@ -270,8 +271,13 @@ html>body div.filter-close a
 
 div.filter-input
 {
-    margin: 10px 0;
+    margin: 10px 0 20px;
     font-size: 0.84em;
+}
+
+div.filter-input table.chooser-item
+{
+    float: none;
 }
 
 div.filter-input table.chooser-item td.chooser-label

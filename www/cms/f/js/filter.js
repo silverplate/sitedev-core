@@ -3,21 +3,26 @@ function dateFilterFromDate(_stringDateFrom, _stringDateTill)
     if (_stringDateFrom) {
         var fromDate = _stringDateFrom.split("-");
         calendarSet("filter-from", fromDate[0], fromDate[1] - 1, fromDate[2]);
-    }
 
-    if (_stringDateTill) {
-        var tillDate = _stringDateTill.split("-");
-        calendarSet("filter-till", tillDate[0], tillDate[1] - 1, tillDate[2]);
+        if (_stringDateTill) {
+            var tillDate = _stringDateTill.split("-");
+            calendarSet("filter-till", tillDate[0], tillDate[1] - 1, tillDate[2]);
+
+        } else {
+            var now = new Date();
+            calendarSet("filter-till", now.getFullYear(), now.getMonth(), now.getDate());
+        }
 
     } else {
-        var now = new Date();
-        calendarSet("filter-till", now.getFullYear(), now.getMonth(), now.getDate());
+        calendarClear("filter-from");
+        calendarClear("filter-till");
     }
 }
 
 function dateFilterGetDate(_name)
 {
-    return getCalendar(_name).getDate();
+    var cal = getCalendar(_name);
+    return cal.getInputEle().value ? cal.getDate() : false;
 }
 
 function hideFilter()
@@ -34,73 +39,66 @@ function showFilter()
     setCookie("filter-is-open", 1);
 }
 
-function filterUpdate(_eleName, _isFormSubmit, _isSortable, _isDate)
+function filterUpdate(_eleName, _isFormSubmit, _isSortable)
 {
     var formEle = document.getElementById("filter");
     var ele = document.getElementById(_eleName);
-    var from, till;
 
-    if (_isDate) {
-        from = dateFilterGetDate("filter-from");
-        till = dateFilterGetDate("filter-till");
-    }
-    
-    if (formEle && ele && (!_isDate || (from && till))) {
+    if (formEle && ele) {
         showLoadingBar();
-
-        if (_isDate) {
-            setCookie("filter-from", from.toGMTString());
-            setCookie("filter-till", till.toGMTString());
-        }
 
         if (_isFormSubmit) {
             setCookie("filter-page", "");
-        }
 
-        var inputs = new Array("title", "name", "email");
+            if ($("[name = 'filter_from']").length != 0) {
+                var from = dateFilterGetDate("filter-from");
+                var till = dateFilterGetDate("filter-till");
 
-        for (var i = 0; i < inputs.length; i++) {
-            var input = document.getElementById("filter-" + inputs[i]);
+                if (from && till) {
+                    setCookie("filter-from", from.toISOString());
+                    setCookie("filter-till", till.toISOString());
 
-            if (input) {
-                setCookie("filter-" + inputs[i], input.value);
+                } else {
+                    setCookie("filter-from", "");
+                    setCookie("filter-till", "");
+                }
             }
-        }
 
-        var inputs = new Array("users", "sections", "actions", "type", "group");
+            $(".filter-input").each(function() {
+                setCookie(
+                    "filter-" + this.id.replace("filter-", ""),
+                    this.value
+                );
+            });
 
-        for (var i = 0; i < inputs.length; i++) {
-            var checkEle = document.getElementById("is-filter-" + inputs[i]);
-
-            if (checkEle) {
+            $(".filter-switcher").each(function() {
                 var value = "";
+                var name = this.id.replace("is-filter-", "");
 
-                if (checkEle.checked) {
-                    var input = formEle.elements["filter_" + inputs[i]];
+                if (this.checked) {
+                    var input = $(formEle).find("[name = 'filter_" + name + "']");
 
-                    if (!input) {
-                        input = formEle.elements["filter_" + inputs[i] + "[]"];
+                    if (input.length == 0) {
+                        input = $(formEle).find("[name = 'filter_" + name + "[]']");
                     }
-                    
-                    if (input) {
-                        if (input.length) {
-                            for (var j = 0; j < input.length; j++) {
-                                if (input[j].checked) {
-                                    value += (value != "" ? "|" : "") + input[j].value;
+
+                    if (input.length > 0) {
+                        if (input.length > 1) {
+                            input.each(function() {
+                                if (this.checked) {
+                                    value += (value != "" ? "|" : "") + this.value;
                                 }
-                            }
+                            });
 
                         } else if (input.checked) {
                             value = input.value;
                         }
                     }
                 }
-               
-                console.log(value);
 
-                setCookie("is-filter-" + inputs[i], checkEle.checked ? 1 : "");
-                setCookie("filter-" + inputs[i], value);
-            }
+                setCookie("is-filter-" + name, this.checked ? 1 : "");
+                setCookie("filter-" + name, value);
+            });
         }
 
         $.post(

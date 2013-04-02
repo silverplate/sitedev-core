@@ -258,21 +258,17 @@
                 <xsl:for-each select="content/list-navigation">
                     <xsl:call-template name="list-navigation">
                         <xsl:with-param name="total" select="@total" />
-                        <xsl:with-param name="per-page">
-                            <xsl:value-of select="@per-page" />
-                        </xsl:with-param>
+                        <xsl:with-param name="per-page" select="@per-page" />
                         <xsl:with-param name="page" select="@page" />
                         <xsl:with-param name="type">query</xsl:with-param>
                         <xsl:with-param name="separator">&middot;</xsl:with-param>
                         <xsl:with-param name="url-subquery" select="/node()/url/@query" />
                         <xsl:with-param name="is-tiny">1</xsl:with-param>
                         <xsl:with-param name="step">5</xsl:with-param>
-                        <xsl:with-param name="js-func">
-                            <xsl:choose>
-                                <xsl:when test="$is-sortable = 1">filterUpdateNav(~, true)</xsl:when>
-                                <xsl:otherwise>filterUpdateNav</xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:with-param>
+                        <xsl:with-param name="js-func"><xsl:choose>
+                            <xsl:when test="$is-sortable = 1">filterUpdateNav(~, true)</xsl:when>
+                            <xsl:otherwise>filterUpdateNav</xsl:otherwise>
+                        </xsl:choose></xsl:with-param>
                     </xsl:call-template>
                 </xsl:for-each>
             </xsl:when>
@@ -369,18 +365,17 @@
                         <xsl:with-param name="url-subquery" select="/node()/url/@query" />
                         <xsl:with-param name="is-tiny">0</xsl:with-param>
                         <xsl:with-param name="step">10</xsl:with-param>
-                        <xsl:with-param name="js-func">
-                            <xsl:choose>
-                                <xsl:when test="$is-sortable = 1">filterUpdateNav(~, true)</xsl:when>
-                                <xsl:otherwise>filterUpdateNav</xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:with-param>
+                        <xsl:with-param name="js-func"><xsl:choose>
+                            <xsl:when test="$is-sortable = 1">filterUpdateNav(~, true)</xsl:when>
+                            <xsl:otherwise>filterUpdateNav</xsl:otherwise>
+                        </xsl:choose></xsl:with-param>
                     </xsl:call-template>
                 </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>Нет</xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+
 
     <!--
     Список элементов из таблицы с тройным

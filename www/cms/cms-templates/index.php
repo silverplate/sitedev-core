@@ -101,18 +101,18 @@ if ($page->isAllowed()) {
 
     // Внутренняя навигация
 
-    $listXml = '';
+    $filterXml = '';
 
     foreach (App_Cms_Front_Template::getList() as $item) {
-        $listXml .= $item->getBackOfficeXml();
+        $filterXml .= $item->getBackOfficeXml();
     }
 
-    $listXml = Ext_Xml::node('local-navigation', $listXml);
+    $filterXml = Ext_Xml::node('local-navigation', $filterXml);
 
 
     // XML модуля
 
-    $xml = $listXml . $formStatusXml;
+    $xml = $filterXml . $formStatusXml;
     $attrs = array('type' => 'simple', 'is-able-to-add' => 'true');
 
     if (empty($obj)) {

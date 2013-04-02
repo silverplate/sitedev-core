@@ -36,74 +36,69 @@
         mode="list"
     >
         <div id="filter-link">
-            <xsl:if test="@is-open"><xsl:attribute name="style">display: none;</xsl:attribute></xsl:if>
+            <xsl:if test="@is-open">
+                <xsl:attribute name="style">display: none;</xsl:attribute>
+            </xsl:if>
             <a onclick="showFilter();">Отфильтровать</a>
         </div>
 
-        <xsl:variable name="is-sortable">
-            <xsl:choose>
-                <xsl:when test="@is-sortable">true</xsl:when>
-                <xsl:otherwise>false</xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
+        <xsl:variable name="is-sortable"><xsl:choose>
+            <xsl:when test="@is-sortable">true</xsl:when>
+            <xsl:otherwise>false</xsl:otherwise>
+        </xsl:choose></xsl:variable>
 
-        <xsl:variable name="is-date">
-            <xsl:choose>
-                <xsl:when test="@is-date">true</xsl:when>
-                <xsl:otherwise>false</xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
-
-        <form id="filter" onsubmit="filterUpdate('filter-content', true, {$is-sortable}, {$is-date}); return false;">
-            <xsl:if test="@is-open"><xsl:attribute name="style">display: block;</xsl:attribute></xsl:if>
-            <div class="filter-close"><a onclick="hideFilter();">&times;</a></div>
-            <xsl:if test="$is-date = 'true'">
-                <xsl:call-template name="date-filter" />
+        <form
+            id="filter"
+            onsubmit="filterUpdate('filter-content', true, {$is-sortable}); return false;"
+        >
+            <xsl:if test="@is-open">
+                <xsl:attribute name="style">display: block;</xsl:attribute>
             </xsl:if>
 
-            <xsl:if test="@is-title">
-                <div class="filter-input">
-                    <label for="filter-title">Название</label>
-                    <input type="text" name="filter_title" id="filter-title" class="string" value="{filter-title}" />
-                </div>
-            </xsl:if>
+            <div class="filter-close">
+                <a onclick="hideFilter();">&times;</a>
+            </div>
 
-            <xsl:if test="@is-name">
-                <div class="filter-input">
-                    <label for="filter-name">Имя</label>
-                    <input type="text" name="filter_name" id="filter-name" class="string" value="{filter-name}" />
-                </div>
-            </xsl:if>
+            <xsl:apply-templates select="filter-param" />
 
-            <xsl:if test="@is-email">
-                <div class="filter-input">
-                    <label for="filter-email">Электропочта</label>
-                    <input type="text" name="filter_email" id="filter-email" class="string" value="{filter-email}" />
-                </div>
-            </xsl:if>
+            <input style="float: right; margin-top: -5px;" type="submit" value="Выбрать" />
 
-            <xsl:apply-templates select="filter-param[@name and title and item]" />
-
-            <div style="text-align: right;"><input type="submit" value="Выбрать" /></div>
-            <input type="hidden" name="filter_selected_id" value="{ancestor::node()[name() = 'module']/@id}" />
+            <input
+                type="hidden"
+                name="filter_selected_id"
+                value="{ancestor::node()[name() = 'module']/@id}"
+            />
         </form>
+
         <br clear="all" />
 
         <xsl:if test="@type = 'filter'">
-            <ul id="filter-content"><xsl:if test="@is-sortable"><xsl:attribute name="class">sortable</xsl:attribute></xsl:if></ul>
-            <script type="text/javascript"><xsl:value-of select="concat('filterUpdate(&quot;filter-content&quot;, false, ', $is-sortable, ', ', $is-date, ');')" /></script>
+            <ul id="filter-content">
+                <xsl:if test="@is-sortable">
+                    <xsl:attribute name="class">sortable</xsl:attribute>
+                </xsl:if>
+            </ul>
+
+            <script type="text/javascript">filterUpdate("filter-content", false, <xsl:value-of select="$is-sortable" />);</script>
         </xsl:if>
     </xsl:template>
 
-    <xsl:template match="filter-param">
+    <xsl:template match="filter-param[@type = 'multiple']">
         <div class="filter-input">
             <table class="chooser-item">
                 <tr>
-                    <td><input type="checkbox" name="is_filter_{@name}" id="is-filter-{@name}" value="1" onclick="changeElementVisibility('filter-{@name}-ele', this.checked);">
-                        <xsl:if test="@is-selected">
-                            <xsl:attribute name="checked">true</xsl:attribute>
-                        </xsl:if>
-                    </input></td>
+                    <td><input
+                        type="checkbox"
+                        name="is_filter_{@name}"
+                        id="is-filter-{@name}"
+                        value="1"
+                        onclick="changeElementVisibility('filter-{@name}-ele', this.checked);"
+                        class="filter-switcher"
+
+                    ><xsl:if test="@is-selected">
+                        <xsl:attribute name="checked">true</xsl:attribute>
+                    </xsl:if></input></td>
+
                     <td class="chooser-label">
                         <label for="is-filter-{@name}" class="filter-name"><xsl:value-of select="title" disable-output-escaping="yes" /></label>
                         <table class="chooser-item" id="filter-{@name}-ele">
@@ -123,40 +118,65 @@
                     </td>
                 </tr>
             </table>
-            <br clear="all" />
         </div>
     </xsl:template>
 
-    <xsl:template name="date-filter">
-        <table class="date-filter">
-            <tr>
-                <td class="label">С</td>
-                <td class="form-calendar">
-                    <input type="hidden" name="filter_from" id="filter-from" value="{@from}" />
-                    <input type="text" id="filter-from-input" onblur="calendarParseInput('filter-from');" />
-                    <button onclick="calendarSwitcher('filter-from', event); return false;"><img src="/cms/f/calendar/btn.gif" width="25" height="13" alt="" /></button>
-                    <script type="text/javascript" language="JavaScript">calendarInit('filter-from');</script>
-                </td>
-            </tr>
-            <tr>
-                <td class="label">По</td>
-                <td class="form-calendar">
-                    <input type="hidden" name="filter_till" id="filter-till" value="{@till}" />
-                    <input type="text" id="filter-till-input" onblur="calendarParseInput('filter-till');" />
-                    <button onclick="calendarSwitcher('filter-till', event); return false;"><img src="/cms/f/calendar/btn.gif" width="25" height="13" alt="" /></button>
-                    <script type="text/javascript" language="JavaScript">calendarInit('filter-till');</script>
-                </td>
-            </tr>
-        </table>
+    <xsl:template match="filter-param[@type = 'string']">
+        <div class="filter-input">
+            <label for="filter-{@name}">
+                <xsl:value-of select="title" disable-output-escaping="yes" />
+            </label>
 
-        <table class="date-filter-periods" style="margin-bottom: 20px;">
-            <tr>
-                <td><a onclick="dateFilterFromDate('{@today}')">Сегодня</a></td>
-                <td><a onclick="dateFilterFromDate('{@week}')">Неделя</a></td>
-                <td><a onclick="dateFilterFromDate('{@month}')">Месяц</a></td>
-                <td><a onclick="dateFilterFromDate('{@all-from}', '{@all-till}')">&laquo;Все&raquo;</a></td>
-            </tr>
-        </table>
+            <input
+                type="text"
+                name="filter_{@name}"
+                id="filter-{@name}"
+                class="string filter-input"
+                value="{value}"
+            />
+        </div>
+    </xsl:template>
+
+    <xsl:template match="filter-param[@type = 'date']">
+        <div class="filter-input">
+            <xsl:if test="title">
+                <label for="filter-from-input">
+                    <xsl:value-of select="title" disable-output-escaping="yes" />
+                </label>
+            </xsl:if>
+    
+            <div style="padding: 5px 10px 0 10px;">
+                <table class="date-filter">
+                    <tr>
+                        <td class="label">С</td>
+                        <td class="form-calendar">
+                            <input type="hidden" name="filter_from" id="filter-from" value="{@from}" />
+                            <input type="text" id="filter-from-input" onblur="calendarParseInput('filter-from');" />
+                            <button onclick="calendarSwitcher('filter-from', event); return false;"><img src="/cms/f/calendar/btn.gif" width="25" height="13" alt="" /></button>
+                            <script type="text/javascript">calendarInit('filter-from');</script>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">По</td>
+                        <td class="form-calendar">
+                            <input type="hidden" name="filter_till" id="filter-till" value="{@till}" />
+                            <input type="text" id="filter-till-input" onblur="calendarParseInput('filter-till');" />
+                            <button onclick="calendarSwitcher('filter-till', event); return false;"><img src="/cms/f/calendar/btn.gif" width="25" height="13" alt="" /></button>
+                            <script type="text/javascript">calendarInit('filter-till');</script>
+                        </td>
+                    </tr>
+                </table>
+        
+                <table class="date-filter-periods">
+                    <tr>
+                        <td><a onclick="dateFilterFromDate('{@today}')">Сегодня</a></td>
+                        <td><a onclick="dateFilterFromDate('{@week}')">Неделя</a></td>
+                        <td><a onclick="dateFilterFromDate('{@month}')">Месяц</a></td>
+                        <td><a onclick="dateFilterFromDate()">&laquo;Все&raquo;</a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </xsl:template>
 
     <xsl:template match="local-navigation" name="local-navigation" mode="list">

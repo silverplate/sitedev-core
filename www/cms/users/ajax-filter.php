@@ -1,36 +1,5 @@
 <?php
 
 require_once '../prepend.php';
-require_once 'filter-lib.php';
 
-$filter = objGetFilter();
-$resultItems = objFilter($filter);
-
-if (!$resultItems['items'] && $resultItems['total'] > 0 && $filter['page'] != 1) {
-    $filter['page'] = 1;
-    $resultItems = objFilter($filter);
-}
-
-$page = new App_Cms_Page();
-$page->setRootName('http-request');
-$page->setRootAttr('type', 'filter');
-$page->setTemplate(TEMPLATES . 'back/http-requests.xsl');
-
-if (!empty($filter['selected_id'])) {
-    $page->setRootAttr('selected-id', $filter['selected_id']);
-}
-
-if ($resultItems['items']) {
-    foreach ($resultItems['items'] as $item) {
-        $page->addContent($item->getBackOfficeXml());
-    }
-
-    $page->addContent(Ext_Xml::node('list-navigation', null, array(
-        'page' => $filter['page'],
-        'per-page' => $filter['per_page'],
-        'total' => $resultItems['total']
-    )));
-}
-
-header('Content-type: text/html; charset=utf-8');
-$page->output();
+App_Cms_User::getCmsNavFilter()->output();

@@ -1,9 +1,12 @@
 function setCookie(_name, _value, _expire, _path)
 {
     var e = isNaN(_expire) ? 0 : _expire;
+    if (!_value) e = -1;
+
     var curDate = new Date();
     var cookieExpire = new Date(Date.parse(curDate.toUTCString()) + e * 24 * 60 * 60 * 1000);
     var cookiePath = _path ? "; path=" + _path : "";
+
     document.cookie = _name + "=" + escape(_value) + (e ? ("; expires=" + cookieExpire.toUTCString()) : "") + cookiePath;
 }
 

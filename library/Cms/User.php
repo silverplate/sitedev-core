@@ -291,4 +291,25 @@ abstract class Core_Cms_User extends App_Model
 
         return parent::getBackOfficeXml($_xml, $attrs);
     }
+
+    /**
+     * @return App_Cms_Back_Office_NavFilter
+     */
+    public static function getCmsNavFilter()
+    {
+        $filter = new App_Cms_Back_Office_NavFilter('App_Cms_User');
+
+        $filter->addElement(new App_Cms_Back_Office_NavFilter_Element_Name(
+            'Имя'
+        ));
+
+        $filter->addElement(new App_Cms_Back_Office_NavFilter_Element(
+            'email',
+            'Электронная почта'
+        ));
+
+        $filter->run();
+
+        return $filter;
+    }
 }
