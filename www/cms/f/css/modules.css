@@ -333,6 +333,11 @@ div.filter-input label.filter-name
     clear: both;
 }
 
+#list-navigation a
+{
+    white-space: nowrap;
+}
+
 .list-navigation-selected
 {
     font-weight: bold;
