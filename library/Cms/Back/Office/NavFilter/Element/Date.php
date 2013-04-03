@@ -6,7 +6,7 @@ extends App_Cms_Back_Office_NavFilter_Element
     /**
      * @var string
      */
-    protected $_dbAttrFormat;
+    protected $_dbAttrType;
 
     /**
      * @var integer
@@ -70,7 +70,7 @@ extends App_Cms_Back_Office_NavFilter_Element
         $where = array();
 
         if (!empty($this->_from)) {
-            $value = $this->_dbAttrFormat == 'sql'
+            $value = $this->_dbAttrType == 'sql'
                    ? date('Y-m-d H:i:s', $this->_from)
                    : $this->_from;
 
@@ -78,7 +78,7 @@ extends App_Cms_Back_Office_NavFilter_Element
         }
 
         if (!empty($this->_till)) {
-            $value = $this->_dbAttrFormat == 'sql'
+            $value = $this->_dbAttrType == 'sql'
                    ? date('Y-m-d H:i:s', $this->_till)
                    : $this->_till;
 

@@ -3,6 +3,7 @@
 abstract class Core_Cms_Back_Office_NavFilter
 {
     protected $_class;
+    protected $_type;
     protected $_page;
     protected $_perPage;
     protected $_selectedId;
@@ -18,6 +19,17 @@ abstract class Core_Cms_Back_Office_NavFilter
     {
         $this->_class = $_class;
         $this->setPerPage(20);
+        $this->setType('filter');
+    }
+
+    public function setType($_type)
+    {
+        $this->_type = $_type;
+    }
+
+    public function getType()
+    {
+        return $this->_type;
     }
 
     public function setPage($_page)
@@ -221,24 +233,31 @@ abstract class Core_Cms_Back_Office_NavFilter
             'local-navigation',
             $xml,
             array(
-                'type' => 'filter',
+                'type' => $this->getType(),
                 'is-open' => $this->isOpen(),
                 'is-sortable' => $this->isSortable()
             )
         );
     }
 
-    public function output()
+    public function output(array $_attrs = array())
     {
         $result = $this->filter();
-
         $page = new App_Cms_Page();
         $page->setRootName('http-request');
-        $page->setRootAttr('type', 'filter');
         $page->setTemplate(TEMPLATES . 'back/http-requests.xsl');
+        $attrs = array('type' => 'filter');
 
         if ($this->getSelectedId()) {
-            $page->setRootAttr('selected-id', $this->getSelectedId());
+            $attrs['selected-id'] = $this->getSelectedId();
+        }
+
+        if ($_attrs) {
+            $attrs = array_merge($attrs, $_attrs);
+        }
+
+        foreach ($attrs as $name => $value) {
+            $page->setRootAttr($name, $value);
         }
 
         if ($result['items']) {

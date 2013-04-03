@@ -78,16 +78,8 @@
 
                 <td class="content">
                     <xsl:for-each select="local-navigation[@type = 'content-filter']">
-                        <xsl:variable name="is-date"><xsl:choose>
-                            <xsl:when test="@is-date">true</xsl:when>
-                            <xsl:otherwise>false</xsl:otherwise>
-                        </xsl:choose></xsl:variable>
-
                         <div id="filter-content" />
-
-                        <script type="text/javascript">
-                            <xsl:value-of select="concat('filterUpdate(&quot;filter-content&quot;, false, false, ', $is-date, ');')" />
-                        </script>
+                        <script type="text/javascript">filterUpdate("filter-content");</script>
                     </xsl:for-each>
 
                     <xsl:apply-templates select="content" mode="module" />

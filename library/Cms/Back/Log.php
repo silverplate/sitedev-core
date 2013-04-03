@@ -10,6 +10,16 @@ abstract class Core_Cms_Back_Log extends App_Model
     const ACT_REMIND_PWD = 6;
     const ACT_CHANGE_PWD = 7;
 
+    /**
+     * @var App_Cms_Back_User
+     */
+    protected $_user;
+
+    /**
+     * @var App_Cms_Back_Section
+     */
+    protected $_section;
+
     public function __construct()
     {
         parent::__construct();
@@ -18,6 +28,7 @@ abstract class Core_Cms_Back_Log extends App_Model
         $this->addForeign(App_Cms_Back_User::createInstance());
         $this->addForeign(App_Cms_Back_Section::createInstance());
         $this->addAttr('section_name', 'string');
+        $this->addAttr('user_name', 'string');
         $this->addAttr('user_ip', 'string');
         $this->addAttr('user_agent', 'string');
         $this->addAttr('request_uri', 'string');
@@ -31,6 +42,30 @@ abstract class Core_Cms_Back_Log extends App_Model
         $this->addAttr('creation_date', 'datetime');
     }
 
+    /**
+     * @return App_Cms_Back_User
+     */
+    public function getUser()
+    {
+        if (!isset($this->_user)) {
+            $this->_user = App_Cms_Back_User::getById($this->backUserId);
+        }
+
+        return $this->_user;
+    }
+
+    /**
+     * @return App_Cms_Back_Section
+     */
+    public function getSection()
+    {
+        if (!isset($this->_section)) {
+            $this->_section = App_Cms_Back_Section::getById($this->backSectionId);
+        }
+
+        return $this->_section;
+    }
+
     public static function getActions()
     {
         return array(
@@ -42,6 +77,12 @@ abstract class Core_Cms_Back_Log extends App_Model
             self::ACT_REMIND_PWD => 'Напоминание пароля',
             self::ACT_CHANGE_PWD => 'Смена пароля'
         );
+    }
+
+    public static function getActionTitleById($_id)
+    {
+        $actions = static::getActions();
+        return isset($actions[$_id]) ? $actions[$_id] : false;
     }
 
     public static function logModule($_actionId, $_entryId, $_description = null)
@@ -138,6 +179,21 @@ abstract class Core_Cms_Back_Log extends App_Model
             Ext_Xml::append($xml, Ext_Xml::notEmptyCdata($item, $this->$item));
         }
 
+        Ext_Xml::append($xml, Ext_Xml::notEmptyCdata(
+            'user',
+            $this->getUser() ? $this->getUser()->getTitle() : $this->userName
+        ));
+
+        Ext_Xml::append($xml, Ext_Xml::notEmptyCdata(
+            'section',
+            $this->getSection() ? $this->getSection()->getTitle() : $this->sectionName
+        ));
+
+        Ext_Xml::append($xml, Ext_Xml::notEmptyCdata(
+            'action',
+            static::getActionTitleById($this->actionId)
+        ));
+
         return parent::getXml($node, $xml, $attrs);
     }
 
@@ -184,5 +240,68 @@ abstract class Core_Cms_Back_Log extends App_Model
     public static function getCount($_where = array())
     {
         return parent::getCount(self::getQueryConditions($_where));
+    }
+
+    /**
+     * @return App_Cms_Back_Office_NavFilter
+     */
+    public static function getCmsNavFilter()
+    {
+        $filter = new App_Cms_Back_Office_NavFilter(get_called_class());
+        $filter->setType('content-filter');
+
+
+        // Дата
+
+        $filter->addElement(new App_Cms_Back_Office_NavFilter_Element_Date(
+            'creation_date',
+            'sql',
+            'Время'
+        ));
+
+
+        // Пользователи
+
+        $el = new App_Cms_Back_Office_NavFilter_Element_Multiple(
+            App_Cms_Back_User::getPri(),
+            'Пользователи'
+        );
+
+        foreach (App_Cms_Back_User::getList() as $item) {
+            $el->addOption($item->id, $item->getTitle());
+        }
+
+        $filter->addElement($el);
+
+
+        // Разделы
+
+        $el = new App_Cms_Back_Office_NavFilter_Element_Multiple(
+            App_Cms_Back_Section::getPri(),
+            'Разделы'
+        );
+
+        foreach (App_Cms_Back_Section::getList() as $item) {
+            $el->addOption($item->id, $item->getTitle());
+        }
+
+        $filter->addElement($el);
+
+
+        // Действия
+
+        $el = new App_Cms_Back_Office_NavFilter_Element_Multiple(
+            'action_id',
+            'Действия'
+        );
+
+        foreach (self::getActions() as $id => $title) {
+            $el->addOption($id, $title);
+        }
+
+        $filter->addElement($el);
+        $filter->run();
+
+        return $filter;
     }
 }
