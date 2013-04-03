@@ -107,7 +107,13 @@ abstract class Core_Cms_Back_Office_NavFilter
         $where = array();
 
         foreach ($this->_elements as $el) {
-            $where = array_merge($where, $el->getSqlWhere());
+            $elWhere = $el->getSqlWhere();
+
+            if ($elWhere === false) {
+                return false;
+            }
+
+            $where = array_merge($where, $elWhere);
         }
 
         return $where;
@@ -138,16 +144,22 @@ abstract class Core_Cms_Back_Office_NavFilter
         $params = $this->getSqlParams();
 
         $result = array(
-            'items' => call_user_func_array(
-                array($this->_class, 'getList'),
-                array($where, $params)
-            ),
-            'total' => call_user_func_array(
-                array($this->_class, 'getCount'),
-                array($where)
-            ),
+            'items' => array(),
+            'total' => array(),
             'only_sort_items' => array()
         );
+
+        if ($where !== false) {
+            $result['items'] = call_user_func_array(
+                array($this->_class, 'getList'),
+                array($where, $params)
+            );
+
+            $result['total'] = call_user_func_array(
+                array($this->_class, 'getCount'),
+                array($where)
+            );
+        }
 
         if (
             count($result['items']) == 0 &&
