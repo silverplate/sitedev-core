@@ -297,7 +297,7 @@ abstract class Core_Cms_User extends App_Model
      */
     public static function getCmsNavFilter()
     {
-        $filter = new App_Cms_Back_Office_NavFilter('App_Cms_User');
+        $filter = new App_Cms_Back_Office_NavFilter(get_called_class());
 
         $filter->addElement(new App_Cms_Back_Office_NavFilter_Element_Name(
             'Имя'
