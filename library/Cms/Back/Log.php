@@ -95,18 +95,34 @@ abstract class Core_Cms_Back_Log extends App_Model
 
     public static function log($_actionId, $_params = array())
     {
+
         $params = array(
-            'user_ip' => $_SERVER['REMOTE_ADDR'],
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'],
-            'request_uri' => $_SERVER['REQUEST_URI'],
-            'request_get' => serialize($_GET),
-            'request_post' => serialize($_POST),
-            'cookies' => serialize($_SERVER['HTTP_COOKIE']),
-            'script_name' => $_SERVER['SCRIPT_NAME'],
+            'request_get' => $_GET,
+            'request_post' => $_POST,
             'action_id' => $_actionId,
             'entry_id' => isset($_params['entry_id']) ? $_params['entry_id'] : '',
             'description' => isset($_params['description']) ? $_params['description'] : ''
         );
+
+        $keys = array(
+            'user_ip' => 'REMOTE_ADDR',
+            'user_agent' => 'HTTP_USER_AGENT',
+            'request_uri' => 'REQUEST_URI',
+            'cookies' => 'HTTP_COOKIE',
+            'script_name' => 'SCRIPT_NAME'
+        );
+
+        foreach ($keys as $attr => $key) {
+            if (!empty($_SERVER[$key])) {
+                $params[$attr] = $_SERVER[$key];
+            }
+        }
+
+        foreach (array('request_get', 'request_post', 'cookies') as $item) {
+            if (key_exists($item, $params)) {
+                $params[$item] = serialize($params[$item]);
+            }
+        }
 
         $userKey = App_Cms_Back_User::getPri();
         $sectionKey = App_Cms_Back_Section::getPri();
