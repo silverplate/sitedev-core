@@ -23,9 +23,15 @@ define('CORE_HELPERS', CORE_PATH . 'helpers/');
 define('CONTROLLERS', WD . 'controllers/');
 define('CORE_CONTROLLERS', CORE_PATH . 'controllers/');
 
+define('MODULES', WD . 'modules/');
+define('CORE_MODULES', WD . 'core-modules/');
+
 
 /**
  * Файлы классов могут находиться в папках ~/core/library, ~/library, ~/models.
+ *
+ * В папках ~/core-modules (базовый функционал) и ~/modules (реализация
+ * на проекте) размещаются модули СУ.
  *
  * Префикс Core в названии класса указавает на то, что класс из ядра СУ и файл
  * с классом должен находиться внутри папки ~/core.
@@ -45,9 +51,9 @@ define('CORE_CONTROLLERS', CORE_PATH . 'controllers/');
  */
 function __autoload($_class)
 {
-    $path = explode('_', $_class);
-    $include = array(LIBRARIES, MODELS, CONTROLLERS, HELPERS);
-    $core = array(CORE_LIBRARIES, CORE_CONTROLLERS, CORE_HELPERS);
+    $path = preg_split('~[_\\\]~', $_class);
+    $include = array(LIBRARIES, MODELS, CONTROLLERS, HELPERS, MODULES);
+    $core = array(CORE_LIBRARIES, CORE_CONTROLLERS, CORE_HELPERS, CORE_MODULES);
 
     if ($path[0] == 'Core') {
         $include = $core;
@@ -61,7 +67,7 @@ function __autoload($_class)
     $l = count($path) - 1;
     $filename = preg_replace('/([^_])(Controller|Helper)$/', '$1', $path[$l]);
     $path[$l] = $filename . '.php';
-    $localPath = implode('/', $path);
+    $localPath = implode(DIRECTORY_SEPARATOR, $path);
 
     foreach ($include as $dir) {
         if (is_file($dir . $localPath)) {
