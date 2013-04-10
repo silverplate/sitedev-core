@@ -81,7 +81,7 @@ $frontData = array(
 
 // Create tables
 
-$sqlTables = file_get_contents('tables.sql');
+$sqlTables = file_get_contents(__DIR__ . '/tables.sql');
 $sqlTables = str_replace('~db prefix~', Ext_Db::get()->getPrefix(), $sqlTables);
 
 foreach (explode(';', $sqlTables) as $query) {
