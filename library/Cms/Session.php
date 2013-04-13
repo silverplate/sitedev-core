@@ -282,6 +282,10 @@ abstract class Core_Cms_Session
         return Ext_Xml::notEmptyNode('workmates', $xml);
     }
 
+    /**
+     * @todo В таблицу с сессиями попадают пользователи и сайта и СУ, возможно
+     * пересечение ID пользователей, нужно различать типы пользователей.
+     */
     public function getWorkmates()
     {
         if ($this->isLoggedIn()) {
@@ -290,7 +294,7 @@ abstract class Core_Cms_Session
                     u.title,
                     u.login
                 FROM
-                    ' . self::getTbl() . ' AS s,
+                    `' . self::getTbl() . '` AS s,
                     ' . Ext_Db::get()->getPrefix() . 'back_user AS u
                 WHERE
                     DATE_ADD(s.last_impression_date, INTERVAL 15 MINUTE) > NOW() AND
