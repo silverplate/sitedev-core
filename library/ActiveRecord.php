@@ -44,7 +44,10 @@ abstract class Core_ActiveRecord
      */
     public static function computeTable()
     {
-        $name = str_replace(array('Core_', 'App_', 'Cms_'), '', get_called_class());
+        $class = explode('\\', get_called_class());
+        $class = $class[count($class) - 1];
+        $name = str_replace(array('Core_', 'App_', 'Cms_'), '', $class);
+
         return Ext_Db::get()->getPrefix() . Ext_String::underline($name);
     }
 
