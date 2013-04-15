@@ -19,8 +19,13 @@ if ($gCache->isAvailable() && $gCache->isCache()) {
         $uri .= '?' . $realUrl['query'];
     }
 
-    $uri = Ext_File::parseUrl(getCustomUrl($uri));
-    $document = App_Cms_Front_Document::load($uri['path'], 'uri');
+    $url = Ext_File::parseUrl($uri);
+    $document = App_Cms_Front_Document::load($url['path'], 'uri');
+
+    if (!($document && ($document->isPublished || !empty($gIsHidden)))) {
+        $url = Ext_File::parseUrl(getCustomUrl($uri));
+        $document = App_Cms_Front_Document::load($url['path'], 'uri');
+    }
 
     if (
         $document &&
@@ -29,27 +34,24 @@ if ($gCache->isAvailable() && $gCache->isCache()) {
     ) {
         goToUrl($document->link);
 
+    } else if (
+        $document &&
+        $document->getController() &&
+        ($document->isPublished == 1 || !empty($gIsHidden)) &&
+        (!$document->authStatusId || is_null(App_Cms_User::getAuthGroup()) || $document->authStatusId & App_Cms_User::getAuthGroup())
+    ) {
+        $controller = App_Cms_Front_Document::initController(
+            $document->getController(),
+            $document
+        );
+
+        $controller->execute();
+        $controller->output();
+
     } else {
-        if (
-            $document &&
-            $document->getController() &&
-            ($document->isPublished == 1 || !empty($gIsHidden)) &&
-            (!$document->authStatusId || is_null(App_Cms_User::getAuthGroup()) || $document->authStatusId & App_Cms_User::getAuthGroup())
-        ) {
-            $controller = App_Cms_Front_Document::initController(
-                $document->getController(),
-                $document
-            );
-
-            $controller->execute();
-            $controller->output();
-
-        } else {
-            documentNotFound();
-        }
+        documentNotFound();
     }
 }
-
 
 function getCustomUrl($_url)
 {
