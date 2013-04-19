@@ -92,7 +92,7 @@ abstract class Core_Cms_Session
                 self::getPri() => Ext_Db::escape(self::getId()),
                 'is_ip_match' => 0,
                 'is_logged_in' => 0,
-                'user_id' => '\'\'',
+                'user_id' => 0,
                 'user_agent' => Ext_Db::escape($userAgent),
                 'user_ip' => Ext_Db::escape($_SERVER['REMOTE_ADDR']),
                 'life_span' => 0,
@@ -191,7 +191,7 @@ abstract class Core_Cms_Session
 
         Ext_Db::get()->execute('UPDATE ' . self::getTbl() . Ext_Db::get()->getQueryFields(array(
             'is_logged_in' => 0,
-            'user_id' => '\'\'',
+            'user_id' => 0,
             'valid_date' => 'NULL'
         ), 'update', true) . 'WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()));
     }
@@ -298,7 +298,7 @@ abstract class Core_Cms_Session
                     ' . Ext_Db::get()->getPrefix() . 'back_user AS u
                 WHERE
                     DATE_ADD(s.last_impression_date, INTERVAL 15 MINUTE) > NOW() AND
-                    s.user_id != \'\' AND
+                    s.user_id != 0 AND
                     s.' . self::getPri() . ' != ' . Ext_Db::escape($this->getId()) . ' AND
                     s.user_id = u.' . Ext_Db::get()->getPrefix() . 'back_user_id
             ');
