@@ -64,7 +64,7 @@ class Core_Model extends App_ActiveRecord
             $attrs['is-published'] = 1;
         }
 
-        return $this->getXml('item', $_xml, $attrs);
+        return self::getXml('item', $_xml, $attrs);
     }
 
     public function getFiles()
