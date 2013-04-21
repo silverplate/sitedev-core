@@ -7,7 +7,7 @@
     <xsl:include href="../common.xsl" />
     <xsl:include href="common.xsl" />
     <xsl:include href="modules.xsl" />
-    <xsl:include href="forms.xsl" />
+    <xsl:include href="../../../templates/back/forms.xsl" />
 
     <xsl:template match="page">
         <html>
@@ -30,6 +30,11 @@
                 <link href="/cms/f/css/forms.css" type="text/css" rel="stylesheet" />
                 <link href="/cms/f/calendar/calendar.css" type="text/css" rel="stylesheet" />
 
+                <xsl:apply-templates
+                    select="content/sys-head-css-files|content/sys-head-styles[text()]"
+                    mode="sys"
+                />
+
                 <script src="/cms/f/js/jquery-1.6.4.min.js" type="text/javascript" />
                 <script src="/cms/f/js/jquery-ui-1.8.16.custom.min.js" type="text/javascript" />
                 <script src="/cms/f/js/cookies.js" type="text/javascript" />
@@ -39,6 +44,11 @@
                 <script src="/cms/f/js/tree.js" type="text/javascript" />
                 <script src="/cms/f/calendar/calendar.js" type="text/javascript" />
                 <script src="/cms/f/js/filter.js" type="text/javascript" />
+
+                <xsl:apply-templates
+                    select="content/sys-head-js-files|content/sys-head-scripts[text()]"
+                    mode="sys"
+                />
             </head>
             <body>
                 <div id="loading" />
@@ -59,6 +69,48 @@
             </body>
         </html>
     </xsl:template>
+
+    <xsl:template match="*[starts-with(name(), 'sys-')]" />
+
+    <xsl:template match="sys-head-styles" mode="sys">
+        <style type="text/css">
+            <xsl:value-of select="text()" disable-output-escaping="yes" />
+        </style>
+    </xsl:template>
+
+    <xsl:template match="sys-head-css-files" mode="sys">
+        <xsl:if test="text()">
+            <xsl:call-template name="sys-css-file" />
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template match="sys-head-css-files[file[text()]]" mode="sys">
+        <xsl:apply-templates select="sys-head-css-files/file[text()]" />
+    </xsl:template>
+
+    <xsl:template match="sys-head-css-files/file" name="sys-css-file">
+        <link href="{text()}" type="text/css" rel="stylesheet" />
+    </xsl:template>
+
+    <xsl:template match="sys-head-js-files" mode="sys">
+        <xsl:if test="text()">
+            <xsl:call-template name="sys-js-file" />
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template match="sys-head-js-files[file[text()]]" mode="sys">
+        <xsl:apply-templates select="sys-head-js-files/file[text()]" />
+    </xsl:template>
+
+    <xsl:template match="sys-head-js-files/file" name="sys-js-file">
+        <script type="text/javascript" src="{text()}" />
+    </xsl:template>
+
+    <!-- <xsl:template match="sys-body-javascript" mode="sys">
+        <script type="text/javascript">
+            <xsl:value-of select="text()" disable-output-escaping="yes" />
+        </script>
+    </xsl:template> -->
 
     <xsl:template match="content">
         <div id="content">
