@@ -1264,10 +1264,10 @@
         <xsl:variable name="hour-ele-name">
             <xsl:value-of select="@name" />
             <xsl:if test="$prefix">
-                <xsl:value-of select="$prefix" />
                 <xsl:text>_</xsl:text>
+                <xsl:value-of select="$prefix" />
             </xsl:if>
-            <xsl:text>hour</xsl:text>
+            <xsl:text>_hour</xsl:text>
         </xsl:variable>
 
         <xsl:variable name="hour-node-name">
@@ -1297,10 +1297,10 @@
         <xsl:variable name="minute-ele-name">
             <xsl:value-of select="@name" />
             <xsl:if test="$prefix">
-                <xsl:value-of select="$prefix" />
                 <xsl:text>_</xsl:text>
+                <xsl:value-of select="$prefix" />
             </xsl:if>
-            <xsl:text>minute</xsl:text>
+            <xsl:text>_minute</xsl:text>
         </xsl:variable>
 
         <xsl:variable name="minutes"><xsl:choose>
