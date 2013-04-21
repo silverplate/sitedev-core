@@ -312,4 +312,20 @@ abstract class Core_Cms_User extends App_Model
 
         return $filter;
     }
+
+    /**
+     * @param array $_where
+     * @param array $_params
+     * @return array[App_Cms_User]
+     */
+    public static function getList($_where = null, $_params = array())
+    {
+        $params = empty($_params) ? array() : $_params;
+
+        if (!isset($params['order'])) {
+            $params['order'] = 'CONCAT_WS("", last_name, first_name, middle_name)';
+        }
+
+        return parent::getList($_where, $params);
+    }
 }
