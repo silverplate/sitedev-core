@@ -33,7 +33,14 @@ img
 
 a
 {
-    color: black;
+    color: #000;
+}
+
+a.func
+{
+    text-decoration: none;
+    border-bottom: 1px dashed #000;
+    color: #000;
 }
 
 table.debug td, table.debug th
