@@ -252,6 +252,10 @@ abstract class Core_Cms_Back_Office_NavFilter
             $attrs['selected-id'] = $this->getSelectedId();
         }
 
+        if ($this->isSortable()) {
+            $attrs['is-sortable'] = true;
+        }
+
         if ($_attrs) {
             $attrs = array_merge($attrs, $_attrs);
         }
