@@ -135,7 +135,10 @@ class Core_Model extends App_ActiveRecord
             $this->_images = array();
 
             foreach ($this->getFiles() as $key => $file) {
-                if (Ext_File::isImageExt($file->getExt())) {
+                if (
+                    Ext_File::isImageExt($file->getExt()) &&
+                    $file->getSize() > 0
+                ) {
                     $this->_images[$key] = $file;
                 }
             }
