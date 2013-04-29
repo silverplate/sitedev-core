@@ -568,8 +568,8 @@
                         <table class="chooser-item">
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="{@name}_delete" id="{generate-id()}" value="1" />
-                                    <input type="hidden" name="{@name}_present" value="{value/path}" />
+                                    <input type="checkbox" name="{@name}-delete" id="{generate-id()}" value="1" />
+                                    <input type="hidden" name="{@name}-present" value="{value/path}" />
                                 </td>
                                 <td class="chooser-label">
                                     <label for="{generate-id()}">
