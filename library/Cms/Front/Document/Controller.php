@@ -8,6 +8,11 @@ abstract class Core_Cms_Front_Document_Controller extends Core_Cms_Front_Page
     protected $_document;
 
     /**
+     * @var string
+     */
+    protected $_request;
+
+    /**
      * @var array
      */
     protected $_requestPieces;
@@ -17,13 +22,15 @@ abstract class Core_Cms_Front_Document_Controller extends Core_Cms_Front_Page
         parent::__construct();
         $this->_document = $_document;
 
-        $request = trim(str_replace(
+        $this->_request = trim(str_replace(
             $this->_document->getUri(),
             '/',
             $this->getUrl('path')
         ), '/');
 
-        $this->_requestPieces = $request ? explode('/', $request) : array();
+        $this->_requestPieces = $this->_request
+                              ? explode('/', $this->_request)
+                              : array();
     }
 
     public function execute()
