@@ -57,19 +57,21 @@
         <xsl:param name="alt" />
         <xsl:param name="title" />
         <xsl:param name="style" />
+        <xsl:param name="width" />
+        <xsl:param name="height" />
 
-        <img src="{@uri}" width="{@width}" height="{@height}">
-            <xsl:if test="$id != ''">
-                <xsl:attribute name="id"><xsl:value-of select="$id" /></xsl:attribute>
-            </xsl:if>
+        <img src="{@uri}">
+            <xsl:if test="$id != ''"><xsl:attribute name="id">
+                <xsl:value-of select="$id" />
+            </xsl:attribute></xsl:if>
 
-            <xsl:if test="$alt != ''">
-                <xsl:attribute name="alt"><xsl:value-of select="$alt" /></xsl:attribute>
-            </xsl:if>
+            <xsl:if test="$alt != ''"><xsl:attribute name="alt">
+                <xsl:value-of select="$alt" />
+            </xsl:attribute></xsl:if>
 
-            <xsl:if test="$title != ''">
-                <xsl:attribute name="title"><xsl:value-of select="$title" /></xsl:attribute>
-            </xsl:if>
+            <xsl:if test="$title != ''"><xsl:attribute name="title">
+                <xsl:value-of select="$title" />
+            </xsl:attribute></xsl:if>
 
             <xsl:for-each select="@class">
                 <xsl:copy select="." />
@@ -81,6 +83,27 @@
                     <xsl:value-of select="$style" />
                 </xsl:attribute>
             </xsl:if>
+
+            <xsl:choose>
+                <xsl:when test="$width = '' and $height = ''">
+                    <xsl:attribute name="width">
+                        <xsl:value-of select="@width" />
+                    </xsl:attribute>
+                    <xsl:attribute name="height">
+                        <xsl:value-of select="@height" />
+                    </xsl:attribute>
+                </xsl:when>
+                <xsl:when test="$width != ''">
+                    <xsl:attribute name="width">
+                        <xsl:value-of select="$width" />
+                    </xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:attribute name="height">
+                        <xsl:value-of select="$height" />
+                    </xsl:attribute>
+                </xsl:otherwise>
+            </xsl:choose>
         </img>
     </xsl:template>
 
@@ -89,57 +112,54 @@
         <xsl:param name="alt" />
         <xsl:param name="title" />
         <xsl:param name="style" />
+        <xsl:param name="width" />
+        <xsl:param name="height" />
 
         <xsl:call-template name="html-image">
-            <xsl:with-param name="id">
-                <xsl:choose>
-                    <xsl:when test="$id">
-                        <xsl:value-of select="$id" />
-                    </xsl:when>
-                    <xsl:when test="@id">
-                        <xsl:value-of select="@id" />
-                    </xsl:when>
-                </xsl:choose>
-            </xsl:with-param>
+            <xsl:with-param name="id"><xsl:choose>
+                <xsl:when test="$id">
+                    <xsl:value-of select="$id" />
+                </xsl:when>
+                <xsl:when test="@id">
+                    <xsl:value-of select="@id" />
+                </xsl:when>
+            </xsl:choose></xsl:with-param>
 
-            <xsl:with-param name="alt">
-                <xsl:choose>
-                    <xsl:when test="$alt">
-                        <xsl:value-of select="$alt" />
-                    </xsl:when>
-                    <xsl:when test="alt">
-                        <xsl:value-of select="alt" />
-                    </xsl:when>
-                    <xsl:when test="@alt">
-                        <xsl:value-of select="@alt" />
-                    </xsl:when>
-                </xsl:choose>
-            </xsl:with-param>
+            <xsl:with-param name="alt"><xsl:choose>
+                <xsl:when test="$alt">
+                    <xsl:value-of select="$alt" />
+                </xsl:when>
+                <xsl:when test="alt">
+                    <xsl:value-of select="alt" />
+                </xsl:when>
+                <xsl:when test="@alt">
+                    <xsl:value-of select="@alt" />
+                </xsl:when>
+            </xsl:choose></xsl:with-param>
 
-            <xsl:with-param name="title">
-                <xsl:choose>
-                    <xsl:when test="$title">
-                        <xsl:value-of select="$title" />
-                    </xsl:when>
-                    <xsl:when test="title">
-                        <xsl:value-of select="title" />
-                    </xsl:when>
-                    <xsl:when test="@title">
-                        <xsl:value-of select="@title" />
-                    </xsl:when>
-                </xsl:choose>
-            </xsl:with-param>
+            <xsl:with-param name="title"><xsl:choose>
+                <xsl:when test="$title">
+                    <xsl:value-of select="$title" />
+                </xsl:when>
+                <xsl:when test="title">
+                    <xsl:value-of select="title" />
+                </xsl:when>
+                <xsl:when test="@title">
+                    <xsl:value-of select="@title" />
+                </xsl:when>
+            </xsl:choose></xsl:with-param>
 
-            <xsl:with-param name="style">
-                <xsl:choose>
-                    <xsl:when test="$style">
-                        <xsl:value-of select="$style" />
-                    </xsl:when>
-                    <xsl:when test="@style">
-                        <xsl:value-of select="@style" />
-                    </xsl:when>
-                </xsl:choose>
-            </xsl:with-param>
+            <xsl:with-param name="style"><xsl:choose>
+                <xsl:when test="$style">
+                    <xsl:value-of select="$style" />
+                </xsl:when>
+                <xsl:when test="@style">
+                    <xsl:value-of select="@style" />
+                </xsl:when>
+            </xsl:choose></xsl:with-param>
+
+            <xsl:with-param name="width" select="$width" />
+            <xsl:with-param name="height" select="$height" />
         </xsl:call-template>
     </xsl:template>
 

@@ -203,8 +203,7 @@ class Core_Model extends App_ActiveRecord
         Ext_File::createDir($this->getFilePath());
 
         move_uploaded_file($_tmpName, $path);
-        @chmod($path, 0777);
-
+        Ext_File::chmod($path, 0777);
         Ext_File_Cache::delete($path);
     }
 }
