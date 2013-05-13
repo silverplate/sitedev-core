@@ -38,7 +38,6 @@ if ($page->isAllowed()) {
     // Форма редактирования или добавления объекта
 
     $form = App_Cms_Ext_Form::load(dirname(__FILE__) . '/data-form.xml');
-    $form->fillWithObject($obj);
 
     // Тип данных
     foreach (
@@ -88,6 +87,7 @@ if ($page->isAllowed()) {
         $form->applyTypeId->addOption($id, Ext_String::toLower($title));
     }
 
+    $form->fillWithObject($obj);
     $form->run();
 
     if ($form->isSubmited() && $form->isSuccess()) {
