@@ -146,7 +146,7 @@ function redirect($_url)
 function reload($_append = null)
 {
     $url = Ext_File::parseUrl();
-    goToUrl(rtrim($url['path'], '/') . $_append);
+    goToUrl(rtrim($url['path'], '/') . '/' . $_append);
 }
 
 function documentNotFound()
