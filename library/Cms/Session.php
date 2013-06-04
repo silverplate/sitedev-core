@@ -241,20 +241,39 @@ abstract class Core_Cms_Session
         Ext_Db::get()->execute('DELETE FROM ' . self::getTbl() . '_param WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()));
     }
 
+    /**
+     * @todo Хорошо бы сбрасывать auto_increment счетчики?
+     * @param string $_userId
+     */
     public static function clean($_userId = null)
     {
-        Ext_Db::get()->execute('
-            DELETE FROM
-                ' . self::getTbl() . '
-            WHERE
-                ' . ($_userId ? 'user_id = ' . Ext_Db::escape($_userId) . ' OR ' : '') . '
-                (NOT(ISNULL(valid_date)) AND valid_date < NOW()) OR
-                (ISNULL(valid_date) AND DATE_ADD(last_impression_date, INTERVAL 1 DAY) < NOW()) OR
-                (life_span > 0 AND DATE_ADD(creation_date, INTERVAL life_span MINUTE) < NOW()) OR
-                (timeout > 0 AND (ISNULL(last_impression_date) OR DATE_ADD(last_impression_date, INTERVAL timeout MINUTE) < NOW()))
-        ');
+        $key = self::getPri();
+        $tbl = self::getTbl();
+        $userCond = $_userId ? 'user_id = ' . Ext_Db::escape($_userId) . ' OR ' : '';
 
-        Ext_Db::get()->execute('DELETE FROM ' . self::getTbl() . '_param WHERE ' . self::getPri() . ' NOT IN (SELECT ' . self::getPri() . ' FROM ' . self::getTbl() . ')');
+        // Пришлось переделать на два запроса, чтобы не было deadlock-ошибки.
+
+        $expired = Ext_Db::get()->getList("
+            SELECT
+                `$key`
+            FROM
+                `$tbl`
+            WHERE
+                $userCond
+                (NOT(ISNULL(`valid_date`)) AND `valid_date` < NOW()) OR
+                (ISNULL(`valid_date`) AND DATE_ADD(`last_impression_date`, INTERVAL 1 DAY) < NOW()) OR
+                (`life_span` > 0 AND DATE_ADD(`creation_date`, INTERVAL `life_span` MINUTE) < NOW()) OR
+                (`timeout` > 0 AND (ISNULL(`last_impression_date`) OR DATE_ADD(`last_impression_date`, INTERVAL `timeout` MINUTE) < NOW()))
+        ");
+
+        if ($expired) {
+            $expired = Ext_Db::escape($expired);
+            Ext_Db::get()->execute("DELETE FROM `$tbl` WHERE `$key` IN ($expired)");
+        }
+
+        // Ненужный запрос после внедрения внешних ключей: записи из session_param
+        // от несуществующих сессий будут удалены автоматически.
+        // Ext_Db::get()->execute("DELETE FROM $tbl_param WHERE $key NOT IN (SELECT $key FROM $tbl)");
     }
 
     public function getXml($_node = null, $_xml = null)
