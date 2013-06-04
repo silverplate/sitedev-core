@@ -3,62 +3,67 @@
 require_once realpath(dirname(__FILE__) . '/../../library') . '/libs.php';
 initSettings();
 
-$nl = PHP_EOL;
-$folders = array(CORE_PATH . 'scripts/patches/', WD . 'scripts/patches/');
-$patches = array();
+applyPatches();
 
-foreach ($folders as $folder) {
-    if (!is_dir($folder)) continue;
-    $handle = opendir($folder);
-    $entry = readdir($handle);
 
-    while ($entry !== false) {
-        if ($entry != '.' && $entry != '..') {
-            $matches = array();
+function applyPatches()
+{
+    $nl = PHP_EOL;
+    $folders = array(CORE_PATH . 'scripts/patches/', WD . 'scripts/patches/');
+    $patches = array();
 
-            preg_match(
-                '/^([0-9]{2,4}-[0-9]{2}-[0-9]{2})-([0-9]{2}-[0-9]{2})-([a-z0-9-]+)\.php$/',
-                $entry,
-                $matches
-            );
+    foreach ($folders as $folder) {
+        if (!is_dir($folder)) continue;
+        $handle = opendir($folder);
+        $entry = readdir($handle);
 
-            if ($matches && is_file($folder . $entry)) {
-                $file = new stdClass();
-                $file->path = $folder . $entry;
-                $file->filename = strtolower($entry);
-                $file->time = strtotime($matches[1] . ' ' . str_replace('-', ':', $matches[2]));
-                $patches[] = $file;
+        while ($entry !== false) {
+            if ($entry != '.' && $entry != '..') {
+                $matches = array();
+
+                preg_match(
+                    '/^([0-9]{2,4}-[0-9]{2}-[0-9]{2})-([0-9]{2}-[0-9]{2})-([a-z0-9-]+)\.php$/',
+                    $entry,
+                    $matches
+                );
+
+                if ($matches && is_file($folder . $entry)) {
+                    $file = new stdClass();
+                    $file->path = $folder . $entry;
+                    $file->filename = strtolower($entry);
+                    $file->time = strtotime($matches[1] . ' ' . str_replace('-', ':', $matches[2]));
+                    $patches[] = $file;
+                }
+            }
+
+            $entry = readdir($handle);
+        }
+
+        closedir($handle);
+    }
+
+    if (count($patches) > 0) {
+        usort($patches, 'sortPatches');
+        $tbl = Ext_Db::get()->getPrefix() . 'patch';
+        $exist = Ext_Db::get()->getList('SELECT filename FROM ' . $tbl);
+
+        foreach ($patches as $patch) {
+            if (!$exist || !in_array($patch->filename, $exist)) {
+                echo $patch->filename;
+                echo $nl;
+
+                include_once($patch->path);
+
+                Ext_Db::get()->execute('INSERT INTO ' . $tbl . Ext_Db::get()->getQueryFields(array(
+                    'creation_time' => time(),
+                    'filename' => $patch->filename
+                ), 'insert'));
             }
         }
 
-        $entry = readdir($handle);
+        echo $nl;
     }
-
-    closedir($handle);
 }
-
-if (count($patches) > 0) {
-    usort($patches, 'sortPatches');
-    $tbl = Ext_Db::get()->getPrefix() . 'patch';
-    $exist = Ext_Db::get()->getList('SELECT filename FROM ' . $tbl);
-
-    foreach ($patches as $patch) {
-        if (!$exist || !in_array($patch->filename, $exist)) {
-            echo $patch->filename;
-            echo $nl;
-
-            include_once($patch->path);
-
-            Ext_Db::get()->execute('INSERT INTO ' . $tbl . Ext_Db::get()->getQueryFields(array(
-                'creation_time' => time(),
-                'filename' => $patch->filename
-            ), 'insert'));
-        }
-    }
-
-    echo $nl;
-}
-
 
 function sortPatches(stdClass $_a, stdClass $_b)
 {
