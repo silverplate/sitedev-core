@@ -271,8 +271,7 @@ CREATE TABLE IF NOT EXISTS `~db prefix~file_cache` (
     `width` SMALLINT UNSIGNED NULL,
     `height` SMALLINT UNSIGNED NULL,
     `mime` VARCHAR(255) NULL,
-    PRIMARY KEY (`~db prefix~file_cache_id`),
-    UNIQUE INDEX `~db prefix~file_cache_file_path_unq` (`file_path` ASC)
+    PRIMARY KEY (`~db prefix~file_cache_id`)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `~db prefix~patch` (
