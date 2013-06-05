@@ -10,27 +10,11 @@ abstract class Core_Cms_Ext_File extends Ext_File
      */
     public static function factory($_path, $_pathStartsWith = null, $_uriStartsWith = null)
     {
-        $file = parent::factory($_path, $_pathStartsWith, $_uriStartsWith);
+        $class = self::isImageExt(self::computeExt($_path))
+               ? 'App_Cms_Ext_Image'
+               : 'App_Cms_Ext_File';
 
-        $appClass = $file instanceof App_Cms_Ext_Image || self::isImageExt($file->getExt())
-                  ? 'App_Cms_Ext_Image'
-                  : 'App_Cms_Ext_File';
-
-        $appFile = new $appClass(
-            $file->getPath(),
-            $file->getPathStartsWith(),
-            $file->getUriStartsWith()
-        );
-
-        $appFile->setSize($file->getSize());
-
-        if ($appFile instanceof App_Cms_Ext_Image) {
-            $appFile->setWidth($file->getWidth());
-            $appFile->setHeight($file->getHeight());
-            $appFile->setMime($file->getMime());
-        }
-
-        return $appFile;
+        return new $class($_path, $_pathStartsWith, $_uriStartsWith);
     }
 
     /**
