@@ -193,7 +193,7 @@ abstract class Core_Cms_Back_Office
         }
     }
 
-    public static function ajaxTreeOutput($_className)
+    public static function ajaxTreeOutput($_className, $_isSelfExclude = true)
     {
         global $gOpenBranches;
 
@@ -271,11 +271,20 @@ abstract class Core_Cms_Back_Office
             }
 
             $xml = $obj->getBackOfficeXml(
-                self::ajaxGetBranchXml($_className, $parentId, $currentId)
+                self::ajaxGetBranchXml(
+                    $_className,
+                    $parentId,
+                    $_isSelfExclude ? $currentId : null
+                )
             );
 
         } else {
-            $xml = self::ajaxGetBranchXml($_className, $parentId, $currentId);
+            $xml = self::ajaxGetBranchXml(
+                $_className,
+                $parentId,
+                $currentId,
+                $_isSelfExclude ? $currentId : null
+            );
         }
 
         $page->addContent($xml);
@@ -284,7 +293,9 @@ abstract class Core_Cms_Back_Office
         $page->output();
     }
 
-    public static function ajaxGetBranchXml($_className, $_parentId, $_excludeId)
+    public static function ajaxGetBranchXml($_className,
+                                            $_parentId,
+                                            $_excludeId = null)
     {
         global $gOpenBranches;
 
