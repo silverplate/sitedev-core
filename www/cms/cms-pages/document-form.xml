@@ -5,13 +5,13 @@
     <group name="main">
         <title>Страница</title>
 
+        <element name="title" type="string" is-required="true">
+            <label>Название</label>
+        </element>
+
         <element name="folder" type="string" is-required="true">
             <label>Папка</label>
             <input-description>Можно использовать латинские буквы, цифры и&nbsp;дефис.</input-description>
-        </element>
-
-        <element name="title" type="string" is-required="true">
-            <label>Название</label>
         </element>
 
         <element name="title_compact" type="word">
