@@ -21,8 +21,8 @@ class Core_Cms_Cache_Apc
     {
         global $gIsApc;
 
-        if (!isset(self::$_isEnabled)) {
-            self::$_isEnabled = !empty($gIsApc) && extension_loaded('apc');
+        if (!isset(static::$_isEnabled)) {
+            static::$_isEnabled = !empty($gIsApc) && extension_loaded('apc');
         }
 
         return self::$_isEnabled;

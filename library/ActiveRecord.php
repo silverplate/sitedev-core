@@ -1088,7 +1088,7 @@ abstract class Core_ActiveRecord extends \StdClass
             if (self::isOptimFetchStrategy()) {
                 if (is_null($_attr)) {
                     $list = self::getList();
-                    return key_exists($_value, $list) ? $list[$_value] : false;
+                    return array_key_exists($_value, $list) ? $list[$_value] : false;
 
                 } else {
                     foreach (self::getList() as $item) {

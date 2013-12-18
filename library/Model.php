@@ -38,13 +38,13 @@ class Core_Model extends App_ActiveRecord
         else if (is_array($_xml)) $xml = $_xml;
         else                      $xml = array($_xml);
 
-        if (!key_exists('title', $xml)) {
+        if (!array_key_exists('title', $xml)) {
             Ext_Xml::append($xml, Ext_Xml::cdata('title', $this->getTitle()));
         }
 
         $attrs = empty($_attrs) ? array() : $_attrs;
 
-        if (!key_exists('id', $attrs)) {
+        if (!array_key_exists('id', $attrs)) {
             $attrs['id'] = $this->id;
         }
 
@@ -102,7 +102,7 @@ class Core_Model extends App_ActiveRecord
     {
         $files = $this->getFiles();
 
-        return $files && key_exists($_filename, $files)
+        return $files && array_key_exists($_filename, $files)
              ? $files[$_filename]
              : false;
     }
@@ -152,7 +152,7 @@ class Core_Model extends App_ActiveRecord
     {
         $files = $this->getImages();
 
-        return $files && key_exists($_filename, $files)
+        return $files && array_key_exists($_filename, $files)
              ? $files[$_filename]
              : false;
     }
