@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_ActiveRecord
+abstract class Core_ActiveRecord extends \StdClass
 {
     /**
      * @var string
@@ -474,7 +474,7 @@ abstract class Core_ActiveRecord
 
     /**
      * @param string|integer $_id
-     * @return App_ActiveRecord|App_Model|false
+     * @return App_ActiveRecord|App_Model
      */
     public static function getById($_id)
     {
@@ -484,7 +484,7 @@ abstract class Core_ActiveRecord
     /**
      * @param string $_attr
      * @param string|integer $_value
-     * @return App_ActiveRecord|App_Model|false
+     * @return App_ActiveRecord|App_Model
      */
     public static function getBy($_attr, $_value)
     {
@@ -493,7 +493,7 @@ abstract class Core_ActiveRecord
 
     /**
      * @param string $_name
-     * @return App_ActiveRecord|App_Model|false
+     * @return App_ActiveRecord|App_Model
      */
     public static function getByName($_name)
     {
@@ -503,7 +503,7 @@ abstract class Core_ActiveRecord
     /**
      * @param string|integer $_value
      * @param string $_attr
-     * @return App_ActiveRecord|App_Model|false
+     * @return App_ActiveRecord|App_Model
      */
     public static function fetch($_value, $_attr = null)
     {
