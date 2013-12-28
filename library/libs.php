@@ -47,6 +47,9 @@ define('CORE_MODULES', WD . 'core-modules/');
  * не переопределяет и может находится как в ядре (например, внешняя библиотека
  * PhpMailer), так и только на сайте.
  *
+ * Когда используется namespace класс может находится в одноименной папке,
+ * поэтому $localPaths содержит два значения.
+ *
  * @param string $_class
  */
 function __autoload($_class)
@@ -66,13 +69,20 @@ function __autoload($_class)
 
     $l = count($path) - 1;
     $filename = preg_replace('/([^_])(Controller|Helper)$/', '$1', $path[$l]);
-    $path[$l] = $filename . '.php';
-    $localPath = implode(DIRECTORY_SEPARATOR, $path);
+
+    $path[$l] = $filename;
+    $path[] = $filename . '.php';
+    $localPaths[] = implode(DIRECTORY_SEPARATOR, $path);
+
+    unset($path[$l]);
+    $localPaths[] = implode(DIRECTORY_SEPARATOR, $path);
 
     foreach ($include as $dir) {
-        if (is_file($dir . $localPath)) {
-            require_once $dir . $localPath;
-            break;
+        foreach ($localPaths as $localPath) {
+            if (is_file($dir . $localPath)) {
+                require_once $dir . $localPath;
+                break;
+            }
         }
     }
 }

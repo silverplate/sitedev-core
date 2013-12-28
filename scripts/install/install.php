@@ -21,7 +21,7 @@ $backSections = array(
 );
 
 $backUsers = array(
-    array('title' => 'Разработчик', 'login' => 'developer', 'passwd' => Ext_String::getRandomReadable(8), 'email' => 'support@sitedev.ru')
+    array('title' => 'Разработчик', 'login' => 'developer', 'passwd' => \Ext\String::getRandomReadable(8), 'email' => 'support@sitedev.ru')
 );
 
 $frontControllers = array(
@@ -82,11 +82,11 @@ $frontData = array(
 // Create tables
 
 $sqlTables = file_get_contents(dirname(__FILE__) . '/' . 'tables.sql');
-$sqlTables = str_replace('~db prefix~', Ext_Db::get()->getPrefix(), $sqlTables);
+$sqlTables = str_replace('~db prefix~', \Ext\Db::get()->getPrefix(), $sqlTables);
 
 foreach (explode(';', $sqlTables) as $query) {
     if (trim($query)) {
-        Ext_Db::get()->execute($query);
+        \Ext\Db::get()->execute($query);
     }
 }
 
@@ -316,7 +316,7 @@ if (is_file($errorLogFile)) {
     $permissions[] = array($errorLogFile, false);
 
 } else {
-    if (Ext_File::write($errorLogFile, '', true) === false) {
+    if (\Ext\File::write($errorLogFile, '', true) === false) {
         echo 'Нужно создать лог-файл ошибок:';
         echo $nl;
         echo $errorLogFile;

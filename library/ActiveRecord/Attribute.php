@@ -34,7 +34,7 @@ abstract class Core_ActiveRecord_Attribute
                 break;
 
             case 'float':
-                $this->_value = Ext_Number::number($_value);
+                $this->_value = \Ext\Number::number($_value);
                 break;
 
             case 'boolean':
@@ -54,7 +54,7 @@ abstract class Core_ActiveRecord_Attribute
 
     public function getSqlValue()
     {
-        return (string) $this->_value == '' ? 'NULL' : Ext_Db::escape($this->_value);
+        return (string) $this->_value == '' ? 'NULL' : \Ext\Db::escape($this->_value);
     }
 
     public function isValue()

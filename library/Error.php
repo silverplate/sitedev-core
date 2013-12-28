@@ -327,7 +327,7 @@ class Core_Error
                     } else if (is_array($arg)) {
                         $message .= 'Array(' . count($arg) . ')';
 
-                    } else if (Ext_Number::isNumber($arg)) {
+                    } else if (\Ext\Number::isNumber($arg)) {
                         $message .= $arg;
 
                     } else {

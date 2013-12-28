@@ -48,7 +48,7 @@ abstract class Core_ActiveRecord extends \StdClass
         $class = $class[count($class) - 1];
         $name = str_replace(array('Core_', 'App_', 'Cms_'), '', $class);
 
-        return Ext_Db::get()->getPrefix() . Ext_String::underline($name);
+        return \Ext\Db::get()->getPrefix() . \Ext\String::underline($name);
     }
 
     /**
@@ -74,7 +74,7 @@ abstract class Core_ActiveRecord extends \StdClass
     public function hasAttr($_name)
     {
         return key_exists($_name, $this->_attributes) ||
-               key_exists(Ext_String::underline($_name), $this->_attributes);
+               key_exists(\Ext\String::underline($_name), $this->_attributes);
     }
 
     /**
@@ -105,14 +105,14 @@ abstract class Core_ActiveRecord extends \StdClass
                 return $this->getPrimaryKey()->getName();
             }
 
-            $name = Ext_String::underline($_name);
+            $name = \Ext\String::underline($_name);
 
             if (key_exists($name, $this->_attributes)) {
                 return $name;
             }
 
-            if (Ext_Db::get()->getPrefix()) {
-                $name = Ext_Db::get()->getPrefix() . $name;
+            if (\Ext\Db::get()->getPrefix()) {
+                $name = \Ext\Db::get()->getPrefix() . $name;
 
                 if (key_exists($name, $this->_attributes)) {
                     return $name;
@@ -414,7 +414,7 @@ abstract class Core_ActiveRecord extends \StdClass
             foreach ($primary as $name => $attr) {
                 $value = is_null($_value)
                        ? $attr->getSqlValue()
-                       : Ext_Db::escape($_value[$name]);
+                       : \Ext\Db::escape($_value[$name]);
 
                 $where[] = $attr->getName() . " $comp $value";
             }
@@ -422,7 +422,7 @@ abstract class Core_ActiveRecord extends \StdClass
         } else {
             $value = is_null($_value)
                    ? $primary->getSqlValue()
-                   : Ext_Db::escape($_value);
+                   : \Ext\Db::escape($_value);
 
             $where[] = $primary->getName() . " $comp $value";
         }
@@ -529,7 +529,7 @@ abstract class Core_ActiveRecord extends \StdClass
             $tmp = array();
 
             foreach ($_attr as $i => $attr) {
-                $tmp[] = "$attr = " . Ext_Db::escape(
+                $tmp[] = "$attr = " . \Ext\Db::escape(
                              isset($_value[$attr]) ? $_value[$attr] : $_value[$i]
                          );
             }
@@ -537,13 +537,13 @@ abstract class Core_ActiveRecord extends \StdClass
             $where = implode(' AND ', $tmp);
 
         } else if ($_attr) {
-            $where = "$_attr = " . Ext_Db::escape($_value);
+            $where = "$_attr = " . \Ext\Db::escape($_value);
 
         } else {
             $where = $this->getPrimaryKeyWhere($_value);
         }
 
-        return Ext_Db::get()->getEntry("
+        return \Ext\Db::get()->getEntry("
             SELECT * FROM {$this->_table} WHERE $where LIMIT 1
         ");
     }
@@ -579,7 +579,7 @@ abstract class Core_ActiveRecord extends \StdClass
             if (!$item->isValue()) {
                 if ($item->isPrimary()) {
                     if ($item->getType() == 'string') {
-                        $item->setValue(Ext_Db::get()->getUnique(
+                        $item->setValue(\Ext\Db::get()->getUnique(
                             $this->getTable(),
                             $item->getName(),
                             $item->getLength() ? $item->getLength() : null
@@ -590,7 +590,7 @@ abstract class Core_ActiveRecord extends \StdClass
                     $item->getName() == 'sort_order' &&
                     $this->getPrimaryKey()->getType() != 'integer'
                 ) {
-                    $item->setValue(Ext_Db::get()->getNextNumber(
+                    $item->setValue(\Ext\Db::get()->getNextNumber(
                         $this->getTable(),
                         $item->getName()
                     ));
@@ -608,13 +608,13 @@ abstract class Core_ActiveRecord extends \StdClass
             $values[$item->getName()] = $item->getSqlValue();
         }
 
-        $result = Ext_Db::get()->execute(
+        $result = \Ext\Db::get()->execute(
             'INSERT INTO ' . $this->getTable() .
-            Ext_Db::get()->getQueryFields($values, 'insert', true)
+            \Ext\Db::get()->getQueryFields($values, 'insert', true)
         );
 
         if ($result) {
-            $lastId = Ext_Db::get()->getLastInsertedId();
+            $lastId = \Ext\Db::get()->getLastInsertedId();
 
             if ($lastId) {
                 $this->id = $lastId;
@@ -660,9 +660,9 @@ abstract class Core_ActiveRecord extends \StdClass
             }
         }
 
-        $result = (boolean) Ext_Db::get()->execute(
+        $result = (boolean) \Ext\Db::get()->execute(
             'UPDATE ' . $this->getTable() .
-            Ext_Db::get()->getQueryFields($attrs, 'update', true) .
+            \Ext\Db::get()->getQueryFields($attrs, 'update', true) .
             'WHERE ' . $this->getPrimaryKeyWhere() . ' LIMIT 1'
         );
 
@@ -697,9 +697,9 @@ abstract class Core_ActiveRecord extends \StdClass
 
         $attrs = array($_name => $this->getAttr($_name)->getSqlValue());
 
-        $result = (boolean) Ext_Db::get()->execute(
+        $result = (boolean) \Ext\Db::get()->execute(
             'UPDATE ' . $this->getTable() .
-            Ext_Db::get()->getQueryFields($attrs, 'update', true) .
+            \Ext\Db::get()->getQueryFields($attrs, 'update', true) .
             'WHERE ' . $this->getPrimaryKeyWhere() . ' LIMIT 1'
         );
 
@@ -738,7 +738,7 @@ abstract class Core_ActiveRecord extends \StdClass
             }
         }
 
-        $result = (boolean) Ext_Db::get()->execute(
+        $result = (boolean) \Ext\Db::get()->execute(
             "DELETE FROM {$this->_table} WHERE " .
             $this->getPrimaryKeyWhere() . ' LIMIT 1'
         );
@@ -768,7 +768,7 @@ abstract class Core_ActiveRecord extends \StdClass
     {
         self::clearApcList();
 
-        return (boolean) Ext_Db::get()->execute('TRUNCATE ' . self::getTbl());
+        return (boolean) \Ext\Db::get()->execute('TRUNCATE ' . self::getTbl());
     }
 
     /**
@@ -779,9 +779,9 @@ abstract class Core_ActiveRecord extends \StdClass
     {
         self::clearApcList();
 
-        return (boolean) Ext_Db::get()->execute(
+        return (boolean) \Ext\Db::get()->execute(
             'DELETE FROM ' . self::getTbl() .
-            ' WHERE ' . implode(' AND ', Ext_Db::get()->getWhere($_where))
+            ' WHERE ' . implode(' AND ', \Ext\Db::get()->getWhere($_where))
         );
     }
 
@@ -793,15 +793,15 @@ abstract class Core_ActiveRecord extends \StdClass
 //         $obj = new $className($_table);
 
 //         if ($_isLog) {
-//             $logFile = LIBRARIES . Ext_File::computeName($className) . '.txt';
-//             Ext_File::write($logFile, $_table . PHP_EOL . PHP_EOL);
-//             Ext_File::write(
+//             $logFile = LIBRARIES . \Ext\File::computeName($className) . '.txt';
+//             \Ext\File::write($logFile, $_table . PHP_EOL . PHP_EOL);
+//             \Ext\File::write(
 //                 $logFile,
 //                 'self::$Base = new App_ActiveRecord(self::TABLE);' . PHP_EOL
 //             );
 //         }
 
-//         $attributes = Ext_Db::get()->getList("SHOW COLUMNS FROM $_table");
+//         $attributes = \Ext\Db::get()->getList("SHOW COLUMNS FROM $_table");
 
 //         foreach ($attributes as $item) {
 //             if ($item['Type'] == 'tinyint(1)') {
@@ -823,7 +823,7 @@ abstract class Core_ActiveRecord extends \StdClass
 //                     : 'addAttr';
 
 //             if ($_isLog) {
-//                 Ext_File::write(
+//                 \Ext\File::write(
 //                     $logFile,
 //                     "self::\$_base->$method('{$item['Field']}', '$type');" .
 //                     PHP_EOL
@@ -864,7 +864,7 @@ abstract class Core_ActiveRecord extends \StdClass
         $instance = self::createInstance();
         $list = array();
 
-        $items = Ext_Db::get()->getList(Ext_Db::get()->getSelect(
+        $items = \Ext\Db::get()->getList(\Ext\Db::get()->getSelect(
             $instance->getTable(),
             null,
             $_where,
@@ -888,7 +888,7 @@ abstract class Core_ActiveRecord extends \StdClass
      */
     public static function getCount($_where = array())
     {
-        $result = Ext_Db::get()->getEntry(Ext_Db::get()->getSelect(
+        $result = \Ext\Db::get()->getEntry(\Ext\Db::get()->getSelect(
             self::getTbl(),
             'COUNT(1) AS `cnt`',
             $_where
@@ -910,7 +910,7 @@ abstract class Core_ActiveRecord extends \StdClass
         if ($_excludeId) {
             $where = array_merge(
                 $where,
-                Ext_Db::get()->getWhereNot(array(self::getPri() => $_excludeId))
+                \Ext\Db::get()->getWhereNot(array(self::getPri() => $_excludeId))
             );
         }
 
@@ -1036,14 +1036,14 @@ abstract class Core_ActiveRecord extends \StdClass
 
     public static function getApcListKey()
     {
-        return Ext_Db::get()->getDatabase() . '-' .
+        return \Ext\Db::get()->getDatabase() . '-' .
                self::getTbl() . '-' .
                'list';
     }
 
     public static function getApcItemKey($_id)
     {
-        return Ext_Db::get()->getDatabase() . '-' .
+        return \Ext\Db::get()->getDatabase() . '-' .
                self::getTbl() . '-' .
                $_id;
     }
@@ -1120,7 +1120,7 @@ abstract class Core_ActiveRecord extends \StdClass
     public static function getInfo()
     {
         $info = null;
-        $db = Ext_Db::get()->getDatabase();
+        $db = \Ext\Db::get()->getDatabase();
 
         if (App_Cms_Cache_Apc::isEnabled()) {
             $key = "$db-tables-info";
@@ -1128,7 +1128,7 @@ abstract class Core_ActiveRecord extends \StdClass
         }
 
         if (!$info) {
-            $list = Ext_Db::get()->getList("
+            $list = \Ext\Db::get()->getList("
                 SELECT TABLE_NAME, TABLE_ROWS
                 FROM INFORMATION_SCHEMA.TABLES
                 WHERE TABLE_SCHEMA = '$db'
