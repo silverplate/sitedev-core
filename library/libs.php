@@ -107,39 +107,13 @@ function getLangInnerUri()
 function d()
 {
     $args = func_get_args();
-    $count = count($args);
-
-    if ($count == 1) {
-        debug($args[0]);
-
-    } else {
-        foreach ($args as $i => $var) {
-            if ($i != 0) echo PHP_EOL;
-            echo $i + 1 . ':';
-            echo PHP_EOL;
-
-            debug($var);
-        }
-    }
-
-    die();
+    call_user_func_array(array('\Ext\Lib', 'd'), $args);
 }
 
 function debug($_var)
 {
-    if (PHP_SAPI == 'cli') {
-        print_r($_var);
-        echo PHP_EOL;
-
-    } else {
-        echo '<pre>';
-
-        if (is_string($_var))   echo htmlspecialchars($_var);
-        else                    print_r($_var);
-
-        echo '</pre>';
-        echo PHP_EOL;
-    }
+    $args = func_get_args();
+    call_user_func_array(array('\Ext\Lib', 'debug'), $args);
 }
 
 function goToUrl($_url)
