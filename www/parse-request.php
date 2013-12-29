@@ -20,11 +20,11 @@ if ($gCache->isAvailable() && $gCache->isCache()) {
     }
 
     $url = \Ext\File::parseUrl($uri);
-    $document = App_Cms_Front_Document::load($url['path'], 'uri');
+    $document = \App\Cms\Front\Document::load($url['path'], 'uri');
 
     if (!($document && ($document->isPublished || !empty($gIsHidden)))) {
         $url = \Ext\File::parseUrl(getCustomUrl($uri));
-        $document = App_Cms_Front_Document::load($url['path'], 'uri');
+        $document = \App\Cms\Front\Document::load($url['path'], 'uri');
     }
 
     if (
@@ -40,7 +40,7 @@ if ($gCache->isAvailable() && $gCache->isCache()) {
         ($document->isPublished == 1 || !empty($gIsHidden)) &&
         (!$document->authStatusId || is_null(App_Cms_User::getAuthGroup()) || $document->authStatusId & App_Cms_User::getAuthGroup())
     ) {
-        $controller = App_Cms_Front_Document::initController(
+        $controller = \App\Cms\Front\Document::initController(
             $document->getController(),
             $document
         );

@@ -1,6 +1,8 @@
 <?php
 
-abstract class Core_Cms_Front_Page extends App_Cms_Page
+namespace Core\Cms\Front;
+
+abstract class Page extends \App\Cms\Page
 {
     protected $_isHidden;
 

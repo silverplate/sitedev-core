@@ -1,9 +1,11 @@
 <?php
 
-abstract class Core_Cms_Front_Document_Controller extends Core_Cms_Front_Page
+namespace Core\Cms\Front\Document;
+
+abstract class Controller extends \Core\Cms\Front\Page
 {
     /**
-     * @var Core_Cms_Front_Document
+     * @var \Core\Cms\Front\Document
      */
     protected $_document;
 
@@ -44,9 +46,9 @@ abstract class Core_Cms_Front_Document_Controller extends Core_Cms_Front_Page
                 $this->setRootAttr('xml:lang', $this->_document->getLang());
             }
 
-            $key = App_Cms_Front_Document::getPri();
+            $key = \App\Cms\Front\Document::getPri();
             $where = array('is_published' => 1);
-            $ancestors = App_Cms_Front_Document::getAncestors($this->_document->getId());
+            $ancestors = \App\Cms\Front\Document::getAncestors($this->_document->getId());
 
             if ($ancestors) {
                 $ancestors = array_values(array_diff(

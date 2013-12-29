@@ -1,6 +1,8 @@
 <?php
 
-abstract class Core_Cms_Page
+namespace Core\Cms;
+
+abstract class Page
 {
     protected $_title;
     protected $_template;

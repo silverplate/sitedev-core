@@ -1,6 +1,8 @@
 <?php
 
-abstract class Core_Cms_Front_Controller extends App_ActiveRecord
+namespace Core\Cms\Front;
+
+abstract class Controller extends \App_ActiveRecord
 {
     protected $_originalFilePath;
 

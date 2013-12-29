@@ -1,18 +1,20 @@
 <?php
 
-abstract class Core_Cms_Front_Document extends App_ActiveRecord_Tree
+namespace Core\Cms\Front;
+
+abstract class Document extends \App_ActiveRecord_Tree
 {
     const FOLDER = 'f';
 
     protected $_language;
 
     /**
-     * @var App_Cms_Front_Controller
+     * @var \App\Cms\Front\Controller
      */
     protected $_controller;
 
     /**
-     * @var App_Cms_Front_Template
+     * @var \App_Cms_Front_Template
      */
     protected $_template;
 
@@ -30,8 +32,8 @@ abstract class Core_Cms_Front_Document extends App_ActiveRecord_Tree
         parent::__construct();
 
         $this->addPrimaryKey('integer');
-        $this->addForeign(App_Cms_Front_Controller::createInstance());
-        $this->addForeign(App_Cms_Front_Template::createInstance());
+        $this->addForeign(\App\Cms\Front\Controller::createInstance());
+        $this->addForeign(\App_Cms_Front_Template::createInstance());
         $this->addAttr('parent_id', 'string');
         $this->addAttr('auth_status_id', 'integer');
         $this->addAttr('title', 'string');
@@ -49,7 +51,7 @@ abstract class Core_Cms_Front_Document extends App_ActiveRecord_Tree
     public function getData()
     {
         if (!isset($this->_data)) {
-            $this->_data = App_Cms_Front_Data::getList(array(
+            $this->_data = \App_Cms_Front_Data::getList(array(
                 $this->getPrimaryKeyName() => $this->id
             ));
         }
@@ -70,11 +72,11 @@ abstract class Core_Cms_Front_Document extends App_ActiveRecord_Tree
 
         if (
             !empty($gIsUsers) &&
-            $this->authStatusId != App_Cms_User::AUTH_GROUP_ALL &&
-            App_Cms_User::getAuthGroupTitle($this->authStatusId)
+            $this->authStatusId != \App_Cms_User::AUTH_GROUP_ALL &&
+            \App_Cms_User::getAuthGroupTitle($this->authStatusId)
         ) {
             $attrs['prefix'] = \Ext\String::toLower(\Ext\String::getPart(
-                App_Cms_User::getAuthGroupTitle($this->authStatusId), 0, 1
+                \App_Cms_User::getAuthGroupTitle($this->authStatusId), 0, 1
             ));
         }
 
@@ -95,8 +97,8 @@ abstract class Core_Cms_Front_Document extends App_ActiveRecord_Tree
         if (is_null($this->_language)) {
             $this->_language = '';
 
-            if (App_Cms_Front_Office::getLanguages()) {
-                foreach (array_keys(App_Cms_Front_Office::getLanguages()) as $i) {
+            if (\App_Cms_Front_Office::getLanguages()) {
+                foreach (array_keys(\App_Cms_Front_Office::getLanguages()) as $i) {
                     $pos = strpos($this->uri, "/$i/");
 
                     if ($pos !== false && $pos == 0) {
@@ -119,7 +121,7 @@ abstract class Core_Cms_Front_Document extends App_ActiveRecord_Tree
 
     public function getUrl()
     {
-        $langs = App_Cms_Front_Office::getLanguages();
+        $langs = \App_Cms_Front_Office::getLanguages();
 
         return $this->getLang()
              ? 'http://' . $langs[$this->getLang()][0] . $this->getUri()
@@ -212,7 +214,7 @@ abstract class Core_Cms_Front_Document extends App_ActiveRecord_Tree
             $item->delete();
         }
 
-        foreach (App_Cms_Front_Data::getList($this->getPrimaryKeyWhere()) as $item) {
+        foreach (\App_Cms_Front_Data::getList($this->getPrimaryKeyWhere()) as $item) {
             $item->delete();
         }
 
@@ -222,13 +224,13 @@ abstract class Core_Cms_Front_Document extends App_ActiveRecord_Tree
     }
 
     /**
-     * @return App_Cms_Front_Controller
+     * @return \App\Cms\Front\Controller
      */
     public function getController()
     {
         if (is_null($this->_controller)) {
             $this->_controller = $this->frontControllerId
-                               ? App_Cms_Front_Controller::getById($this->frontControllerId)
+                               ? \App\Cms\Front\Controller::getById($this->frontControllerId)
                                : false;
         }
 
@@ -243,11 +245,11 @@ abstract class Core_Cms_Front_Document extends App_ActiveRecord_Tree
     }
 
     /**
-     * @param App_Cms_Front_Controller $_controller
-     * @param App_Cms_Front_Document $_document
-     * @return App_Cms_Front_Document_Controller|false
+     * @param \App\Cms\Front\Controller $_controller
+     * @param \App\Cms\Front\Document $_document
+     * @return \App\Cms\Front\Document\Controller|false
      */
-    public static function initController(App_Cms_Front_Controller $_controller, &$_document)
+    public static function initController(\App\Cms\Front\Controller $_controller, &$_document)
     {
         require_once $_controller->getFilename();
 
@@ -261,13 +263,13 @@ abstract class Core_Cms_Front_Document extends App_ActiveRecord_Tree
     }
 
     /**
-     * @return App_Cms_Front_Template
+     * @return \App_Cms_Front_Template
      */
     public function getTemplate()
     {
         if (is_null($this->_template)) {
             $this->_template = $this->frontTemplateId
-                             ? App_Cms_Front_Template::getById($this->frontTemplateId)
+                             ? \App_Cms_Front_Template::getById($this->frontTemplateId)
                              : false;
         }
 

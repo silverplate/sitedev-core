@@ -1,6 +1,8 @@
 <?php
 
-abstract class Core_RobotsSitemapController extends CommonController
+namespace Core\Controller;
+
+abstract class RobotsSitemapController extends CommonController
 {
     public function output($_createCache = true)
     {

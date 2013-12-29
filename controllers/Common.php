@@ -1,7 +1,9 @@
 <?php
 
-abstract class Core_CommonController
-extends App_Cms_Front_Document_Controller
+namespace Core\Controller;
+
+abstract class CommonController
+extends \App\Cms\Front\Document\Controller
 {
     public function execute()
     {

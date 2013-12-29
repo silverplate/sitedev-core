@@ -1,6 +1,8 @@
 <?php
 
-abstract class Core_NotFoundController extends CommonController
+namespace Core\Controller;
+
+abstract class NotFoundController extends CommonController
 {
     public function execute()
     {
