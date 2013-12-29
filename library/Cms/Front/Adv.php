@@ -41,7 +41,7 @@ abstract class Core_Cms_Front_Adv
 
         if (!empty($_SERVER[$envName])) {
             $referer = strtolower($_SERVER[$envName]);
-            $url = Ext_File::parseUrl($referer);
+            $url = \Ext\File::parseUrl($referer);
 
             if (!empty($url['host']) && $url['host'] != strtolower($gHost)) {
                 $prev = static::getCookie($envName);

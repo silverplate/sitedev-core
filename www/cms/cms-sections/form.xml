@@ -1,28 +1,28 @@
 <?xml version="1.0"?>
-<!DOCTYPE form SYSTEM "../../../core/library/Ext/entities.dtd">
+<!DOCTYPE form SYSTEM "../../../core/library/Ext/Xml/entities.dtd">
 
 <form>
     <group name="main">
         <title>Содержание</title>
-        
+
         <element name="title" type="string" is-required="true">
             <label>Название</label>
         </element>
-    
+
         <element name="uri" type="system-name" is-required="true">
             <label>Локальная папка</label>
             <description>Можно использовать латинские буквы, цифры и&nbsp;дефис.</description>
         </element>
-    
+
         <element name="is_published" type="boolean">
             <label>Раздел доступен</label>
             <value>1</value>
         </element>
-    
+
         <element name="users" type="multiple">
             <label>Пользователи, имеющие доступ</label>
         </element>
-    
+
         <element name="description" type="text">
             <label>Описание</label>
         </element>

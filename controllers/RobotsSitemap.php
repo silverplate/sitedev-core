@@ -49,12 +49,12 @@ abstract class Core_RobotsSitemapController extends CommonController
                 $xml = '';
 
                 foreach ($item as $name => $value) {
-                    $xml .= Ext_Xml::cdata($name, $value);
+                    $xml .= \Ext\Xml::cdata($name, $value);
                 }
 
-                Ext_Xml::append(
+                \Ext\Xml::append(
                     $sitemapXml,
-                    Ext_Xml::notEmptyNode('url', $xml)
+                    \Ext\Xml::notEmptyNode('url', $xml)
                 );
             }
 

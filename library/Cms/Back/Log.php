@@ -192,20 +192,20 @@ abstract class Core_Cms_Back_Log extends App_Model
         else                      $xml = array($_xml);
 
         foreach (array('user_agent', 'description') as $item) {
-            Ext_Xml::append($xml, Ext_Xml::notEmptyCdata($item, $this->$item));
+            \Ext\Xml::append($xml, \Ext\Xml::notEmptyCdata($item, $this->$item));
         }
 
-        Ext_Xml::append($xml, Ext_Xml::notEmptyCdata(
+        \Ext\Xml::append($xml, \Ext\Xml::notEmptyCdata(
             'user',
             $this->getUser() ? $this->getUser()->getTitle() : $this->userName
         ));
 
-        Ext_Xml::append($xml, Ext_Xml::notEmptyCdata(
+        \Ext\Xml::append($xml, \Ext\Xml::notEmptyCdata(
             'section',
             $this->getSection() ? $this->getSection()->getTitle() : $this->sectionName
         ));
 
-        Ext_Xml::append($xml, Ext_Xml::notEmptyCdata(
+        \Ext\Xml::append($xml, \Ext\Xml::notEmptyCdata(
             'action',
             static::getActionTitleById($this->actionId)
         ));

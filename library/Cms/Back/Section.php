@@ -25,7 +25,7 @@ abstract class Core_Cms_Back_Section extends App_Model
 
     public function getName()
     {
-        return Ext_File::normalizeName($this->getTitle());
+        return \Ext\File::normalizeName($this->getTitle());
     }
 
     public function checkUnique()
@@ -54,7 +54,7 @@ abstract class Core_Cms_Back_Section extends App_Model
      */
     public static function compute()
     {
-        $url = Ext_File::parseUrl();
+        $url = \Ext\File::parseUrl();
 
         $path = explode('/', trim(str_replace(
             App_Cms_Back_Office::$uriStartsWith,
@@ -76,7 +76,7 @@ abstract class Core_Cms_Back_Section extends App_Model
         $attrs['uri'] = $this->getUri();
 
         $xml = $_xml;
-        Ext_Xml::append($xml, Ext_Xml::notEmptyCdata('description', $this->description));
+        \Ext\Xml::append($xml, \Ext\Xml::notEmptyCdata('description', $this->description));
 
         return parent::getXml(null, $xml, $attrs);
     }

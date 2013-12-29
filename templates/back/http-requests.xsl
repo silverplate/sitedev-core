@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE xsl:stylesheet SYSTEM "../../library/Ext/entities.dtd">
+<!DOCTYPE xsl:stylesheet SYSTEM "../../library/Ext/Xml/entities.dtd">
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="html" indent="no" encoding="utf-8" />
@@ -64,7 +64,7 @@
                     <xsl:for-each select="@*[name() = 'xml:lang' or name() = 'prefix']"><xsl:value-of select="concat(., '&nbsp;')" /></xsl:for-each>
                     <label for="{generate-id()}">
                         <xsl:if test="not(@is-published)"><xsl:attribute name="class">hidden</xsl:attribute></xsl:if>
-                            
+
                         <xsl:choose>
                             <xsl:when test="title-compact">
                                 <xsl:value-of select="title-compact" disable-output-escaping="yes" />
@@ -115,7 +115,7 @@
                                 </xsl:when>
                                 <xsl:when test="not(@is-published)"><xsl:attribute name="class">hidden</xsl:attribute></xsl:when>
                             </xsl:choose>
-                            
+
                             <xsl:choose>
                                 <xsl:when test="title-compact">
                                     <xsl:value-of select="title-compact" disable-output-escaping="yes" />

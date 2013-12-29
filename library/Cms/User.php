@@ -203,7 +203,7 @@ abstract class Core_Cms_User extends App_Model
     {
         if ($this->email) {
             $this->reminderTime = time();
-            $this->reminderKey = Ext_Db::get()->getUnique(
+            $this->reminderKey = \Ext\Db::get()->getUnique(
                 $this->getTable(),
                 'reminder_key',
                 30
@@ -262,7 +262,7 @@ abstract class Core_Cms_User extends App_Model
 
     public static function generatePassword()
     {
-        return Ext_String::getRandomReadableAlt(8);
+        return \Ext\String::getRandomReadableAlt(8);
     }
 
     public static function cryptPassword($_password)

@@ -18,7 +18,7 @@ abstract class Core_Cms_Back_User_Has_Section extends App_Model
         $where = $_where;
 
         if (isset($where['is_published'])) {
-            $ids = Ext_Db::get()->getList(Ext_Db::get()->getSelect(
+            $ids = \Ext\Db::get()->getList(\Ext\Db::get()->getSelect(
                 self::getFirstForeignTbl(),
                 self::getFirstForeignPri(),
                 array('status_id' => $where['is_published'] ? 1 : 0)
@@ -30,7 +30,7 @@ abstract class Core_Cms_Back_User_Has_Section extends App_Model
                 $where[self::getFirstForeignPri()] = $ids;
             }
 
-            $ids = Ext_Db::get()->getList(Ext_Db::get()->getSelect(
+            $ids = \Ext\Db::get()->getList(\Ext\Db::get()->getSelect(
                 self::getSecondForeignTbl(),
                 self::getSecondForeignPri(),
                 array('is_published' => $where['is_published'] ? 1 : 0)

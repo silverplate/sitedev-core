@@ -48,7 +48,7 @@ abstract class Core_Model_Tree extends App_Model
         $result = array();
         $key = static::getPri();
 
-        $entry = Ext_Db::get()->getEntry(Ext_Db::get()->getSelect(
+        $entry = \Ext\Db::get()->getEntry(\Ext\Db::get()->getSelect(
             static::getTbl(),
             array($key, 'parent_id'),
             array($key => $_id)

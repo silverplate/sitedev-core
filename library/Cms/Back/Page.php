@@ -45,7 +45,7 @@ abstract class Core_Cms_Back_Page extends App_Cms_Page
                 $xml .= $item->getNavigationXml();
             }
 
-            $xml = Ext_Xml::notEmptyNode('navigation', $xml);
+            $xml = \Ext\Xml::notEmptyNode('navigation', $xml);
         }
 
         return $xml;
@@ -60,7 +60,7 @@ abstract class Core_Cms_Back_Page extends App_Cms_Page
     {
         global $gSiteTitle;
 
-        $this->addSystem(Ext_Xml::cdata('title', $gSiteTitle));
+        $this->addSystem(\Ext\Xml::cdata('title', $gSiteTitle));
 
         if (App_Cms_Back_User::get()) {
             $this->addSystem(App_Cms_Back_User::get()->getXml());
@@ -72,7 +72,7 @@ abstract class Core_Cms_Back_Page extends App_Cms_Page
         ));
 
         if ($this->_updateStatus) {
-            $this->addContent(Ext_Xml::notEmptyCdata(
+            $this->addContent(\Ext\Xml::notEmptyCdata(
                 'update-status',
                 $this->_updateStatus['message'],
                 array('type' => $this->_updateStatus['type'])

@@ -12,18 +12,18 @@ if ($gCache->isAvailable() && $gCache->isCache()) {
     echo $gCache;
 
 } else {
-    $realUrl = Ext_File::parseUrl();
+    $realUrl = \Ext\File::parseUrl();
     $uri = rtrim($realUrl['path'], '/') . '/';
 
     if (!empty($realUrl['query'])) {
         $uri .= '?' . $realUrl['query'];
     }
 
-    $url = Ext_File::parseUrl($uri);
+    $url = \Ext\File::parseUrl($uri);
     $document = App_Cms_Front_Document::load($url['path'], 'uri');
 
     if (!($document && ($document->isPublished || !empty($gIsHidden)))) {
-        $url = Ext_File::parseUrl(getCustomUrl($uri));
+        $url = \Ext\File::parseUrl(getCustomUrl($uri));
         $document = App_Cms_Front_Document::load($url['path'], 'uri');
     }
 

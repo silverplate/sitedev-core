@@ -52,7 +52,7 @@ abstract class Core_Cms_Back_User extends App_Model
 
         return !empty($user) &&
                $user->statusId == 1 &&
-               (!$user->ipRestriction || in_array($_SERVER['REMOTE_ADDR'], Ext_String::split($user->ipRestriction)))
+               (!$user->ipRestriction || in_array($_SERVER['REMOTE_ADDR'], \Ext\String::split($user->ipRestriction)))
              ? $user
              : false;
     }
@@ -75,7 +75,7 @@ abstract class Core_Cms_Back_User extends App_Model
         global $gHost;
 
         if ($this->email) {
-            $this->reminderKey = Ext_Db::get()->getUnique(self::getTbl(), 'reminder_key');
+            $this->reminderKey = \Ext\Db::get()->getUnique(self::getTbl(), 'reminder_key');
             $this->reminderTime = time();
             $this->update();
 
@@ -117,7 +117,7 @@ abstract class Core_Cms_Back_User extends App_Model
                            'Логин: ' . $this->login .
                            "\nПароль: $password";
 
-                $ips = Ext_String::split($this->ipRestriction);
+                $ips = \Ext\String::split($this->ipRestriction);
 
                 if ($ips) {
                     $message .= "\nРазрешённы" .
@@ -143,7 +143,7 @@ abstract class Core_Cms_Back_User extends App_Model
 
     public static function generatePassword()
     {
-        return Ext_String::getRandomReadableAlt(8);
+        return \Ext\String::getRandomReadableAlt(8);
     }
 
     public static function cryptPassword($_password)

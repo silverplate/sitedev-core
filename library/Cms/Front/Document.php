@@ -73,7 +73,7 @@ abstract class Core_Cms_Front_Document extends App_Model_Tree
             $this->authStatusId != App_Cms_User::AUTH_GROUP_ALL &&
             App_Cms_User::getAuthGroupTitle($this->authStatusId)
         ) {
-            $attrs['prefix'] = Ext_String::toLower(Ext_String::getPart(
+            $attrs['prefix'] = \Ext\String::toLower(\Ext\String::getPart(
                 App_Cms_User::getAuthGroupTitle($this->authStatusId), 0, 1
             ));
         }
@@ -82,9 +82,9 @@ abstract class Core_Cms_Front_Document extends App_Model_Tree
         else if (is_array($_xml)) $xml = $_xml;
         else                      $xml = array($_xml);
 
-        Ext_Xml::append(
+        \Ext\Xml::append(
             $xml,
-            Ext_Xml::notEmptyCdata('title-compact', $this->titleCompact)
+            \Ext\Xml::notEmptyCdata('title-compact', $this->titleCompact)
         );
 
         return parent::getBackOfficeXml($xml, $attrs);
@@ -199,7 +199,7 @@ abstract class Core_Cms_Front_Document extends App_Model_Tree
             $this->getFilePath() != $root &&
             $path != $root
         ) {
-            Ext_File::moveDir($path, $this->getFilePath());
+            \Ext\File::moveDir($path, $this->getFilePath());
         }
 
         parent::update();
@@ -216,7 +216,7 @@ abstract class Core_Cms_Front_Document extends App_Model_Tree
             $item->delete();
         }
 
-        Ext_File::deleteDir($this->getFilePath());
+        \Ext\File::deleteDir($this->getFilePath());
 
         return parent::delete();
     }
@@ -290,7 +290,7 @@ abstract class Core_Cms_Front_Document extends App_Model_Tree
 
     public function checkFolder()
     {
-        return $this->folder == '/' || Ext_File::checkName($this->folder);
+        return $this->folder == '/' || \Ext\File::checkName($this->folder);
     }
 
     public function checkRoot()

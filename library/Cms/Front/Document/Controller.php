@@ -57,7 +57,7 @@ abstract class Core_Cms_Front_Document_Controller extends Core_Cms_Front_Page
 
             if ($ancestors) {
                 $where[] =
-                    "(($key IN (" . Ext_Db::escape($ancestors) . ') AND apply_type_id IN (2, 3)) OR (' .
+                    "(($key IN (" . \Ext\Db::escape($ancestors) . ') AND apply_type_id IN (2, 3)) OR (' .
                     "$key = {$this->_document->getSqlId()} AND apply_type_id IN (1, 3)))";
 
             } else {

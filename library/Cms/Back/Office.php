@@ -234,7 +234,7 @@ abstract class Core_Cms_Back_Office
         }
 
         foreach ($selectedIds as $i) {
-            $page->addContent(Ext_Xml::cdata('selected', $i));
+            $page->addContent(\Ext\Xml::cdata('selected', $i));
         }
 
         $gOpenBranches = $selectedIds
@@ -303,7 +303,7 @@ abstract class Core_Cms_Back_Office
         $where = array('parent_id' => empty($_parentId) ? null : $_parentId);
 
         if ($_excludeId) {
-            $where[] = $_className::getPri() . ' != ' . Ext_Db::escape($_excludeId);
+            $where[] = $_className::getPri() . ' != ' . \Ext\Db::escape($_excludeId);
         }
 
         $list = $_className::getList($where);

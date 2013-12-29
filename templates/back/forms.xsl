@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE xsl:stylesheet SYSTEM "../../library/Ext/entities.dtd">
+<!DOCTYPE xsl:stylesheet SYSTEM "../../library/Ext/Xml/entities.dtd">
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:template match="form">
@@ -188,7 +188,7 @@
                             </label>
                         </xsl:otherwise>
                     </xsl:choose>
-                    
+
                     <xsl:if test="label-description">
                         <div class="description">
                             <xsl:value-of select="label-description" disable-output-escaping="yes" />
@@ -1033,7 +1033,7 @@
             </div>
 
             <div style="float: left; margin: 1px 5px 0.5em 3px; font-size: 1.25em;">&mdash;</div>
-            
+
             <div style="float: left;">
                 <xsl:call-template name="calendar">
                     <xsl:with-param name="name">
@@ -1233,7 +1233,7 @@
     <!--
     Календарь
     -->
-    
+
     <xsl:template name="calendar">
         <xsl:param name="name" />
         <xsl:param name="value" />

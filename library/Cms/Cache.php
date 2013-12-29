@@ -41,7 +41,7 @@ abstract class Core_Cms_Cache
     public function getUri($_uri = null)
     {
         if (is_null($this->_uri)) {
-            $this->_uri = Ext_File::parseUrl();
+            $this->_uri = \Ext\File::parseUrl();
             $this->_uri['path_info'] = pathinfo($this->_uri['path']);
 
             if (!empty($this->_uri['query']) && $this->_queryIgnore) {
@@ -160,7 +160,7 @@ abstract class Core_Cms_Cache
                 isset($path['extension'])
             ) {
                 $this->_file .= $path['dirname'] . '/' .
-                                Ext_File::computeName($path['basename']) . '/';
+                                \Ext\File::computeName($path['basename']) . '/';
             } else {
                 $this->_file .= $this->getRequestPath();
             }
@@ -172,7 +172,7 @@ abstract class Core_Cms_Cache
                 $query = str_replace(
                     array('&', '=', '[', ']', '"', '\''),
                     '-',
-                    Ext_String::translit(urldecode($this->getRequestQuery()))
+                    \Ext\String::translit(urldecode($this->getRequestQuery()))
                 );
 
             } else {
@@ -201,8 +201,8 @@ abstract class Core_Cms_Cache
 
     public function set($_content)
     {
-        Ext_File::createDir(dirname($this->getFile()));
-        Ext_File::write($this->getFile(), $_content);
+        \Ext\File::createDir(dirname($this->getFile()));
+        \Ext\File::write($this->getFile(), $_content);
     }
 
     public function deletePage()
@@ -211,19 +211,19 @@ abstract class Core_Cms_Cache
             unlink($this->getFile());
             $path = dirname($this->getFile());
 
-            if (Ext_File::isDirEmpty($path)) {
-                Ext_File::deleteDir($path);
+            if (\Ext\File::isDirEmpty($path)) {
+                \Ext\File::deleteDir($path);
             }
         }
     }
 
     public function emptyPage()
     {
-        return Ext_File::deleteDir(dirname($this->getFile()), false, true);
+        return \Ext\File::deleteDir(dirname($this->getFile()), false, true);
     }
 
     public function emptyCache()
     {
-        return Ext_File::deleteDir($this->_path, false);
+        return \Ext\File::deleteDir($this->_path, false);
     }
 }

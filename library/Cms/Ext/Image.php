@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_Ext_Image extends Ext_Image
+abstract class Core_Cms_Ext_Image extends \Ext\Image
 {
     /**
      * @param string $_path

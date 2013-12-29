@@ -41,12 +41,12 @@ abstract class Core_Cms_Session
 
     public static function getTbl()
     {
-        return Ext_Db::get()->getPrefix() . 'session';
+        return \Ext\Db::get()->getPrefix() . 'session';
     }
 
     public static function getPri()
     {
-        return Ext_Db::get()->getPrefix() . 'session_id';
+        return \Ext\Db::get()->getPrefix() . 'session_id';
     }
 
     protected function __construct()
@@ -58,27 +58,27 @@ abstract class Core_Cms_Session
     protected function _init()
     {
         $userAgent = md5(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '');
-        $session = Ext_Db::get()->getEntry('
+        $session = \Ext\Db::get()->getEntry('
             SELECT
                 is_logged_in,
                 user_id
             FROM
                 ' . self::getTbl() . '
             WHERE
-                ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()) . ' AND
-                user_agent = ' . Ext_Db::escape($userAgent) . ' AND (
+                ' . self::getPri() . ' = ' . \Ext\Db::escape(self::getId()) . ' AND
+                user_agent = ' . \Ext\Db::escape($userAgent) . ' AND (
                     ISNULL(valid_date) OR NOW() < valid_date
                 ) AND (
                     life_span <= 0 OR DATE_ADD(creation_date, INTERVAL life_span MINUTE) < NOW()
                 ) AND (
                     timeout <= 0 OR (NOT(ISNULL(last_impression_date)) AND DATE_ADD(last_impression_date, INTERVAL timeout MINUTE) < NOW())
                 ) AND (
-                    is_ip_match = 0 OR user_ip = ' . Ext_Db::escape($_SERVER['REMOTE_ADDR']) . '
+                    is_ip_match = 0 OR user_ip = ' . \Ext\Db::escape($_SERVER['REMOTE_ADDR']) . '
                 )
         ');
 
         if ($session) {
-            foreach (Ext_Db::get()->getList('SELECT name, value FROM ' . self::getTbl() . '_param WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId())) as $item) {
+            foreach (\Ext\Db::get()->getList('SELECT name, value FROM ' . self::getTbl() . '_param WHERE ' . self::getPri() . ' = ' . \Ext\Db::escape(self::getId())) as $item) {
                 $this->_params[$item['name']] = unserialize($item['value']);
             }
 
@@ -88,13 +88,13 @@ abstract class Core_Cms_Session
             self::_destroy();
             self::clean();
 
-            Ext_Db::get()->execute('INSERT INTO ' . self::getTbl() . Ext_Db::get()->getQueryFields(array(
-                self::getPri() => Ext_Db::escape(self::getId()),
+            \Ext\Db::get()->execute('INSERT INTO ' . self::getTbl() . \Ext\Db::get()->getQueryFields(array(
+                self::getPri() => \Ext\Db::escape(self::getId()),
                 'is_ip_match' => 0,
                 'is_logged_in' => 0,
                 'user_id' => 0,
-                'user_agent' => Ext_Db::escape($userAgent),
-                'user_ip' => Ext_Db::escape($_SERVER['REMOTE_ADDR']),
+                'user_agent' => \Ext\Db::escape($userAgent),
+                'user_ip' => \Ext\Db::escape($_SERVER['REMOTE_ADDR']),
                 'life_span' => 0,
                 'timeout' => 0,
                 'creation_date' => 'NOW()',
@@ -133,7 +133,7 @@ abstract class Core_Cms_Session
         if ($this->_cookiePath) {
             return $this->_cookiePath;
         } else {
-            $url = Ext_File::parseUrl();
+            $url = \Ext\File::parseUrl();
             preg_match('/^(\/(admin|cms)\/)/', $url['path'], $match);
             return $match ? $match[1] : self::PATH;
         }
@@ -142,7 +142,7 @@ abstract class Core_Cms_Session
     public static function getId()
     {
         if (empty($_COOKIE[self::get()->getCookieName()])) {
-            self::_setId(Ext_Db::get()->getUnique(self::getTbl(), self::getPri(), 30));
+            self::_setId(\Ext\Db::get()->getUnique(self::getTbl(), self::getPri(), 30));
         }
 
         return $_COOKIE[self::get()->getCookieName()];
@@ -174,14 +174,14 @@ abstract class Core_Cms_Session
         $this->_userId = $_userId;
         self::_setId(self::getId(), $_validDate ? $_validDate : null);
 
-        Ext_Db::get()->execute('UPDATE ' . self::getTbl() . Ext_Db::get()->getQueryFields(array(
+        \Ext\Db::get()->execute('UPDATE ' . self::getTbl() . \Ext\Db::get()->getQueryFields(array(
             'is_ip_match' => ($_isIpMatch) ? 1 : 0,
             'is_logged_in' => 1,
-            'user_id' => Ext_Db::escape($_userId),
+            'user_id' => \Ext\Db::escape($_userId),
             'life_span' => $_lifeSpan ? $_lifeSpan : 0,
             'timeout' => $_timeout ? $_timeout : 0,
-            'valid_date' => $_validDate ? Ext_Db::escape(date('Y-m-d H:i:s', $_validDate)) : 'NULL'
-        ), 'update', true) . 'WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()));
+            'valid_date' => $_validDate ? \Ext\Db::escape(date('Y-m-d H:i:s', $_validDate)) : 'NULL'
+        ), 'update', true) . 'WHERE ' . self::getPri() . ' = ' . \Ext\Db::escape(self::getId()));
     }
 
     public function logout()
@@ -189,21 +189,21 @@ abstract class Core_Cms_Session
         $this->_isLoggedIn = false;
         $this->_userId = '';
 
-        Ext_Db::get()->execute('UPDATE ' . self::getTbl() . Ext_Db::get()->getQueryFields(array(
+        \Ext\Db::get()->execute('UPDATE ' . self::getTbl() . \Ext\Db::get()->getQueryFields(array(
             'is_logged_in' => 0,
             'user_id' => 0,
             'valid_date' => 'NULL'
-        ), 'update', true) . 'WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()));
+        ), 'update', true) . 'WHERE ' . self::getPri() . ' = ' . \Ext\Db::escape(self::getId()));
     }
 
     private function impress()
     {
-        Ext_Db::get()->execute('UPDATE ' . self::getTbl() . Ext_Db::get()->getQueryFields(array('last_impression_date' => 'NOW()'), 'update', true) . 'WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()));
+        \Ext\Db::get()->execute('UPDATE ' . self::getTbl() . \Ext\Db::get()->getQueryFields(array('last_impression_date' => 'NOW()'), 'update', true) . 'WHERE ' . self::getPri() . ' = ' . \Ext\Db::escape(self::getId()));
     }
 
     public function deleteParam($_name)
     {
-        Ext_Db::get()->execute('DELETE FROM ' . self::getTbl() . '_param WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()) . ' AND name = ' . Ext_Db::escape($_name));
+        \Ext\Db::get()->execute('DELETE FROM ' . self::getTbl() . '_param WHERE ' . self::getPri() . ' = ' . \Ext\Db::escape(self::getId()) . ' AND name = ' . \Ext\Db::escape($_name));
         unset($this->_params[$_name]);
     }
 
@@ -211,7 +211,7 @@ abstract class Core_Cms_Session
     {
         self::deleteParam($_name);
 
-        Ext_Db::get()->execute('INSERT INTO ' . self::getTbl() . '_param' . Ext_Db::get()->getQueryFields(array(
+        \Ext\Db::get()->execute('INSERT INTO ' . self::getTbl() . '_param' . \Ext\Db::get()->getQueryFields(array(
             self::getPri() => self::getId(),
             'name' => $_name,
             'value' => serialize($_value)
@@ -223,7 +223,7 @@ abstract class Core_Cms_Session
     public function getParam($_name)
     {
         if (!isset($this->_params[$_name])) {
-            $param = Ext_Db::get()->getEntry('SELECT value FROM ' . self::getTbl() . '_param WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()) . ' AND name = ' . Ext_Db::escape($_name));
+            $param = \Ext\Db::get()->getEntry('SELECT value FROM ' . self::getTbl() . '_param WHERE ' . self::getPri() . ' = ' . \Ext\Db::escape(self::getId()) . ' AND name = ' . \Ext\Db::escape($_name));
             $this->_params[$_name] = $param ? unserialize($param['value']) : null;
         }
 
@@ -232,7 +232,7 @@ abstract class Core_Cms_Session
 
     private function _destroy()
     {
-        Ext_Db::get()->execute('DELETE FROM ' . self::getTbl() . ' WHERE ' . self::getPri() . ' = ' . Ext_Db::escape(self::getId()));
+        \Ext\Db::get()->execute('DELETE FROM ' . self::getTbl() . ' WHERE ' . self::getPri() . ' = ' . \Ext\Db::escape(self::getId()));
     }
 
     /**
@@ -242,9 +242,9 @@ abstract class Core_Cms_Session
     public static function clean($_userId = null)
     {
         $tbl = self::getTbl();
-        $userCond = $_userId ? 'user_id = ' . Ext_Db::escape($_userId) . ' OR ' : '';
+        $userCond = $_userId ? 'user_id = ' . \Ext\Db::escape($_userId) . ' OR ' : '';
 
-        Ext_Db::get()->execute("
+        \Ext\Db::get()->execute("
             DELETE FROM
                 `$tbl`
             WHERE
@@ -264,7 +264,7 @@ abstract class Core_Cms_Session
             $attrs[self::ACT_PARAM] = $this->getParam(self::ACT_PARAM);
         }
 
-        return Ext_Xml::node($_node ? $_node : 'session', $_xml, $attrs);
+        return \Ext\Xml::node($_node ? $_node : 'session', $_xml, $attrs);
     }
 
     public function getWorkmateXml()
@@ -272,13 +272,13 @@ abstract class Core_Cms_Session
         $xml = '';
 
         foreach ($this->getWorkmates() as $item) {
-            Ext_Xml::append($xml, Ext_Xml::cdata(
+            \Ext\Xml::append($xml, \Ext\Xml::cdata(
                 'back-user',
                 empty($item['title']) ? $item['login'] : $item['title']
             ));
         }
 
-        return Ext_Xml::notEmptyNode('workmates', $xml);
+        return \Ext\Xml::notEmptyNode('workmates', $xml);
     }
 
     /**
@@ -288,18 +288,18 @@ abstract class Core_Cms_Session
     public function getWorkmates()
     {
         if ($this->isLoggedIn()) {
-            return Ext_Db::get()->getList('
+            return \Ext\Db::get()->getList('
                 SELECT
                     u.title,
                     u.login
                 FROM
                     `' . self::getTbl() . '` AS s,
-                    ' . Ext_Db::get()->getPrefix() . 'back_user AS u
+                    ' . \Ext\Db::get()->getPrefix() . 'back_user AS u
                 WHERE
                     DATE_ADD(s.last_impression_date, INTERVAL 15 MINUTE) > NOW() AND
                     s.user_id != 0 AND
-                    s.' . self::getPri() . ' != ' . Ext_Db::escape($this->getId()) . ' AND
-                    s.user_id = u.' . Ext_Db::get()->getPrefix() . 'back_user_id
+                    s.' . self::getPri() . ' != ' . \Ext\Db::escape($this->getId()) . ' AND
+                    s.user_id = u.' . \Ext\Db::get()->getPrefix() . 'back_user_id
             ');
         }
 

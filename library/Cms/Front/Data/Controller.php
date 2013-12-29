@@ -75,6 +75,6 @@ abstract class Core_Cms_Front_Data_Controller
     public function getXml()
     {
         $method = $this->getType() == 'xml' ? 'node' : 'cdata';
-        return Ext_Xml::$method($this->_data->tag, $this->getContent());
+        return \Ext\Xml::$method($this->_data->tag, $this->getContent());
     }
 }

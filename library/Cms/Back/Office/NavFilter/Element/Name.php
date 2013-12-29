@@ -14,7 +14,7 @@ extends App_Cms_Back_Office_NavFilter_Element
 
         if ($this->_value !== false) {
             $where[] = 'CONCAT_WS(" ", last_name, first_name, middle_name) LIKE ' .
-                        Ext_Db::escape('%' . $this->_value . '%');
+                       \Ext\Db::escape('%' . $this->_value . '%');
         }
 
         return $where;

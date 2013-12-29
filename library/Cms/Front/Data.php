@@ -58,7 +58,7 @@ abstract class Core_Cms_Front_Data extends App_Model
         switch ($this->frontDataContentTypeId) {
             case 'integer': return (integer) $_content;
             case 'float':   return (float) $_content;
-            default:        return Ext_Xml::decodeCdata($_content);
+            default:        return \Ext\Xml::decodeCdata($_content);
         }
     }
 
@@ -101,9 +101,9 @@ abstract class Core_Cms_Front_Data extends App_Model
 
 //         $xml = array();
 
-//         Ext_Xml::append(
+//         \Ext\Xml::append(
 //             $xml,
-//             Ext_Xml::notEmptyNode('additional', $_additionalXml)
+//             \Ext\Xml::notEmptyNode('additional', $_additionalXml)
 //         );
 
         if (empty($_xml))         $xml = array();
@@ -111,15 +111,15 @@ abstract class Core_Cms_Front_Data extends App_Model
         else                      $xml = array($_xml);
 
         if ($this->getController()) {
-            Ext_Xml::append(
+            \Ext\Xml::append(
                 $xml,
-                Ext_Xml::cdata('controller', $this->getController()->getTitle())
+                \Ext\Xml::cdata('controller', $this->getController()->getTitle())
             );
         }
 
-        Ext_Xml::append(
+        \Ext\Xml::append(
             $xml,
-            Ext_Xml::notEmptyCdata('content', $this->content)
+            \Ext\Xml::notEmptyCdata('content', $this->content)
         );
 
         if (
@@ -127,7 +127,7 @@ abstract class Core_Cms_Front_Data extends App_Model
             $this->authStatusId != App_Cms_User::AUTH_GROUP_ALL &&
             App_Cms_User::getAuthGroupTitle($this->authStatusId)
         ) {
-            Ext_Xml::append($xml, Ext_Xml::cdata(
+            \Ext\Xml::append($xml, \Ext\Xml::cdata(
                 'auth-group',
                 App_Cms_User::getAuthGroupTitle($this->authStatusId)
             ));

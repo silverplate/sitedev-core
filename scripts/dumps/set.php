@@ -16,14 +16,14 @@
 require_once realpath(dirname(__FILE__) . '/../../library') . '/libs.php';
 initSettings();
 
-$d = Ext_Db::get()->getDatabase();
-$u = ' -u' . Ext_Db::get()->getUser();
+$d = \Ext\Db::get()->getDatabase();
+$u = ' -u' . \Ext\Db::get()->getUser();
 
-$password = Ext_Db::get()->getPassword();
+$password = \Ext\Db::get()->getPassword();
 $p = $password ? ' -p' . $password : '';
 
-$prt = Ext_Db::get()->getPort() ? ' -P' . Ext_Db::get()->getPort() : '';
-$h = ' -h' . Ext_Db::get()->getHost();
+$prt = \Ext\Db::get()->getPort() ? ' -P' . \Ext\Db::get()->getPort() : '';
+$h = ' -h' . \Ext\Db::get()->getHost();
 
 $indent = PHP_EOL . PHP_EOL;
 $return = null;

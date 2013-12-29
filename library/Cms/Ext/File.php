@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_Ext_File extends Ext_File
+abstract class Core_Cms_Ext_File extends \Ext\File
 {
     /**
      * @param string $_path
@@ -149,9 +149,9 @@ abstract class Core_Cms_Ext_File extends Ext_File
         global $gMaxUploadFilesize, $gAmountMaxUploadFilesize;
 
         return 'Превышен максимальный размер для&nbsp;загрузки. Лимиты: ' .
-               Ext_Number::format($gMaxUploadFilesize) .
+               \Ext\Number::format($gMaxUploadFilesize) .
                '&nbsp;МБ для&nbsp;одного файла и&nbsp;' .
-               Ext_Number::format($gAmountMaxUploadFilesize) .
+               \Ext\Number::format($gAmountMaxUploadFilesize) .
                '&nbsp;МБ всего.';
     }
 
@@ -171,9 +171,9 @@ abstract class Core_Cms_Ext_File extends Ext_File
 
         return 'Общий размер всех загружаемых за&nbsp;раз файлов ' .
                'не&nbsp;должен превышать ' .
-               Ext_Number::format($gAmountMaxUploadFilesize) .
+               \Ext\Number::format($gAmountMaxUploadFilesize) .
                '&nbsp;МБ и&nbsp;каждый файл должен быть меньше ' .
-               Ext_Number::format($gMaxUploadFilesize) .
+               \Ext\Number::format($gMaxUploadFilesize) .
                '&nbsp;МБ.';
     }
 

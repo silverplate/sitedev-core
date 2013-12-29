@@ -115,7 +115,7 @@ abstract class Core_Cms_Mail extends PhpMailer
             if (!empty($this->_config['bcc'])) {
                 $bcc = is_array($this->_config['bcc'])
                      ? $this->_config['bcc']
-                     : Ext_String::split($this->_config['bcc']);
+                     : \Ext\String::split($this->_config['bcc']);
 
                 foreach ($bcc as $recipient) {
                     $this->addBcc($recipient);
@@ -191,7 +191,7 @@ abstract class Core_Cms_Mail extends PhpMailer
             $this->isHTML($this->isHtmlBody());
 
             if (!$this->isHtmlBody()) {
-                $this->Body = Ext_String::replaceEntities($this->Body);
+                $this->Body = \Ext\String::replaceEntities($this->Body);
             }
 
 

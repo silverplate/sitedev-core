@@ -21,7 +21,7 @@ abstract class Core_Cms_Front_Page extends App_Cms_Page
     {
         global $gSiteTitle, $gIsUsers;
 
-        $this->addSystem(Ext_Xml::cdata('title', $gSiteTitle));
+        $this->addSystem(\Ext\Xml::cdata('title', $gSiteTitle));
 
         if (!empty($gIsUsers) && App_Cms_User::get()) {
             $this->addSystem(App_Cms_User::get()->getXml());

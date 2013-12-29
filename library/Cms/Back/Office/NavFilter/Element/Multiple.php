@@ -53,7 +53,7 @@ extends App_Cms_Back_Office_NavFilter_Element
 
         if ($this->_value !== false) {
             $where[] = $this->_value
-                     ? $this->_dbAttr . ' IN (' . Ext_Db::escape($this->_value) . ')'
+                     ? $this->_dbAttr . ' IN (' . \Ext\Db::escape($this->_value) . ')'
                      : 'ISNULL(' . $this->_dbAttr . ')';
         }
 
@@ -68,10 +68,10 @@ extends App_Cms_Back_Office_NavFilter_Element
             $attrs['is-selected'] = true;
         }
 
-        $xml = Ext_Xml::cdata('title', $this->_title);
+        $xml = \Ext\Xml::cdata('title', $this->_title);
 
         foreach ($this->_options as $id => $title) {
-            Ext_Xml::append($xml, Ext_Xml::cdata(
+            \Ext\Xml::append($xml, \Ext\Xml::cdata(
                 'item',
                 $title,
                 array(
@@ -82,7 +82,7 @@ extends App_Cms_Back_Office_NavFilter_Element
             ));
         }
 
-        return Ext_Xml::node('filter-param', $xml, $attrs);
+        return \Ext\Xml::node('filter-param', $xml, $attrs);
     }
 
     public function addOption($_id, $_title)

@@ -73,7 +73,7 @@ if ($page->isAllowed()) {
                     if ($obj->ipRestriction) {
                         $obj->ipRestriction = implode(
                             "\n",
-                            Ext_String::split($obj->ipRestriction)
+                            \Ext\String::split($obj->ipRestriction)
                         );
                     }
 
@@ -99,7 +99,7 @@ if ($page->isAllowed()) {
 
                 } else {
                     $form->setUpdateStatus(App_Cms_Ext_Form::ERROR);
-                    $form->login->setUpdateStatus(Ext_Form_Element::ERROR_EXIST);
+                    $form->login->setUpdateStatus(\Ext\Form\Element::ERROR_EXIST);
                 }
             }
         }
@@ -127,7 +127,7 @@ if ($page->isAllowed()) {
         $filterXml .= $item->getBackOfficeXml();
     }
 
-    $filterXml = Ext_Xml::node(
+    $filterXml = \Ext\Xml::node(
         'local-navigation',
         $filterXml,
         array('is-sortable' => 1)
@@ -141,7 +141,7 @@ if ($page->isAllowed()) {
 
     if (empty($obj)) {
         if (App_Cms_Back_Section::get()->description) {
-            $xml .= Ext_Xml::notEmptyNode('content', Ext_Xml::cdata(
+            $xml .= \Ext\Xml::notEmptyNode('content', \Ext\Xml::cdata(
                 'html',
                 '<p class="first">' . App_Cms_Back_Section::get()->description . '</p>'
             ));
@@ -149,16 +149,16 @@ if ($page->isAllowed()) {
 
     } else if ($obj->getId()) {
         $attrs['id'] = $obj->id;
-        $xml .= Ext_Xml::cdata('title', $obj->getTitle());
+        $xml .= \Ext\Xml::cdata('title', $obj->getTitle());
         $xml .= $form->getXml();
 
     } else {
         $attrs['is-new'] = 1;
-        $xml .= Ext_Xml::cdata('title', 'Добавление');
+        $xml .= \Ext\Xml::cdata('title', 'Добавление');
         $xml .= $form->getXml();
     }
 
-    $page->addContent(Ext_Xml::node('module', $xml, $attrs));
+    $page->addContent(\Ext\Xml::node('module', $xml, $attrs));
 }
 
 $page->output();

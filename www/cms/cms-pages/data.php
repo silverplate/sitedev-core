@@ -51,7 +51,7 @@ if ($page->isAllowed()) {
     }
 
     // Контроллер
-    $used = Ext_Db::get()->getList(Ext_Db::get()->getSelect(
+    $used = \Ext\Db::get()->getList(\Ext\Db::get()->getSelect(
         $obj->getTable(),
         App_Cms_Front_Controller::getPri(),
         $obj->id ? array($obj->getPrimaryKeyWhereNot()) : null
@@ -77,14 +77,14 @@ if ($page->isAllowed()) {
         foreach (App_Cms_User::getAuthGroups() as $id => $params) {
             $form->authStatusId->addOption(
                 $id,
-                Ext_String::toLower($params['title1'])
+                \Ext\String::toLower($params['title1'])
             );
         }
     }
 
     // Копирование блока в дочерние документы
     foreach (App_Cms_Front_Data::getApplyTypes() as $id => $title) {
-        $form->applyTypeId->addOption($id, Ext_String::toLower($title));
+        $form->applyTypeId->addOption($id, \Ext\String::toLower($title));
     }
 
     $form->fillWithObject($obj);
@@ -124,7 +124,7 @@ if ($page->isAllowed()) {
     }
 
     if (!$form->isSubmited() && App_Cms_Ext_Form::wasCookieStatus()) {
-        $page->addContent(Ext_Xml::cdata(
+        $page->addContent(\Ext\Xml::cdata(
             'update-parent',
             'documentUpdateDataBlocks();'
         ));

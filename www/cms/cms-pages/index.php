@@ -35,7 +35,7 @@ if ($page->isAllowed()) {
         }
 
         // Контроллер
-        $used = Ext_Db::get()->getList(Ext_Db::get()->getSelect(
+        $used = \Ext\Db::get()->getList(\Ext\Db::get()->getSelect(
             $obj->getTable(),
             App_Cms_Front_Controller::getPri(),
             $obj->id ? array($obj->getPrimaryKeyWhereNot()) : null
@@ -58,7 +58,7 @@ if ($page->isAllowed()) {
         }
 
         // Шаблон
-        $used = Ext_Db::get()->getList(Ext_Db::get()->getSelect(
+        $used = \Ext\Db::get()->getList(\Ext\Db::get()->getSelect(
             $obj->getTable(),
             App_Cms_Front_Template::getPri(),
             $obj->id ? array($obj->getPrimaryKeyWhereNot()) : null
@@ -94,7 +94,7 @@ if ($page->isAllowed()) {
             foreach (App_Cms_User::getAuthGroups() as $id => $params) {
                 $form->authStatusId->addOption(
                     $id,
-                    Ext_String::toLower($params['title1'])
+                    \Ext\String::toLower($params['title1'])
                 );
             }
         }
@@ -103,7 +103,7 @@ if ($page->isAllowed()) {
         $form->fillWithObject($obj);
 
         if ($obj->id) {
-            $form->getGroup('content')->addAdditionalXml(Ext_Xml::node('document-data'));
+            $form->getGroup('content')->addAdditionalXml(\Ext\Xml::node('document-data'));
             $form->navigations = $obj->getLinkIds('navigations');
 
             foreach ($obj->getFiles() as $file) {
@@ -136,11 +136,11 @@ if ($page->isAllowed()) {
 
                 if (!$obj->checkFolder() || !$obj->checkRoot()) {
                     $form->setUpdateStatus(App_Cms_Ext_Form::ERROR);
-                    $form->folder->setUpdateStatus(Ext_Form_Element::ERROR_SPELLING);
+                    $form->folder->setUpdateStatus(\Ext\Form\Element::ERROR_SPELLING);
 
                 } else if (!$obj->checkUnique()) {
                     $form->setUpdateStatus(App_Cms_Ext_Form::ERROR);
-                    $form->folder->setUpdateStatus(Ext_Form_Element::ERROR_EXIST);
+                    $form->folder->setUpdateStatus(\Ext\Form\Element::ERROR_EXIST);
 
                 } else {
                     $obj->save();
@@ -216,7 +216,7 @@ if ($page->isAllowed()) {
 
     if (empty($obj)) {
         if (App_Cms_Back_Section::get()->description) {
-            $xml .= Ext_Xml::notEmptyNode('content', Ext_Xml::cdata(
+            $xml .= \Ext\Xml::notEmptyNode('content', \Ext\Xml::cdata(
                 'html',
                 '<p class="first">' . App_Cms_Back_Section::get()->description . '</p>'
             ));
@@ -225,7 +225,7 @@ if ($page->isAllowed()) {
     } else if ($obj->getId()) {
         $attrs['id'] = $obj->id;
 
-        $xml .= Ext_Xml::cdata(
+        $xml .= \Ext\Xml::cdata(
             'title',
             '<a href="' . $obj->getUri() .
             (empty($gCache) ? '' : '?no-cache') . '">' .
@@ -236,11 +236,11 @@ if ($page->isAllowed()) {
 
     } else {
         $attrs['is-new'] = 1;
-        $xml .= Ext_Xml::cdata('title', 'Добавление');
+        $xml .= \Ext\Xml::cdata('title', 'Добавление');
         $xml .= $form->getXml();
     }
 
-    $page->addContent(Ext_Xml::node('module', $xml, $attrs));
+    $page->addContent(\Ext\Xml::node('module', $xml, $attrs));
 }
 
 $page->output();

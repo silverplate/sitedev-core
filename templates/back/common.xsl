@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE xsl:stylesheet SYSTEM "../../library/Ext/entities.dtd">
+<!DOCTYPE xsl:stylesheet SYSTEM "../../library/Ext/Xml/entities.dtd">
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:template name="module-add-element-link">
@@ -144,7 +144,7 @@
                     <xsl:value-of select="title" disable-output-escaping="yes" />
                 </label>
             </xsl:if>
-    
+
             <div style="padding: 5px 10px 0 10px;">
                 <table class="date-filter">
                     <tr>
@@ -166,7 +166,7 @@
                         </td>
                     </tr>
                 </table>
-        
+
                 <table class="date-filter-periods">
                     <tr>
                         <td><a onclick="dateFilterFromDate('{@today}')">Сегодня</a></td>

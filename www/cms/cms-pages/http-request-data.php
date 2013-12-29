@@ -88,7 +88,7 @@ function getDataImages($_dir, $_excludePath)
 
                 } else if (
                     $dir != $excludePath &&
-                    Ext_File::isImageExt(Ext_File::computeExt($item))
+                    \Ext\File::isImageExt(\Ext\File::computeExt($item))
                 ) {
                     $result[] = App_Cms_Ext_Image::factory($dir . $item);
                 }

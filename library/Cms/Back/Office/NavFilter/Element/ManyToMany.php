@@ -23,12 +23,12 @@ extends Core_Cms_Back_Office_NavFilter_Element_Multiple
         $where = array();
 
         if ($this->_value !== false) {
-            $p = Ext_Db::get()->getPrefix();
+            $p = \Ext\Db::get()->getPrefix();
 
             if ($this->_value) {
-                $value = Ext_Db::escape($this->_value);
+                $value = \Ext\Db::escape($this->_value);
 
-                $ids = Ext_Db::get()->getList("
+                $ids = \Ext\Db::get()->getList("
                     SELECT   $this->_key
                     FROM     $this->_linkTable
                     WHERE    $this->_valueKey IN ($value)
@@ -36,7 +36,7 @@ extends Core_Cms_Back_Office_NavFilter_Element_Multiple
                 ");
 
             } else {
-                $ids = Ext_Db::get()->getList("
+                $ids = \Ext\Db::get()->getList("
                     SELECT    $this->_key
                     FROM      $this->_table
                     LEFT JOIN $this->_linkTable
@@ -49,7 +49,7 @@ extends Core_Cms_Back_Office_NavFilter_Element_Multiple
                 return false;
             }
 
-            $value = Ext_Db::escape($ids);
+            $value = \Ext\Db::escape($ids);
             $where[] = "$this->_key IN ($value)";
         }
 

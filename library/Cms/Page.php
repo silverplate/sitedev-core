@@ -50,7 +50,7 @@ abstract class Core_Cms_Page
     {
         global $gHost;
 
-        $this->_url = Ext_File::parseUrl();
+        $this->_url = \Ext\File::parseUrl();
         $this->_url['host'] = $gHost;
     }
 
@@ -59,7 +59,7 @@ abstract class Core_Cms_Page
         $url = $this->getUrl();
         unset($url['request_uri']);
 
-        return Ext_Xml::cdata('url', $this->getUrl('request_uri'), $url);
+        return \Ext\Xml::cdata('url', $this->getUrl('request_uri'), $url);
     }
 
     public function getUrl($_name = null)
@@ -118,22 +118,22 @@ abstract class Core_Cms_Page
     {
         $xml = '';
 
-        Ext_Xml::append($xml, Ext_Xml::notEmptyNode(
+        \Ext\Xml::append($xml, \Ext\Xml::notEmptyNode(
             'content',
             $this->_content
         ));
 
-        Ext_Xml::append($xml, Ext_Xml::notEmptyCdata('title', $this->getTitle()));
-        Ext_Xml::append($xml, $this->getUrlXml());
-        Ext_Xml::append($xml, Ext_Date::getXml(time()));
+        \Ext\Xml::append($xml, \Ext\Xml::notEmptyCdata('title', $this->getTitle()));
+        \Ext\Xml::append($xml, $this->getUrlXml());
+        \Ext\Xml::append($xml, \Ext\Date::getXml(time()));
 
-        Ext_Xml::append($xml, Ext_Xml::notEmptyNode(
+        \Ext\Xml::append($xml, \Ext\Xml::notEmptyNode(
             'system',
             $this->_system,
             $this->_systemAttrs
         ));
 
-        return Ext_Xml::node(
+        return \Ext\Xml::node(
             $this->getRootName(),
             $xml,
             $this->_rootAttrs
@@ -143,9 +143,9 @@ abstract class Core_Cms_Page
     public function getHtml()
     {
         $proc = new XSLTProcessor();
-        $proc->importStylesheet(Ext_Dom::load($this->_template));
+        $proc->importStylesheet(\Ext\Xml\Dom::load($this->_template));
 
-        return $proc->transformToXml(Ext_Dom::get(App_Cms_Ext_Xml::getDocumentForXml(
+        return $proc->transformToXml(\Ext\Xml\Dom::get(App_Cms_Ext_Xml::getDocumentForXml(
             $this->getXml(),
             $this->getRootName()
         )));

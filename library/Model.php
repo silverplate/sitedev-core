@@ -27,19 +27,19 @@ class Core_Model extends App_ActiveRecord
 
     public function getDate($_name)
     {
-        return !empty($this->$_name) ? Ext_Date::getDate($this->$_name) : false;
+        return !empty($this->$_name) ? \Ext\Date::getDate($this->$_name) : false;
     }
 
     public function getXml($_node = null, $_xml = null, $_attrs = null)
     {
-        $node = $_node ? $_node : Ext_String::dash($this->getTable());
+        $node = $_node ? $_node : \Ext\String::dash($this->getTable());
 
         if (empty($_xml))         $xml = array();
         else if (is_array($_xml)) $xml = $_xml;
         else                      $xml = array($_xml);
 
         if (!array_key_exists('title', $xml)) {
-            Ext_Xml::append($xml, Ext_Xml::cdata('title', $this->getTitle()));
+            \Ext\Xml::append($xml, \Ext\Xml::cdata('title', $this->getTitle()));
         }
 
         $attrs = empty($_attrs) ? array() : $_attrs;
@@ -48,7 +48,7 @@ class Core_Model extends App_ActiveRecord
             $attrs['id'] = $this->id;
         }
 
-        return Ext_Xml::node($node, $xml, $attrs);
+        return \Ext\Xml::node($node, $xml, $attrs);
     }
 
     public function getBackOfficeXml($_xml = array(), $_attrs = array())
@@ -86,7 +86,7 @@ class Core_Model extends App_ActiveRecord
                         $file = App_Cms_Ext_File::factory($filePath);
 
                         $this->_files[
-                            Ext_String::toLower($file->getFilename())
+                            \Ext\String::toLower($file->getFilename())
                         ] = $file;
                     }
                 }
@@ -136,9 +136,9 @@ class Core_Model extends App_ActiveRecord
 
             foreach ($this->getFiles() as $key => $file) {
                 if (
-                    Ext_File::isImageExt($file->getExt()) &&
+                    \Ext\File::isImageExt($file->getExt()) &&
                     $file->getSize() > 0 &&
-                    Ext_File::isImageExt(str_replace('image/', '', $file->getMime()))
+                    \Ext\File::isImageExt(str_replace('image/', '', $file->getMime()))
                 ) {
                     $this->_images[$key] = $file;
                 }
@@ -188,23 +188,23 @@ class Core_Model extends App_ActiveRecord
     public function cleanFileCache()
     {
         foreach ($this->getFiles() as $file) {
-            Ext_File_Cache::delete($file->getPath());
+            \Ext\File\Cache::delete($file->getPath());
         }
     }
 
     public function uploadFile($_filename, $_tmpName, $_newName = null)
     {
         $filename = is_null($_newName)
-                  ? Ext_File::normalizeName($_filename)
-                  : $_newName . '.' . Ext_File::computeExt($_filename);
+                  ? \Ext\File::normalizeName($_filename)
+                  : $_newName . '.' . \Ext\File::computeExt($_filename);
 
         $path = $this->getFilePath() . $filename;
 
-        Ext_File::deleteFile($path);
-        Ext_File::createDir($this->getFilePath());
+        \Ext\File::deleteFile($path);
+        \Ext\File::createDir($this->getFilePath());
 
         move_uploaded_file($_tmpName, $path);
-        Ext_File::chmod($path, 0777);
-        Ext_File_Cache::delete($path);
+        \Ext\File::chmod($path, 0777);
+        \Ext\File\Cache::delete($path);
     }
 }

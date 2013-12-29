@@ -51,13 +51,13 @@ abstract class Core_Cms_Front_Office
         $siteLang = null;
 
         if (self::getLanguages()) {
-            $url = empty($_SERVER['REQUEST_URI']) ? false : Ext_File::parseUrl();
+            $url = empty($_SERVER['REQUEST_URI']) ? false : \Ext\File::parseUrl();
 
             if ($gHost && $url) {
                 $langPath = array();
 
                 foreach (self::getLanguages() as $lang => $params) {
-                    foreach (Ext_String::split($params[0]) as $item) {
+                    foreach (\Ext\String::split($params[0]) as $item) {
                         if (
                             $gHost == $item ||
                             ('/' == $item && '/' == $url['path']) ||

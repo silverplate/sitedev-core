@@ -35,7 +35,7 @@ abstract class Core_Cms_Front_Navigation extends App_Model
     {
         global $gSiteLangType;
 
-        $list = Ext_Db::get()->getList('
+        $list = \Ext\Db::get()->getList('
             SELECT
                 d.' . App_Cms_Front_Document::getPri() . ' AS id,
                 d.*
@@ -45,7 +45,7 @@ abstract class Core_Cms_Front_Navigation extends App_Model
                 ' . App_Cms_Front_Document_Has_Navigation::getTbl() . ' AS l
             WHERE
                 n.is_published = 1 AND
-                n.name = ' . Ext_Db::escape($_name) . ' AND
+                n.name = ' . \Ext\Db::escape($_name) . ' AND
                 n.' . App_Cms_Front_Navigation::getPri() . ' = l.' . App_Cms_Front_Navigation::getPri() . ' AND
                 l.' . App_Cms_Front_Document::getPri() . ' = d.' . App_Cms_Front_Document::getPri() . ' AND
                 d.is_published = 1' .
@@ -101,7 +101,7 @@ abstract class Core_Cms_Front_Navigation extends App_Model
                 ? self::getNavigationXmlTree()
                 : self::getNavigationXmlList();
 
-        return $result ? Ext_Xml::node($_name, $result) : false;
+        return $result ? \Ext\Xml::node($_name, $result) : false;
     }
 
     public static function getNavigationXmlTree($_parentId = '')
@@ -124,9 +124,9 @@ abstract class Core_Cms_Front_Navigation extends App_Model
                         $attrs['xml:lang'] = $item['lang'];
                     }
 
-                    $xml .= Ext_Xml::node(
+                    $xml .= \Ext\Xml::node(
                         'item',
-                        Ext_Xml::cdata('title', $item['title_compact'] ? $item['title_compact'] : $item['title']) .
+                        \Ext\Xml::cdata('title', $item['title_compact'] ? $item['title_compact'] : $item['title']) .
                         self::getNavigationXmlTree($item['id']),
                         $attrs
                     );
@@ -151,9 +151,9 @@ abstract class Core_Cms_Front_Navigation extends App_Model
                 $attrs['xml:lang'] = $item['lang'];
             }
 
-            $xml .= Ext_Xml::node(
+            $xml .= \Ext\Xml::node(
                 'item',
-                Ext_Xml::cdata('title', $item['title_compact'] ? $item['title_compact'] : $item['title']),
+                \Ext\Xml::cdata('title', $item['title_compact'] ? $item['title_compact'] : $item['title']),
                 $attrs
             );
         }

@@ -15,7 +15,7 @@ extends App_Cms_Front_Data_Controller
         $append = array();
 
         if ($content) {
-            $pref = Ext_Dom::get(Core_Cms_Ext_Xml::getDocument($content));
+            $pref = \Ext\Xml\Dom::get(Core_Cms_Ext_Xml::getDocument($content));
 
             foreach ($pref->getElementsByTagName('except') as $item) {
                 foreach ($item->attributes as $attr) {
@@ -43,7 +43,7 @@ extends App_Cms_Front_Data_Controller
                        'is_published' => 1);
 
         foreach ($except as $attr => $value) {
-            $rowConds[] = $attr . ' != ' . Ext_Db::escape($value);
+            $rowConds[] = $attr . ' != ' . \Ext\Db::escape($value);
         }
 
         $children = App_Cms_Front_Document::getList($conds, null, $rowConds);
@@ -51,7 +51,7 @@ extends App_Cms_Front_Data_Controller
 
         foreach ($children as $item) {
             $link = $item->link ? $item->link : $item->getUri();
-            $itemXml = Ext_Xml::cdata('title', $item->getTitle());
+            $itemXml = \Ext\Xml::cdata('title', $item->getTitle());
             $itemAttrs = array('uri' => $item->getUri(), 'link' => $link);
 
             if (count($append) > 0) {
@@ -67,7 +67,7 @@ extends App_Cms_Front_Data_Controller
                 }
             }
 
-            $xml .= Ext_Xml::node('item', $itemXml, $itemAttrs);
+            $xml .= \Ext\Xml::node('item', $itemXml, $itemAttrs);
         }
 
         $this->setContent($xml);

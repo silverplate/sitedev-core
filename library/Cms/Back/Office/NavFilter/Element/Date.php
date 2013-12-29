@@ -27,10 +27,10 @@ extends App_Cms_Back_Office_NavFilter_Element
     public function run()
     {
         if (!empty($_POST['filter_from'])) {
-            $this->_from = Ext_Date::getDate($_POST['filter_from']);
+            $this->_from = \Ext\Date::getDate($_POST['filter_from']);
 
         } else if (!empty($_COOKIE['filter-from'])) {
-            $this->_from = Ext_Date::getDate($_COOKIE['filter-from']);
+            $this->_from = \Ext\Date::getDate($_COOKIE['filter-from']);
 
         } else {
             $this->_from = false;
@@ -46,10 +46,10 @@ extends App_Cms_Back_Office_NavFilter_Element
         }
 
         if (!empty($_POST['filter_till'])) {
-            $this->_till = Ext_Date::getDate($_POST['filter_till']);
+            $this->_till = \Ext\Date::getDate($_POST['filter_till']);
 
         } else if (!empty($_COOKIE['filter-till'])) {
-            $this->_till = Ext_Date::getDate($_COOKIE['filter-till']);
+            $this->_till = \Ext\Date::getDate($_COOKIE['filter-till']);
 
         } else {
             $this->_till = false;
@@ -74,7 +74,7 @@ extends App_Cms_Back_Office_NavFilter_Element
                    ? date('Y-m-d H:i:s', $this->_from)
                    : $this->_from;
 
-            $where[] = $this->_dbAttr . ' >= ' . Ext_Db::escape($value);
+            $where[] = $this->_dbAttr . ' >= ' . \Ext\Db::escape($value);
         }
 
         if (!empty($this->_till)) {
@@ -82,7 +82,7 @@ extends App_Cms_Back_Office_NavFilter_Element
                    ? date('Y-m-d H:i:s', $this->_till)
                    : $this->_till;
 
-            $where[] = $this->_dbAttr . ' <= ' . Ext_Db::escape($value);
+            $where[] = $this->_dbAttr . ' <= ' . \Ext\Db::escape($value);
         }
 
         return $where;
@@ -105,9 +105,9 @@ extends App_Cms_Back_Office_NavFilter_Element
             $attrs['till'] = date('Y-m-d', $this->_till);
         }
 
-        return Ext_Xml::node(
+        return \Ext\Xml::node(
             'filter-param',
-            Ext_Xml::notEmptyCdata('title', $this->_title),
+            \Ext\Xml::notEmptyCdata('title', $this->_title),
             $attrs
         );
     }

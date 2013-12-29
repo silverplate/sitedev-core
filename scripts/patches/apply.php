@@ -44,8 +44,8 @@ function applyPatches()
 
     if (count($patches) > 0) {
         usort($patches, 'sortPatches');
-        $tbl = Ext_Db::get()->getPrefix() . 'patch';
-        $exist = Ext_Db::get()->getList('SELECT filename FROM ' . $tbl);
+        $tbl = \Ext\Db::get()->getPrefix() . 'patch';
+        $exist = \Ext\Db::get()->getList('SELECT filename FROM ' . $tbl);
 
         foreach ($patches as $patch) {
             if (!$exist || !in_array($patch->filename, $exist)) {
@@ -54,7 +54,7 @@ function applyPatches()
 
                 include_once($patch->path);
 
-                Ext_Db::get()->execute('INSERT INTO ' . $tbl . Ext_Db::get()->getQueryFields(array(
+                \Ext\Db::get()->execute('INSERT INTO ' . $tbl . \Ext\Db::get()->getQueryFields(array(
                     'creation_time' => time(),
                     'filename' => $patch->filename
                 ), 'insert'));

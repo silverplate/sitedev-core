@@ -1,16 +1,16 @@
 <?php
 
-abstract class Core_Cms_Ext_Xml extends Ext_Xml
+abstract class Core_Cms_Ext_Xml extends \Ext\Xml
 {
     /**
      * @param string $_xml
-     * @param array[Ext_File] $_files
+     * @param \Ext\File[] $_files
      * @param array $_match
      * @return string
      */
     public static function applyFiles($_xml, array $_files, array $_match = null)
     {
-        $dom = Ext_Dom::get(self::getDocument($_xml));
+        $dom = \Ext\Xml\Dom::get(self::getDocument($_xml));
         $match = empty($_match) ? array('illu', 'image', 'file') : $_match;
 
         if (count($match) > 1) {
@@ -34,7 +34,7 @@ abstract class Core_Cms_Ext_Xml extends Ext_Xml
                 $alias = $node->getAttribute('alias');
 
                 if ($node->hasAttribute('alias-uri')) {
-                    $filePath = Ext_File::getByName(
+                    $filePath = \Ext\File::getByName(
                         rtrim(DOCUMENT_ROOT, '/') . $node->getAttribute('alias-uri'),
                         $alias
                     );
@@ -71,6 +71,6 @@ abstract class Core_Cms_Ext_Xml extends Ext_Xml
             }
         }
 
-        return Ext_Dom::getInnerXml($dom->documentElement);
+        return \Ext\Xml\Dom::getInnerXml($dom->documentElement);
     }
 }

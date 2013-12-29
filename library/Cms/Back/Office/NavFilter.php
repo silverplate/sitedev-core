@@ -226,10 +226,10 @@ abstract class Core_Cms_Back_Office_NavFilter
         $xml = '';
 
         foreach ($this->_elements as $el) {
-            Ext_Xml::append($xml, $el->getXml());
+            \Ext\Xml::append($xml, $el->getXml());
         }
 
-        return Ext_Xml::node(
+        return \Ext\Xml::node(
             'local-navigation',
             $xml,
             array(
@@ -269,7 +269,7 @@ abstract class Core_Cms_Back_Office_NavFilter
                 $page->addContent($item->getBackOfficeXml());
             }
 
-            $page->addContent(Ext_Xml::node('list-navigation', null, array(
+            $page->addContent(\Ext\Xml::node('list-navigation', null, array(
                 'page' => $this->getPage(),
                 'per-page' => $this->getPerPage(),
                 'total' => $result['total']

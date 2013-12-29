@@ -19,7 +19,7 @@ abstract class Core_Cms_Front_Controller extends App_Model
 
     public function getClassName()
     {
-        $class = Ext_File::computeName($this->filename);
+        $class = \Ext\File::computeName($this->filename);
 
         if ($this->typeId == 1)      return $class . 'Controller';
         else if ($this->typeId == 2) return $class . 'Helper';
@@ -60,7 +60,7 @@ abstract class Core_Cms_Front_Controller extends App_Model
         $content = str_replace(array("\r\n", "\r"), "\n", $_content);
         $content = preg_replace('~[\n]{3,}~', "\n\n", $content);
 
-        Ext_File::write($this->getFilename(), $content);
+        \Ext\File::write($this->getFilename(), $content);
     }
 
     public function checkUnique()
@@ -89,17 +89,17 @@ abstract class Core_Cms_Front_Controller extends App_Model
 
     public function delete()
     {
-//         Ext_Db::get()->execute(
+//         \Ext\Db::get()->execute(
 //             'UPDATE ' . App_Cms_Front_Document::getTbl() .
 //             ' SET ' . $this->getPrimaryKeyName() . ' = NULL WHERE ' . $this->getPrimaryKeyWhere()
 //         );
 
-//         Ext_Db::get()->execute(
+//         \Ext\Db::get()->execute(
 //             'UPDATE ' . App_Cms_Front_Data::getTbl() .
 //             ' SET ' . $this->getPrimaryKeyName() . ' = NULL WHERE ' . $this->getPrimaryKeyWhere()
 //         );
 
-        Ext_File::deleteFile($this->getFilename());
+        \Ext\File::deleteFile($this->getFilename());
 
         return parent::delete();
     }
@@ -116,7 +116,7 @@ abstract class Core_Cms_Front_Controller extends App_Model
     public function update()
     {
         if ($this->getFilename() != $this->_originalFilePath) {
-            Ext_File::moveFile(
+            \Ext\File::moveFile(
                 $this->_originalFilePath,
                 $this->getFilename()
             );

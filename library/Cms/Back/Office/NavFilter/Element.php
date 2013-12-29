@@ -61,7 +61,7 @@ abstract class Core_Cms_Back_Office_NavFilter_Element
 
         if ($this->_value !== false) {
             $where[] = $this->_dbAttr . ' LIKE ' .
-                       Ext_Db::escape('%' . $this->_value . '%');
+                       \Ext\Db::escape('%' . $this->_value . '%');
         }
 
         return $where;
@@ -69,11 +69,11 @@ abstract class Core_Cms_Back_Office_NavFilter_Element
 
     public function getXml()
     {
-        return Ext_Xml::node(
+        return \Ext\Xml::node(
             'filter-param',
 
-            Ext_Xml::notEmptyCdata('title', $this->_title) .
-            Ext_Xml::notEmptyCdata('value', $this->_value),
+            \Ext\Xml::notEmptyCdata('title', $this->_title) .
+            \Ext\Xml::notEmptyCdata('value', $this->_value),
 
             array('name' => $this->_dbAttr, 'type' => 'string')
         );

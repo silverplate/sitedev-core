@@ -23,6 +23,6 @@ extends App_Cms_Front_Document_Controller
             $xml .= App_Cms_Front_Navigation::getNavigationXml($i->name, $i->type);
         }
 
-        $this->addSystem(Ext_Xml::notEmptyNode('navigation', $xml));
+        $this->addSystem(\Ext\Xml::notEmptyNode('navigation', $xml));
     }
 }
