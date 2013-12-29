@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_User extends App_Model
+abstract class Core_Cms_User extends App_ActiveRecord
 {
     const AUTH_GROUP_GUESTS = 1;
     const AUTH_GROUP_USERS  = 2;

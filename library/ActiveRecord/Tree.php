@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Model_Tree extends App_Model
+abstract class Core_ActiveRecord_Tree extends App_ActiveRecord
 {
     protected $_isChildren;
 

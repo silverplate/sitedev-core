@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_Front_Data extends App_Model
+abstract class Core_Cms_Front_Data extends App_ActiveRecord
 {
     /**
      * @var App_Cms_Front_Controller
@@ -167,10 +167,10 @@ abstract class Core_Cms_Front_Data extends App_Model
     }
 
     /**
-     * @param App_Model $_parent
+     * @param App_ActiveRecord $_parent
      * @return array|false
      */
-    public function proceedContent(App_Model $_parent)
+    public function proceedContent(App_ActiveRecord $_parent)
     {
         switch ($this->getTypeId()) {
             case 'image': return $this->proceedImage();
@@ -201,10 +201,10 @@ abstract class Core_Cms_Front_Data extends App_Model
     }
 
     /**
-     * @param App_Model $_parent
+     * @param App_ActiveRecord $_parent
      * @return array
      */
-    public function proceedXml(App_Model $_parent)
+    public function proceedXml(App_ActiveRecord $_parent)
     {
         return array('content' => Core_Cms_Ext_Xml::applyFiles(
             $this->content,

@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_Back_User_Has_Section extends App_Model
+abstract class Core_Cms_Back_User_Has_Section extends App_ActiveRecord
 {
     public function __construct()
     {

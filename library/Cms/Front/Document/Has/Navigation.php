@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_Front_Document_Has_Navigation extends App_Model
+abstract class Core_Cms_Front_Document_Has_Navigation extends App_ActiveRecord
 {
     public function __construct()
     {

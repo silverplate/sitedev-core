@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_Front_Template extends App_Model
+abstract class Core_Cms_Front_Template extends App_ActiveRecord
 {
     /**
      * @var App_Cms_Ext_File

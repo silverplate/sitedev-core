@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_Front_Navigation extends App_Model
+abstract class Core_Cms_Front_Navigation extends App_ActiveRecord
 {
     /**
      * @var array[array]

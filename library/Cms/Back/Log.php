@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_Back_Log extends App_Model
+abstract class Core_Cms_Back_Log extends App_ActiveRecord
 {
     const ACT_LOGIN      = 1;
     const ACT_LOGOUT     = 2;

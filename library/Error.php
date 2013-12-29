@@ -1,6 +1,6 @@
 <?php
 
-class Core_Error_Exeption extends Exception
+class Core_Error_Exeption extends \Exception
 {
     public function __construct($_num = 0,
                                 $_str = null,

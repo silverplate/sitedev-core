@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_Front_Document extends App_Model_Tree
+abstract class Core_Cms_Front_Document extends App_ActiveRecord_Tree
 {
     const FOLDER = 'f';
 

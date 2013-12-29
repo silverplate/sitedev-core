@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Cms_Back_User extends App_Model
+abstract class Core_Cms_Back_User extends App_ActiveRecord
 {
     protected $_linkParams = array(
         'sections' => 'App_Cms_Back_User_Has_Section'
