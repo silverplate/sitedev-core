@@ -2,7 +2,7 @@
 
 require_once 'prepend.php';
 
-$page = new App_Cms_Back_Page_404();
+$page = new \App\Cms\Back\Page_404();
 
 $page->setTitle('Страница не найдена');
 $page->addContent(\Ext\Xml::cdata(

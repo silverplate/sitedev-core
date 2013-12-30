@@ -2,7 +2,7 @@
 
 require_once '../prepend.php';
 
-$page = new App_Cms_Page();
+$page = new \App\Cms\Page();
 $page->setRootName('http-request');
 $page->setRootAttr('type', 'document-data');
 $page->setTemplate(TEMPLATES . 'back/http-requests.xsl');
@@ -20,10 +20,10 @@ $page->output();
 function getBranchXml($_parentId)
 {
     $result = '';
-    $document = App_Cms_Front_Document::load($_parentId);
+    $document = \App\Cms\Front\Document::load($_parentId);
 
     foreach (
-        App_Cms_Front_Data::getList(array(App_Cms_Front_Document::getPri() => $_parentId)) as
+        \App\Cms\Front\Data::getList(array(\App\Cms\Front\Document::getPri() => $_parentId)) as
         $item
     ) {
         $xml = '';
@@ -90,7 +90,7 @@ function getDataImages($_dir, $_excludePath)
                     $dir != $excludePath &&
                     \Ext\File::isImageExt(\Ext\File::computeExt($item))
                 ) {
-                    $result[] = App_Cms_Ext_Image::factory($dir . $item);
+                    $result[] = \App\Cms\Ext\Image::factory($dir . $item);
                 }
             }
 

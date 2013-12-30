@@ -5,8 +5,8 @@ require_once 'prepend.php';
 global $gSiteLang, $gIsHidden, $gCache;
 
 $gCache = empty($gSiteLang)
-        ? new App_Cms_Cache_Project()
-        : new App_Cms_Cache_Project(null, $gSiteLang);
+        ? new \App\Cms\Cache\Project()
+        : new \App\Cms\Cache\Project(null, $gSiteLang);
 
 if ($gCache->isAvailable() && $gCache->isCache()) {
     echo $gCache;
@@ -38,7 +38,7 @@ if ($gCache->isAvailable() && $gCache->isCache()) {
         $document &&
         $document->getController() &&
         ($document->isPublished == 1 || !empty($gIsHidden)) &&
-        (!$document->authStatusId || is_null(App_Cms_User::getAuthGroup()) || $document->authStatusId & App_Cms_User::getAuthGroup())
+        (!$document->authStatusId || is_null(\App\Cms\User::getAuthGroup()) || $document->authStatusId & \App\Cms\User::getAuthGroup())
     ) {
         $controller = \App\Cms\Front\Document::initController(
             $document->getController(),

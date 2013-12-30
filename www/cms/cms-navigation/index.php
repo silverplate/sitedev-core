@@ -2,7 +2,7 @@
 
 require_once '../prepend.php';
 
-$page = new App_Cms_Back_Page();
+$page = new \App\Cms\Back\Page();
 
 if ($page->isAllowed()) {
 
@@ -11,21 +11,21 @@ if ($page->isAllowed()) {
     $obj = null;
 
     if (!empty($_GET['id'])) {
-        $obj = App_Cms_Front_Navigation::getById($_GET['id']);
+        $obj = \App\Cms\Front\Navigation::getById($_GET['id']);
         if (!$obj) reload();
 
-    } else if (key_exists('add', $_GET)) {
-        $obj = new App_Cms_Front_Navigation();
+    } else if (array_key_exists('add', $_GET)) {
+        $obj = new \App\Cms\Front\Navigation();
     }
 
 
     // Форма редактирования или добавления объекта
 
     if ($obj) {
-        $form = App_Cms_Ext_Form::load(dirname(__FILE__) . '/form.xml');
+        $form = \App\Cms\Ext\Form::load(dirname(__FILE__) . '/form.xml');
         $form->fillWithObject($obj);
 
-        foreach (App_Cms_Front_Navigation::getTypes() as $id => $params) {
+        foreach (\App\Cms\Front\Navigation::getTypes() as $id => $params) {
             $form->type->addOption($id, \Ext\String::toLower($params['title']));
         }
 
@@ -35,26 +35,26 @@ if ($page->isAllowed()) {
             if ($form->isSubmited('delete')) {
                 $obj->delete();
 
-                App_Cms_Back_Log::logModule(
-                    App_Cms_Back_Log::ACT_DELETE,
+                \App\Cms\Back\Log::logModule(
+                    \App\Cms\Back\Log::ACT_DELETE,
                     $obj->id,
                     $obj->getTitle()
                 );
 
-                App_Cms_Ext_Form::saveCookieStatus();
+                \App\Cms\Ext\Form::saveCookieStatus();
                 redirect($page->getUrl('path'));
 
             } else {
                 $obj->fillWithData($form->toArray());
                 $obj->save();
 
-                App_Cms_Back_Log::logModule(
-                    $form->isSubmited('insert') ? App_Cms_Back_Log::ACT_CREATE : App_Cms_Back_Log::ACT_MODIFY,
+                \App\Cms\Back\Log::logModule(
+                    $form->isSubmited('insert') ? \App\Cms\Back\Log::ACT_CREATE : \App\Cms\Back\Log::ACT_MODIFY,
                     $obj->id,
                     $obj->getTitle()
                 );
 
-                App_Cms_Ext_Form::saveCookieStatus();
+                \App\Cms\Ext\Form::saveCookieStatus();
                 reload('?id=' . $obj->id);
             }
         }
@@ -66,11 +66,11 @@ if ($page->isAllowed()) {
     $formStatusXml = '';
 
     if (!isset($form) || !$form->isSubmited()) {
-        $formStatusXml = App_Cms_Ext_Form::getCookieStatusXml(
+        $formStatusXml = \App\Cms\Ext\Form::getCookieStatusXml(
             empty($obj) ? 'Выполнено' : 'Данные сохранены'
         );
 
-        App_Cms_Ext_Form::clearCookieStatus();
+        \App\Cms\Ext\Form::clearCookieStatus();
     }
 
 
@@ -78,7 +78,7 @@ if ($page->isAllowed()) {
 
     $filterXml = '';
 
-    foreach (App_Cms_Front_Navigation::getList() as $item) {
+    foreach (\App\Cms\Front\Navigation::getList() as $item) {
         $filterXml .= $item->getBackOfficeXml();
     }
 
@@ -91,10 +91,10 @@ if ($page->isAllowed()) {
     $attrs = array('type' => 'simple', 'is-able-to-add' => 'true');
 
     if (empty($obj)) {
-        if (App_Cms_Back_Section::get()->description) {
+        if (\App\Cms\Back\Section::get()->description) {
             $xml .= \Ext\Xml::notEmptyNode('content', \Ext\Xml::cdata(
                 'html',
-                '<p class="first">' . App_Cms_Back_Section::get()->description . '</p>'
+                '<p class="first">' . \App\Cms\Back\Section::get()->description . '</p>'
             ));
         }
 

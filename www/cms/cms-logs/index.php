@@ -2,12 +2,12 @@
 
 require_once '../prepend.php';
 
-$page = new App_Cms_Back_Page();
+$page = new \App\Cms\Back\Page();
 
 if ($page->isAllowed()) {
     $page->addContent(\Ext\Xml::node(
         'module',
-        App_Cms_Back_Log::getCmsNavFilter()->getXml(),
+        \App\Cms\Back\Log::getCmsNavFilter()->getXml(),
         array('type' => 'simple')
     ));
 }

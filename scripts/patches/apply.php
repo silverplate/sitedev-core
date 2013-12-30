@@ -1,6 +1,6 @@
 <?php
 
-require_once realpath(dirname(__FILE__) . '/../../library') . '/libs.php';
+require_once realpath(dirname(__FILE__) . '/../../src') . '/libs.php';
 initSettings();
 
 applyPatches();

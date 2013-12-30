@@ -2,4 +2,4 @@
 
 require_once '../prepend.php';
 
-App_Cms_Back_Office::ajaxSort('App_Cms_Front_Data');
+\App\Cms\Back\Office::ajaxSort('\App\Cms\Front\Data');

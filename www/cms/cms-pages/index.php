@@ -4,7 +4,7 @@ require_once '../prepend.php';
 
 global $gCache, $gIsUsers;
 
-$page = new App_Cms_Back_Page();
+$page = new \App\Cms\Back\Page();
 
 if ($page->isAllowed()) {
 
@@ -13,22 +13,22 @@ if ($page->isAllowed()) {
     $obj = null;
 
     if (!empty($_GET['id'])) {
-        $obj = App_Cms_Front_Document::getById($_GET['id']);
+        $obj = \App\Cms\Front\Document::getById($_GET['id']);
         if (!$obj) reload();
 
-    } else if (key_exists('add', $_GET)) {
-        $obj = new App_Cms_Front_Document();
+    } else if (array_key_exists('add', $_GET)) {
+        $obj = new \App\Cms\Front\Document();
     }
 
 
     // Форма редактирования или добавления объекта
 
     if ($obj) {
-        $form = App_Cms_Ext_Form::load(dirname(__FILE__) . '/document-form.xml');
+        $form = \App\Cms\Ext\Form::load(dirname(__FILE__) . '/document-form.xml');
 
         // Добавление документа в навигацию
         foreach (
-            App_Cms_Front_Navigation::getList(array('is_published' => 1)) as
+            \App\Cms\Front\Navigation::getList(array('is_published' => 1)) as
             $item
         ) {
             $form->navigations->addOption($item->getId(), $item->getTitle());
@@ -37,11 +37,11 @@ if ($page->isAllowed()) {
         // Контроллер
         $used = \Ext\Db::get()->getList(\Ext\Db::get()->getSelect(
             $obj->getTable(),
-            App_Cms_Front_Controller::getPri(),
+            \App\Cms\Front\Controller::getPri(),
             $obj->id ? array($obj->getPrimaryKeyWhereNot()) : null
         ));
 
-        foreach (App_Cms_Front_Controller::getList(array('type_id' => 1)) as $item) {
+        foreach (\App\Cms\Front\Controller::getList(array('type_id' => 1)) as $item) {
             if (
                 $item->id == $obj->frontControllerId || (
                     $item->isPublished &&
@@ -60,12 +60,12 @@ if ($page->isAllowed()) {
         // Шаблон
         $used = \Ext\Db::get()->getList(\Ext\Db::get()->getSelect(
             $obj->getTable(),
-            App_Cms_Front_Template::getPri(),
+            \App\Cms\Front\Template::getPri(),
             $obj->id ? array($obj->getPrimaryKeyWhereNot()) : null
         ));
 
         foreach (
-            App_Cms_Front_Template::getList(null, array('order' => 'is_document_main DESC, title')) as
+            \App\Cms\Front\Template::getList(null, array('order' => 'is_document_main DESC, title')) as
             $item
         ) {
             if (
@@ -91,7 +91,7 @@ if ($page->isAllowed()) {
                 'Страница доступна'
             ));
 
-            foreach (App_Cms_User::getAuthGroups() as $id => $params) {
+            foreach (\App\Cms\User::getAuthGroups() as $id => $params) {
                 $form->authStatusId->addOption(
                     $id,
                     \Ext\String::toLower($params['title1'])
@@ -121,13 +121,13 @@ if ($page->isAllowed()) {
             if ($form->isSubmited('delete')) {
                 $obj->delete();
 
-                App_Cms_Back_Log::logModule(
-                    App_Cms_Back_Log::ACT_DELETE,
+                \App\Cms\Back\Log::logModule(
+                    \App\Cms\Back\Log::ACT_DELETE,
                     $obj->id,
                     $obj->getTitle()
                 );
 
-                App_Cms_Ext_Form::saveCookieStatus();
+                \App\Cms\Ext\Form::saveCookieStatus();
 
                 redirect($page->getUrl('path'));
 
@@ -135,37 +135,37 @@ if ($page->isAllowed()) {
                 $obj->fillWithData($form->toArray());
 
                 if (!$obj->checkFolder() || !$obj->checkRoot()) {
-                    $form->setUpdateStatus(App_Cms_Ext_Form::ERROR);
+                    $form->setUpdateStatus(\App\Cms\Ext\Form::ERROR);
                     $form->folder->setUpdateStatus(\Ext\Form\Element::ERROR_SPELLING);
 
                 } else if (!$obj->checkUnique()) {
-                    $form->setUpdateStatus(App_Cms_Ext_Form::ERROR);
+                    $form->setUpdateStatus(\App\Cms\Ext\Form::ERROR);
                     $form->folder->setUpdateStatus(\Ext\Form\Element::ERROR_EXIST);
 
                 } else {
                     $obj->save();
 
-                    App_Cms_Back_Log::logModule(
-                        $form->isSubmited('insert') ? App_Cms_Back_Log::ACT_CREATE : App_Cms_Back_Log::ACT_MODIFY,
+                    \App\Cms\Back\Log::logModule(
+                        $form->isSubmited('insert') ? \App\Cms\Back\Log::ACT_CREATE : \App\Cms\Back\Log::ACT_MODIFY,
                         $obj->id,
                         $obj->getTitle()
                     );
 
                     if ($form->isSubmited('update')) {
-                        foreach (App_Cms_Front_Data::getList(array(
+                        foreach (\App\Cms\Front\Data::getList(array(
                             $obj->getPrimaryKeyWhere(),
                             'is_mount' => 1
                         )) as $data) {
                             $key = 'document_data_form_ele_' . $data->id;
 
-                            if (key_exists($key, $_POST)) {
+                            if (array_key_exists($key, $_POST)) {
                                 $data->updateAttr(
                                     'content',
                                     $data->getParsedContent($_POST[$key])
                                 );
 
-                                App_Cms_Back_Log::LogModule(
-                                    App_Cms_Back_Log::ACT_MODIFY,
+                                \App\Cms\Back\Log::LogModule(
+                                    \App\Cms\Back\Log::ACT_MODIFY,
                                     $data->id,
                                     'Блоки данных, документ ' . $obj->id
                                 );
@@ -183,7 +183,7 @@ if ($page->isAllowed()) {
 
                     $obj->updateLinks('navigations', $form->navigations->getValue());
 
-                    App_Cms_Ext_Form::saveCookieStatus();
+                    \App\Cms\Ext\Form::saveCookieStatus();
 
                     reload('?id=' . $obj->id);
                 }
@@ -197,11 +197,11 @@ if ($page->isAllowed()) {
     $formStatusXml = '';
 
     if (!isset($form) || !$form->isSubmited()) {
-        $formStatusXml = App_Cms_Ext_Form::getCookieStatusXml(
+        $formStatusXml = \App\Cms\Ext\Form::getCookieStatusXml(
             empty($obj) ? 'Выполнено' : 'Данные сохранены'
         );
 
-        App_Cms_Ext_Form::clearCookieStatus();
+        \App\Cms\Ext\Form::clearCookieStatus();
     }
 
 
@@ -211,14 +211,14 @@ if ($page->isAllowed()) {
     $attrs = array(
         'type' => 'tree',
         'is-able-to-add' => 'true',
-        'name' => App_Cms_Back_Section::get()->getName()
+        'name' => \App\Cms\Back\Section::get()->getName()
     );
 
     if (empty($obj)) {
-        if (App_Cms_Back_Section::get()->description) {
+        if (\App\Cms\Back\Section::get()->description) {
             $xml .= \Ext\Xml::notEmptyNode('content', \Ext\Xml::cdata(
                 'html',
-                '<p class="first">' . App_Cms_Back_Section::get()->description . '</p>'
+                '<p class="first">' . \App\Cms\Back\Section::get()->description . '</p>'
             ));
         }
 

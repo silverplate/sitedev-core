@@ -2,7 +2,7 @@
 
 require_once 'prepend.php';
 
-$page = new App_Cms_Back_Page();
+$page = new \App\Cms\Back\Page();
 
 if (!$page->isAuthorized()) {
     documentNotFound();

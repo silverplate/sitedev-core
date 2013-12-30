@@ -1,6 +1,6 @@
 <?php
 
-require_once realpath(dirname(__FILE__) . '/../../../core/library') . '/libs.php';
+require_once realpath(dirname(__FILE__) . '/../../../core/src') . '/libs.php';
 
 initSettings();
 $result = array();
@@ -71,10 +71,10 @@ $content2  = '<p>Такой страницы не&nbsp;существует. Е�
 
 $frontData = array(
     '/' => array(
-        array('title' => 'Содержание', 'tag' => 'html', App_Cms_Front_Data_ContentType::getPri() => 'text', 'content' => $content1),
+        array('title' => 'Содержание', 'tag' => 'html', \App\Cms\Front\Data\ContentType::getPri() => 'text', 'content' => $content1),
     ),
     '/not-found/' => array(
-        array('title' => 'Содержание', 'tag' => 'html', App_Cms_Front_Data_ContentType::getPri() => 'text', 'content' => $content2)
+        array('title' => 'Содержание', 'tag' => 'html', \App\Cms\Front\Data\ContentType::getPri() => 'text', 'content' => $content2)
     )
 );
 
@@ -96,7 +96,7 @@ foreach (explode(';', $sqlTables) as $query) {
 
 $backSectionObjs = array();
 foreach ($backSections as $i) {
-    $obj = App_Cms_Back_Section::createInstance();
+    $obj = \App\Cms\Back\Section::createInstance();
 
     $obj->fillWithData($i);
     $obj->isPublished = !isset($i['is_published']) || $i['is_published'];
@@ -112,7 +112,7 @@ $result['Back Sections'] = count($backSectionObjs);
 
 $backUserObjs = array();
 foreach ($backUsers as $i) {
-    $obj = App_Cms_Back_User::createInstance();
+    $obj = \App\Cms\Back\User::createInstance();
     $obj->fillWithData($i);
     $obj->setPassword($i['passwd']);
 
@@ -124,7 +124,7 @@ foreach ($backUsers as $i) {
 
     $backUserObjs[$obj->getId()] = $obj;
     foreach (array_keys($backSectionObjs) as $j) {
-        $link = App_Cms_Back_User_Has_Section::createInstance();
+        $link = \App\Cms\Back\User\Has\Section::createInstance();
         $link->backUserId = $obj->getId();
         $link->backSectionId = $j;
         $link->create();
@@ -138,7 +138,7 @@ $result['Back Users'] = count($backUserObjs);
 
 $frontControllerObjs = array();
 foreach ($frontControllers as $key => $i) {
-    $obj = App_Cms_Front_Controller::createInstance();
+    $obj = \App\Cms\Front\Controller::createInstance();
     $obj->fillWithData($i);
     $obj->isPublished = true;
     $obj->create();
@@ -153,7 +153,7 @@ $result['Controllers'] = count($frontControllerObjs);
 
 $templatesObjs = array();
 foreach ($templates as $key => $i) {
-    $obj = App_Cms_Front_Template::createInstance();
+    $obj = \App\Cms\Front\Template::createInstance();
     $obj->fillWithData($i);
     $obj->isPublished = true;
     $obj->isMultiple = !empty($i['is_multiple']);
@@ -170,7 +170,7 @@ $result['Templates'] = count($templatesObjs);
 
 $frontNavigationObjs = array();
 foreach ($frontNavigations as $key => $i) {
-    $obj = App_Cms_Front_Navigation::createInstance();
+    $obj = \App\Cms\Front\Navigation::createInstance();
     $obj->fillWithData($i);
     $obj->isPublished = !isset($i['is_published']) || $i['is_published'];
     $obj->create();
@@ -186,12 +186,12 @@ $result['Navigation'] = count($frontNavigationObjs);
 $frontDocumentObjs = array();
 foreach ($frontDocuments as $level) {
     foreach ($level as $uri => $i) {
-        $obj = App_Cms_Front_Document::createInstance();
+        $obj = \App\Cms\Front\Document::createInstance();
         $obj->fillWithData($i);
         $obj->isPublished = true;
 
         if (!empty($gIsUsers)) {
-            $obj->authStatusId = App_Cms_User::AUTH_GROUP_ALL;
+            $obj->authStatusId = \App\Cms\User::AUTH_GROUP_ALL;
         }
 
         if (isset($i['сontroller']) && isset($frontControllerObjs[$i['сontroller']])) {
@@ -232,7 +232,7 @@ $result['Documents'] = count($frontDocumentObjs);
 
 $frontDataContentTypeObjs = array();
 foreach ($frontDataContentType as $id => $i) {
-    $obj = App_Cms_Front_Data_ContentType::createInstance();
+    $obj = \App\Cms\Front\Data\ContentType::createInstance();
     $obj->fillWithData($i);
     $obj->id = $id;
     $obj->isPublished = true;
@@ -250,14 +250,14 @@ $frontDataObjs = array();
 foreach ($frontData as $uri => $blocks) {
     if (isset($frontDocumentObjs[$uri])) {
         foreach ($blocks as $i) {
-            $obj = App_Cms_Front_Data::createInstance();
+            $obj = \App\Cms\Front\Data::createInstance();
             $obj->fillWithData($i);
             $obj->frontDocumentId = $frontDocumentObjs[$uri]->getId();
             $obj->isPublished = true;
             $obj->isMount = true;
 
             if (!empty($gIsUsers)) {
-                $obj->authStatusId = App_Cms_User::AUTH_GROUP_ALL;
+                $obj->authStatusId = \App\Cms\User::AUTH_GROUP_ALL;
             }
 
             if (
@@ -353,19 +353,19 @@ $solt = '$2y$09$d42R0c216184E3f0tjm60c';
 $passwordConsts = array();
 
 if (
-    !defined('App_Cms_User::SECRET') ||
-    App_Cms_User::cryptPassword('test') == '' ||
-    App_Cms_User::SECRET == $solt
+    !defined('\App\Cms\User::SECRET') ||
+    \App\Cms\User::cryptPassword('test') == '' ||
+    \App\Cms\User::SECRET == $solt
 ) {
-    $passwordConsts[] = 'App_Cms_User::SECRET';
+    $passwordConsts[] = '\App\Cms\User::SECRET';
 }
 
 if (
-    !defined('App_Cms_Back_User::SECRET') ||
-    App_Cms_Back_User::cryptPassword('test') == '' ||
-    App_Cms_Back_User::SECRET == $solt
+    !defined('\App\Cms\Back\User::SECRET') ||
+    \App\Cms\Back\User::cryptPassword('test') == '' ||
+    \App\Cms\Back\User::SECRET == $solt
 ) {
-    $passwordConsts[] = 'App_Cms_Back_User::SECRET';
+    $passwordConsts[] = '\App\Cms\Back\User::SECRET';
 }
 
 if (count($passwordConsts) > 0) {

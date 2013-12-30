@@ -13,7 +13,7 @@
  * путем запуска скрипта get.php.
  */
 
-require_once realpath(dirname(__FILE__) . '/../../library') . '/libs.php';
+require_once realpath(dirname(__FILE__) . '/../../src') . '/libs.php';
 initSettings();
 
 $d = \Ext\Db::get()->getDatabase();
